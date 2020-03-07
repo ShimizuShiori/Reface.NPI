@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29009.5
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reface.NPI", "Reface.NPI.csproj", "{468D9CD4-2136-4657-BE44-64921D327CA0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reface.NPITests", "..\Reface.NPITests\Reface.NPITests.csproj", "{D0AB78C6-13DB-4306-AE03-9E6ADDCD28AB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{468D9CD4-2136-4657-BE44-64921D327CA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{468D9CD4-2136-4657-BE44-64921D327CA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{468D9CD4-2136-4657-BE44-64921D327CA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{468D9CD4-2136-4657-BE44-64921D327CA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0AB78C6-13DB-4306-AE03-9E6ADDCD28AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0AB78C6-13DB-4306-AE03-9E6ADDCD28AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0AB78C6-13DB-4306-AE03-9E6ADDCD28AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0AB78C6-13DB-4306-AE03-9E6ADDCD28AB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {91957D35-5B44-4ECF-A4B9-A99CA437042F}
+	EndGlobalSection
+EndGlobal
