@@ -50,8 +50,10 @@
     <Compile Include="Models\OrderInfo.cs" />
     <Compile Include="Models\OrderTypes.cs" />
     <Compile Include="Parsers\DefaultSelectParser.cs" />
+    <Compile Include="Parsers\Events\SelectTokenParsingEvenrArgs.cs" />
     <Compile Include="Parsers\ISelectParser.cs" />
     <Compile Include="Parsers\SelectParseStateMachineBuilder.cs" />
+    <Compile Include="Parsers\StateMachines\SelectStateMachine.cs" />
     <Compile Include="Parsers\SelectToken.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\SelectInfo.cs" />

@@ -2,16 +2,16 @@
 {
     public class SelectToken
     {
-        private const string TEXT_AND = "And";
-        private const string TEXT_OR = "Or";
-        private const string TEXT_BY = "By";
-        private const string TEXT_ORDER_BY = "Orderby";
-        private const string TEXT_ASC = "Asc";
-        private const string TEXT_DESC = "Desc";
-        private const string TEXT_IS = "Is";
-        private const string TEXT_LIKE = "Like";
-        private const string TEXT_GREATER_THAN = "Greaterthan";
-        private const string TEXT_LESS_THAN = "Lessthan";
+        public const string TEXT_AND = "And";
+        public const string TEXT_OR = "Or";
+        public const string TEXT_BY = "By";
+        public const string TEXT_ORDER_BY = "Orderby";
+        public const string TEXT_ASC = "Asc";
+        public const string TEXT_DESC = "Desc";
+        public const string TEXT_IS = "Is";
+        public const string TEXT_LIKE = "Like";
+        public const string TEXT_GREATER_THAN = "Greaterthan";
+        public const string TEXT_LESS_THAN = "Lessthan";
 
         public string Text { get; private set; }
         public SelectParseActions Action { get; private set; }

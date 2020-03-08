@@ -13,15 +13,15 @@ namespace Reface.NPI.Models
         public ConditionOperators Operators { get; private set; }
 
         /// <summary>
-        /// 与前一个条件的连接词
+        /// 与后一个条件的连接词
         /// </summary>
-        public ConditionJoiners Joiner { get; private set; } = ConditionJoiners.Null;
+        public ConditionJoiners JoinerToNext { get; private set; } = ConditionJoiners.Null;
 
-        public ConditionInfo(string field, ConditionOperators operators, ConditionJoiners joiner)
+        public ConditionInfo(string field, ConditionOperators operators, ConditionJoiners joinerToNext)
         {
             Field = field;
             Operators = operators;
-            Joiner = joiner;
+            JoinerToNext = joinerToNext;
         }
 
         public ConditionInfo(string field, ConditionOperators operators)
