@@ -58,5 +58,10 @@
     <Compile Include="Parsers\SelectParseActions.cs" />
     <Compile Include="Parsers\SelectParseStates.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resouce\NPI.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
