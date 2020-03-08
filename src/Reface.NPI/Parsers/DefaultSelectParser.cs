@@ -33,65 +33,6 @@ namespace Reface.NPI.Parsers
             string field;
             string opr;
             string joiner;
-            switch (e.NewState)
-            {
-                case SelectParseStates.Start:
-                    break;
-                case SelectParseStates.OutputField:
-                    selectInfo.Fields.Add(tokenStack.Pop().Text);
-                    break;
-                case SelectParseStates.NextOutputField:
-                    tokenStack.Pop();
-                    break;
-                case SelectParseStates.Condition:
-                    break;
-                case SelectParseStates.ConditionField:
-                    break;
-                case SelectParseStates.ConditionOperator:
-                    opr = tokenStack.Pop().Text;
-                    field = tokenStack.Pop().Text;
-                    selectInfo.Conditions.Add
-                        (
-                            new ConditionInfo
-                                (
-                                    field,
-                                    ConditionOperators.Is
-                                )
-                        );
-                    break;
-                case SelectParseStates.NextCondition:
-                    joiner = tokenStack.Pop().Text;
-                    field = tokenStack.Pop().Text;
-                    selectInfo.Conditions.Add(new ConditionInfo(field, ConditionOperators.Is, ConditionJoiners.And));
-                    break;
-                case SelectParseStates.OrderBy:
-                    tokenStack.Pop();
-                    if (tokenStack.Any() && tokenStack.Peek().Action == SelectParseActions.Field)
-                    {
-                        selectInfo.Conditions.Add(new ConditionInfo(tokenStack.Pop().Text, ConditionOperators.Is));
-                    }
-                    break;
-                case SelectParseStates.OrderByField:
-                    break;
-                case SelectParseStates.OrderByAsc:
-                    tokenStack.Pop();
-                    selectInfo.Orders.Add(new OrderInfo(tokenStack.Pop().Text, OrderTypes.Asc));
-                    break;
-                case SelectParseStates.OrderByDesc:
-                    tokenStack.Pop();
-                    selectInfo.Orders.Add(new OrderInfo(tokenStack.Pop().Text, OrderTypes.Asc));
-                    break;
-                case SelectParseStates.NextOrderBy:
-                    tokenStack.Pop();
-                    break;
-                case SelectParseStates.SkipOutputAndCondition:
-                    tokenStack.Pop();
-                    break;
-                case SelectParseStates.End:
-                    break;
-                default:
-                    break;
-            }
         }
 
         public List<SelectToken> SplitCommandToTokens(string command)

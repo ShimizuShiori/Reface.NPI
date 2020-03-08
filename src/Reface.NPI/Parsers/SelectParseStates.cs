@@ -8,13 +8,20 @@
         Condition,
         ConditionField,
         ConditionOperator,
+        NextConditionWithF,
         NextCondition,
         OrderBy,
+        OrderBySkipOutput,
+        OrderBySkipCondition,
         OrderByField,
-        OrderByAsc,
-        OrderByDesc,
+        AscOrDesc,
         NextOrderBy,
-        SkipOutputAndCondition,
-        End
+        EndFromOutput,
+        EndFromCondition,
+        EndFromConditionOperator,
+        EndFromOrderByField,
+        EndFromAscOrDesc,
+        EndFromStart
+
     }
 }

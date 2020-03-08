@@ -12,7 +12,6 @@
         private const string TEXT_LIKE = "Like";
         private const string TEXT_GREATER_THAN = "Greaterthan";
         private const string TEXT_LESS_THAN = "Lessthan";
-        private const string TEXT_ALL = "All";
 
         public string Text { get; private set; }
         public SelectParseActions Action { get; private set; }
@@ -36,16 +35,14 @@
                 case TEXT_ORDER_BY:
                     return new SelectToken(text, SelectParseActions.Orderby);
                 case TEXT_ASC:
-                    return new SelectToken(text, SelectParseActions.Asc);
+                    return new SelectToken(text, SelectParseActions.AscOrDesc);
                 case TEXT_DESC:
-                    return new SelectToken(text, SelectParseActions.Desc);
+                    return new SelectToken(text, SelectParseActions.AscOrDesc);
                 case TEXT_IS:
                 case TEXT_LIKE:
                 case TEXT_GREATER_THAN:
                 case TEXT_LESS_THAN:
                     return new SelectToken(text, SelectParseActions.Operator);
-                case TEXT_ALL:
-                    return new SelectToken(text, SelectParseActions.All);
                 default:
                     return new SelectToken(text, SelectParseActions.Field);
             }

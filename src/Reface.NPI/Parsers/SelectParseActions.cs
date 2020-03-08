@@ -7,10 +7,8 @@
         Or,
         By,
         Orderby,
-        Asc,
-        Desc,
+        AscOrDesc,
         Operator,
-        All,
         End
     }
 }
