@@ -10,7 +10,7 @@
         NextCondition,
         OrderBy,
         OrderByField,
-        AscOrDesc
-
+        AscOrDesc,
+        End
     }
 }

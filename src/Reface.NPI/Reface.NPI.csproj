@@ -46,7 +46,6 @@
   <ItemGroup>
     <Compile Include="Models\ConditionInfo.cs" />
     <Compile Include="Models\ConditionJoiners.cs" />
-    <Compile Include="Models\ConditionOperators.cs" />
     <Compile Include="Models\OrderInfo.cs" />
     <Compile Include="Models\OrderTypes.cs" />
     <Compile Include="Parsers\DefaultSelectParser.cs" />
@@ -61,7 +60,7 @@
     <Compile Include="Parsers\SelectParseStates.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resouce\NPI.csv">
+    <None Include="Resources\NPI.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -25,11 +25,11 @@ namespace Reface.NPI.Parsers
         {
             SelectStateMachine machine = (SelectStateMachine)sender;
             ConditionJoiners joiner = ConditionJoiners.And;
-            ConditionOperators opr = ConditionOperators.Is;
             SelectToken token;
             string field = "";
             OrderTypes orderTypes = OrderTypes.Asc;
-            switch (e.State)
+            string opr;
+            switch (e.NowState)
             {
                 case SelectParseStates.OutputField:
                     selectInfo.Fields.Add
@@ -39,75 +39,71 @@ namespace Reface.NPI.Parsers
                     break;
                 case SelectParseStates.Condition:
                 case SelectParseStates.NextOutputField:
-                case SelectParseStates.OrderBy:
                     machine.TokenStacks.Pop();
                     break;
                 case SelectParseStates.ConditionField:
                     break;
+                case SelectParseStates.OrderBy:
+                    machine.TokenStacks.Pop();
+                    if (e.FromState == SelectParseStates.ConditionField)
+                    {
+                        field = machine.TokenStacks.Pop().Text;
+                        selectInfo.Conditions.Add(new ConditionInfo(field, ""));
+                        break;
+                    }
+                    if (e.FromState == SelectParseStates.ConditionOperator)
+                    {
+                        opr = machine.TokenStacks.Pop().Text;
+                        field = machine.TokenStacks.Pop().Text;
+                        selectInfo.Conditions.Add(new ConditionInfo(field, opr));
+                        break;
+                    }
+                    throw new NotImplementedException($"不支持的解析 : OrderBy 之前是 {e.FromState.ToString()}");
                 case SelectParseStates.ConditionOperator:
+                    opr = machine.TokenStacks.Pop().Text;
+                    field = machine.TokenStacks.Pop().Text;
+                    selectInfo.Conditions.Add(new ConditionInfo(field, opr));
                     break;
                 case SelectParseStates.NextCondition:
-                    if (machine.TokenStacks.Peek().Action == SelectParseActions.Or)
+                    token = machine.TokenStacks.Pop();
+                    if (token.Text == SelectToken.TEXT_OR)
                         joiner = ConditionJoiners.Or;
-
-                    if (machine.TokenStacks.Count == 1)
+                    else if (token.Text == SelectToken.TEXT_AND)
+                        joiner = ConditionJoiners.And;
+                    if (e.FromState == SelectParseStates.ConditionField)
                     {
-                        opr = ConditionOperators.Is;
                         field = machine.TokenStacks.Pop().Text;
+                        selectInfo.Conditions.Add(new ConditionInfo(field, "", joiner));
+                        break;
                     }
 
-                    if (machine.TokenStacks.Count == 2)
-                    {
-                        token = machine.TokenStacks.Pop();
-                        switch (token.Text)
-                        {
-                            case SelectToken.TEXT_IS:
-                                opr = ConditionOperators.Is;
-                                break;
-                            case SelectToken.TEXT_LIKE:
-                                opr = ConditionOperators.Like;
-                                break;
-                            case SelectToken.TEXT_GREATER_THAN:
-                                opr = ConditionOperators.GreaterThan;
-                                break;
-                            case SelectToken.TEXT_LESS_THAN:
-                                opr = ConditionOperators.LessThan;
-                                break;
-                            default:
-                                break;
-                        }
-                        field = machine.TokenStacks.Pop().Text;
-                    }
-
-                    selectInfo.Conditions.Add
-                        (
-                            new ConditionInfo
-                            (
-                                field,
-                                opr,
-                                joiner
-                            )
-                        );
-
+                    opr = machine.TokenStacks.Pop().Text;
+                    field = machine.TokenStacks.Pop().Text;
+                    selectInfo.Conditions.Add(new ConditionInfo(field, opr, joiner));
                     break;
                 case SelectParseStates.OrderByField:
+                    if (e.FromState == SelectParseStates.OrderByField)
+                    {
+                        field = machine.TokenStacks.Pop().Text;
+                        selectInfo.Orders.Add(new OrderInfo(field));
+                        break;
+                    }
                     break;
                 case SelectParseStates.AscOrDesc:
                     token = machine.TokenStacks.Pop();
-                    if (token.Text == SelectToken.TEXT_ASC)
-                        orderTypes = OrderTypes.Asc;
                     if (token.Text == SelectToken.TEXT_DESC)
                         orderTypes = OrderTypes.Desc;
-
-                    selectInfo.Orders.Add
-                        (
-                            new OrderInfo
-                            (
-                                machine.TokenStacks.Pop().Text,
-                                orderTypes
-                            )
-                        );
-
+                    token = machine.TokenStacks.Pop();
+                    field = token.Text;
+                    selectInfo.Orders.Add(new OrderInfo(field, orderTypes));
+                    break;
+                case SelectParseStates.End:
+                    if (e.FromState == SelectParseStates.ConditionField)
+                    {
+                        field = machine.TokenStacks.Pop().Text;
+                        selectInfo.Conditions.Add(new ConditionInfo(field, ""));
+                        break;
+                    }
                     break;
                 default:
                     break;

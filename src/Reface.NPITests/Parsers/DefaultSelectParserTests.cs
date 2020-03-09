@@ -49,7 +49,7 @@ namespace Reface.NPI.Parsers.Tests
             Assert.AreEqual("Name", info.Fields[0]);
             Assert.AreEqual(1, info.Conditions.Count, "count of condition should be 1");
             Assert.AreEqual("Id", info.Conditions[0].Field);
-            Assert.AreEqual(ConditionOperators.Is, info.Conditions[0].Operators);
+            Assert.AreEqual("", info.Conditions[0].Operators);
             Assert.AreEqual(0, info.Orders.Count);
         }
     }

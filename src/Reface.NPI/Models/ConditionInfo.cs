@@ -10,21 +10,21 @@ namespace Reface.NPI.Models
     public class ConditionInfo
     {
         public string Field { get; private set; }
-        public ConditionOperators Operators { get; private set; }
+        public string Operators { get; private set; }
 
         /// <summary>
         /// 与后一个条件的连接词
         /// </summary>
         public ConditionJoiners JoinerToNext { get; private set; } = ConditionJoiners.Null;
 
-        public ConditionInfo(string field, ConditionOperators operators, ConditionJoiners joinerToNext)
+        public ConditionInfo(string field, string operators, ConditionJoiners joinerToNext)
         {
             Field = field;
             Operators = operators;
             JoinerToNext = joinerToNext;
         }
 
-        public ConditionInfo(string field, ConditionOperators operators)
+        public ConditionInfo(string field, string operators)
             : this(field, operators, ConditionJoiners.Null)
         {
         }

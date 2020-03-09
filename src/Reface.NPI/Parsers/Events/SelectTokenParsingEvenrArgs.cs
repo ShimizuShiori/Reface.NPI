@@ -4,11 +4,13 @@ namespace Reface.NPI.Parsers.Events
 {
     public class SelectTokenParsingEvenrArgs : EventArgs
     {
-        public SelectParseStates State { get; private set; }
+        public SelectParseStates FromState { get; private set; }
+        public SelectParseStates NowState { get; private set; }
 
-        public SelectTokenParsingEvenrArgs(SelectParseStates state)
+        public SelectTokenParsingEvenrArgs(SelectParseStates fromState, SelectParseStates nowState)
         {
-            State = state;
+            FromState = fromState;
+            NowState = nowState;
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Reface.NPI.Parsers.StateMachines
             this.TokenStacks = new Stack<SelectToken>();
             this.Context = new Dictionary<string, object>();
             machine = CsvStateMachineBuilder<SelectParseStates, SelectParseActions>
-                .FromFile("./resouce/NPI.csv").Build();
+                .FromFile("./resources/NPI.csv").Build();
             machine.Pushed += Machine_Pushed;
         }
 
@@ -33,7 +33,7 @@ namespace Reface.NPI.Parsers.StateMachines
 
         private void Machine_Pushed(object sender, StateMachine.Events.StateMachinePushedEventArgs<SelectParseStates, SelectParseActions> e)
         {
-            this.Parsing?.Invoke(this, new SelectTokenParsingEvenrArgs(e.NewState));
+            this.Parsing?.Invoke(this, new SelectTokenParsingEvenrArgs(e.OldState, e.NewState));
         }
     }
 }

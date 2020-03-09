@@ -1,0 +1,12 @@
+,Field,And,Or,By,OrderBy,AscOrDesc,Operator,End
+Start,OutputField,,,,,,,
+OutputField,,NextOutputField,,Condition,OrderBy,,,End
+NextOutputField,OutputField,,,,,,,
+Condition,ConditionField,,,,,,,
+ConditionField,,NextCondition,NextCondition,,OrderBy,,ConditionOperator,End
+ConditionOperator,,NextCondition,NextCondition,,OrderBy,,,End
+NextCondition,ConditionField,,,,,,,
+OrderBy,OrderByField,,,,,,,
+OrderByField,OrderByField,,,,,AscOrDesc,,End
+AscOrDesc,OrderByField,,,,,,,End
+End,,,,,,,,
