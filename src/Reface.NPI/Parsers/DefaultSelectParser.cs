@@ -14,6 +14,9 @@ namespace Reface.NPI.Parsers
         {
             selectInfo = new SelectInfo();
             List<SelectToken> tokens = this.SplitCommandToTokens(command);
+            Console.WriteLine("Tokens : ");
+            foreach (var token in tokens)
+                Console.WriteLine($"    {token.Action.ToString()} : {token.Text}");
             var machine = new SelectStateMachine();
             machine.Parsing += Machine_Parsing;
             foreach (var token in tokens)
@@ -58,11 +61,8 @@ namespace Reface.NPI.Parsers
                         selectInfo.Conditions.Add(new ConditionInfo(field, opr));
                         break;
                     }
-                    throw new NotImplementedException($"不支持的解析 : OrderBy 之前是 {e.FromState.ToString()}");
+                    break;
                 case SelectParseStates.ConditionOperator:
-                    opr = machine.TokenStacks.Pop().Text;
-                    field = machine.TokenStacks.Pop().Text;
-                    selectInfo.Conditions.Add(new ConditionInfo(field, opr));
                     break;
                 case SelectParseStates.NextCondition:
                     token = machine.TokenStacks.Pop();
@@ -98,10 +98,24 @@ namespace Reface.NPI.Parsers
                     selectInfo.Orders.Add(new OrderInfo(field, orderTypes));
                     break;
                 case SelectParseStates.End:
+                    machine.TokenStacks.Pop();
                     if (e.FromState == SelectParseStates.ConditionField)
                     {
                         field = machine.TokenStacks.Pop().Text;
                         selectInfo.Conditions.Add(new ConditionInfo(field, ""));
+                        break;
+                    }
+                    if (e.FromState == SelectParseStates.ConditionOperator)
+                    {
+                        opr = machine.TokenStacks.Pop().Text;
+                        field = machine.TokenStacks.Pop().Text;
+                        selectInfo.Conditions.Add(new ConditionInfo(field, opr));
+                        break;
+                    }
+                    if (e.FromState == SelectParseStates.OrderByField)
+                    {
+                        field = machine.TokenStacks.Pop().Text;
+                        selectInfo.Orders.Add(new OrderInfo(field));
                         break;
                     }
                     break;
@@ -112,7 +126,10 @@ namespace Reface.NPI.Parsers
 
         public List<SelectToken> SplitCommandToTokens(string command)
         {
+
             List<SelectToken> result = new List<SelectToken>();
+            if (string.IsNullOrEmpty(command))
+                return result;
             StringBuilder sb = new StringBuilder();
             foreach (var c in command)
             {
@@ -133,6 +150,7 @@ namespace Reface.NPI.Parsers
                 sb.Append(c);
             }
             result.Add(SelectToken.Create(sb.ToString()));
+            result.Add(SelectToken.CreateEndToken());
             return result;
         }
     }

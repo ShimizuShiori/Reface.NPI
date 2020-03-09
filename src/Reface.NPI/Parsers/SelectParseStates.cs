@@ -2,6 +2,7 @@
 {
     public enum SelectParseStates
     {
+        Start,
         OutputField,
         NextOutputField,
         Condition,

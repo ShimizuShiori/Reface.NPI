@@ -1,5 +1,5 @@
 ,Field,And,Or,By,OrderBy,AscOrDesc,Operator,End
-Start,OutputField,,,,,,,
+Start,OutputField,,,Condition,OrderBy,,,
 OutputField,,NextOutputField,,Condition,OrderBy,,,End
 NextOutputField,OutputField,,,,,,,
 Condition,ConditionField,,,,,,,

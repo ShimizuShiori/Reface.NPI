@@ -33,7 +33,7 @@
                 case TEXT_BY:
                     return new SelectToken(text, SelectParseActions.By);
                 case TEXT_ORDER_BY:
-                    return new SelectToken(text, SelectParseActions.Orderby);
+                    return new SelectToken(text, SelectParseActions.OrderBy);
                 case TEXT_ASC:
                     return new SelectToken(text, SelectParseActions.AscOrDesc);
                 case TEXT_DESC:
@@ -46,6 +46,11 @@
                 default:
                     return new SelectToken(text, SelectParseActions.Field);
             }
+        }
+
+        public static SelectToken CreateEndToken()
+        {
+            return new SelectToken("", SelectParseActions.End);
         }
     }
 }

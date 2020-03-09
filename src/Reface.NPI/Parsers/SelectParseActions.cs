@@ -6,7 +6,7 @@
         And,
         Or,
         By,
-        Orderby,
+        OrderBy,
         AscOrDesc,
         Operator,
         End
