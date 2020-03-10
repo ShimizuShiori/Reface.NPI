@@ -52,5 +52,10 @@
         {
             return new SelectToken("", SelectParseActions.End);
         }
+
+        public override string ToString()
+        {
+            return $"{this.Action} : {this.Text}";
+        }
     }
 }

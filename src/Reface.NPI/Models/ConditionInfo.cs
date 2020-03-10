@@ -28,5 +28,10 @@ namespace Reface.NPI.Models
             : this(field, operators, ConditionJoiners.Null)
         {
         }
+
+        public override string ToString()
+        {
+            return $"[{Field}] [{Operators}] [{JoinerToNext.ToString()}]";
+        }
     }
 }

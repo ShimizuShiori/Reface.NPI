@@ -80,7 +80,6 @@ namespace Reface.NPI.Parsers.Tests
         [DataRow("OrderbyId", 0, 0, 1)]
         [DataRow("OrderbyIdName", 0, 0, 2)]
         [DataRow("NameAndIconByRegstertimeAndStateOrderbyRegtertimeDescId", 2, 2, 2)]
-        [DataRow("")]
         public void ParseTestsAncCheckCount(string command, int outputCount, int conditionCount, int orderByCount)
         {
             DefaultSelectParser parser = new DefaultSelectParser();
@@ -88,6 +87,29 @@ namespace Reface.NPI.Parsers.Tests
             Assert.AreEqual(outputCount, info.Fields.Count, "count of output");
             Assert.AreEqual(conditionCount, info.Conditions.Count, "count of condition");
             Assert.AreEqual(orderByCount, info.Orders.Count, "count of orderby");
+        }
+
+        [TestMethod]
+        public void ParseCommand_NameAndIconByRegstertimeAndStateOrderbyRegtertimeDescId()
+        {
+            DefaultSelectParser parser = new DefaultSelectParser();
+            SelectInfo info = parser.Parse("NameAndIconByRegstertimeAndStateOrderbyRegtertimeDescId");
+            Assert.AreEqual("Name", info.Fields[0]);
+            Assert.AreEqual("Icon", info.Fields[1]);
+
+            Assert.AreEqual("Regstertime", info.Conditions[0].Field);
+            Assert.AreEqual("", info.Conditions[0].Operators);
+            Assert.AreEqual(ConditionJoiners.And, info.Conditions[0].JoinerToNext);
+
+            Assert.AreEqual("State", info.Conditions[1].Field);
+            Assert.AreEqual("", info.Conditions[1].Operators);
+            Assert.AreEqual(ConditionJoiners.Null, info.Conditions[1].JoinerToNext);
+
+            Assert.AreEqual("Regtertime", info.Orders[0].Field);
+            Assert.AreEqual(OrderTypes.Desc, info.Orders[0].Type);
+
+            Assert.AreEqual("Id", info.Orders[1].Field);
+            Assert.AreEqual(OrderTypes.Asc, info.Orders[1].Type);
         }
     }
 }

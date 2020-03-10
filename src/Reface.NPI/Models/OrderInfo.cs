@@ -15,5 +15,10 @@
         {
 
         }
+
+        public override string ToString()
+        {
+            return $"[{Field}] [{Type.ToString()}]";
+        }
     }
 }

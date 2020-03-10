@@ -12,5 +12,12 @@ namespace Reface.NPI.Models
         public List<ConditionInfo> Conditions { get; private set; } = new List<ConditionInfo>();
 
         public List<OrderInfo> Orders { get; private set; } = new List<OrderInfo>();
+
+        public override string ToString()
+        {
+            return $"Outputs : {Fields.Join(",", x => $"[{x}]")} " +
+                $"Conditions : {Conditions.Join(",", x => x.ToString())} " +
+                $"Orders : {Orders.Join(",", x => x.ToString())}";
+        }
     }
 }

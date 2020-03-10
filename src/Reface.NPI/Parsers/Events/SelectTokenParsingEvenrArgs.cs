@@ -12,5 +12,10 @@ namespace Reface.NPI.Parsers.Events
             FromState = fromState;
             NowState = nowState;
         }
+
+        public override string ToString()
+        {
+            return $"[{FromState.ToString()}] --> [{NowState.ToString()}]";
+        }
     }
 }
