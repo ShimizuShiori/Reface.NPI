@@ -26,7 +26,7 @@ namespace Reface.NPI.Parsers
             return selectInfo;
         }
 
-        private void Machine_Parsing(object sender, Events.SelectTokenParsingEvenrArgs e)
+        private void Machine_Parsing(object sender, Events.TokenParsingEventArgs<States.SelectParseStates> e)
         {
             SelectStateMachine machine = (SelectStateMachine)sender;
             ConditionJoiners joiner = ConditionJoiners.And;
@@ -39,27 +39,27 @@ namespace Reface.NPI.Parsers
                 case SelectParseStates.OutputField:
                     selectInfo.Fields.Add
                         (
-                            machine.TokenStacks.Pop().Text
+                            machine.TokenStack.Pop().Text
                         );
                     break;
                 case SelectParseStates.Condition:
                 case SelectParseStates.NextOutputField:
-                    machine.TokenStacks.Pop();
+                    machine.TokenStack.Pop();
                     break;
                 case SelectParseStates.ConditionField:
                     break;
                 case SelectParseStates.OrderBy:
-                    machine.TokenStacks.Pop();
+                    machine.TokenStack.Pop();
                     if (e.FromState == SelectParseStates.ConditionField)
                     {
-                        field = machine.TokenStacks.Pop().Text;
+                        field = machine.TokenStack.Pop().Text;
                         selectInfo.Conditions.Add(new ConditionInfo(field, ""));
                         break;
                     }
                     if (e.FromState == SelectParseStates.ConditionOperator)
                     {
-                        opr = machine.TokenStacks.Pop().Text;
-                        field = machine.TokenStacks.Pop().Text;
+                        opr = machine.TokenStack.Pop().Text;
+                        field = machine.TokenStack.Pop().Text;
                         selectInfo.Conditions.Add(new ConditionInfo(field, opr));
                         break;
                     }
@@ -67,56 +67,56 @@ namespace Reface.NPI.Parsers
                 case SelectParseStates.ConditionOperator:
                     break;
                 case SelectParseStates.NextCondition:
-                    token = machine.TokenStacks.Pop();
+                    token = machine.TokenStack.Pop();
                     if (token.Text == SelectToken.TEXT_OR)
                         joiner = ConditionJoiners.Or;
                     else if (token.Text == SelectToken.TEXT_AND)
                         joiner = ConditionJoiners.And;
                     if (e.FromState == SelectParseStates.ConditionField)
                     {
-                        field = machine.TokenStacks.Pop().Text;
+                        field = machine.TokenStack.Pop().Text;
                         selectInfo.Conditions.Add(new ConditionInfo(field, "", joiner));
                         break;
                     }
 
-                    opr = machine.TokenStacks.Pop().Text;
-                    field = machine.TokenStacks.Pop().Text;
+                    opr = machine.TokenStack.Pop().Text;
+                    field = machine.TokenStack.Pop().Text;
                     selectInfo.Conditions.Add(new ConditionInfo(field, opr, joiner));
                     break;
                 case SelectParseStates.OrderByField:
                     if (e.FromState == SelectParseStates.OrderByField)
                     {
-                        field = machine.TokenStacks.Pop().Text;
+                        field = machine.TokenStack.Pop().Text;
                         selectInfo.Orders.Add(new OrderInfo(field));
                         break;
                     }
                     break;
                 case SelectParseStates.AscOrDesc:
-                    token = machine.TokenStacks.Pop();
+                    token = machine.TokenStack.Pop();
                     if (token.Text == SelectToken.TEXT_DESC)
                         orderTypes = OrderTypes.Desc;
-                    token = machine.TokenStacks.Pop();
+                    token = machine.TokenStack.Pop();
                     field = token.Text;
                     selectInfo.Orders.Add(new OrderInfo(field, orderTypes));
                     break;
                 case SelectParseStates.End:
-                    machine.TokenStacks.Pop();
+                    machine.TokenStack.Pop();
                     if (e.FromState == SelectParseStates.ConditionField)
                     {
-                        field = machine.TokenStacks.Pop().Text;
+                        field = machine.TokenStack.Pop().Text;
                         selectInfo.Conditions.Add(new ConditionInfo(field, ""));
                         break;
                     }
                     if (e.FromState == SelectParseStates.ConditionOperator)
                     {
-                        opr = machine.TokenStacks.Pop().Text;
-                        field = machine.TokenStacks.Pop().Text;
+                        opr = machine.TokenStack.Pop().Text;
+                        field = machine.TokenStack.Pop().Text;
                         selectInfo.Conditions.Add(new ConditionInfo(field, opr));
                         break;
                     }
                     if (e.FromState == SelectParseStates.OrderByField)
                     {
-                        field = machine.TokenStacks.Pop().Text;
+                        field = machine.TokenStack.Pop().Text;
                         selectInfo.Orders.Add(new OrderInfo(field));
                         break;
                     }
