@@ -24,7 +24,7 @@ namespace Reface.NPI.Parsers
             return deleteInfo;
         }
 
-        private void DeleteStateMachine_Parsing(object sender, Events.DeleteTokenParsingEvenrArgs e)
+        private void DeleteStateMachine_Parsing(object sender, Events.TokenParsingEventArgs<States.DeleteParseStates> e)
         {
             const string CONTEXT_KEY_CONDITION = "CONDITION";
             DeleteStateMachine machine = sender as DeleteStateMachine;

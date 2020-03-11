@@ -12,7 +12,7 @@ namespace Reface.NPI.Parsers.StateMachines
     public class DefaultParseStateMachine<TToken, TState, TAction> : IParseStateMachine<TToken, TState, TAction>
         where TToken : IToken<TAction>
     {
-        public TokenStack<TToken, TAction> TokenStacks { get; private set; }
+        public TokenStack<TToken, TAction> TokenStack { get; private set; }
 
         public Dictionary<string, object> Context { get; private set; }
 
@@ -22,6 +22,8 @@ namespace Reface.NPI.Parsers.StateMachines
 
         public DefaultParseStateMachine(string stateMachineName)
         {
+            this.TokenStack = new TokenStack<TToken, TAction>();
+            this.Context = new Dictionary<string, object>();
             machine = CsvStateMachineBuilder<TState, TAction>.FromFile(PathProvider.GetStateMachine(stateMachineName)).Build();
             machine.Pushed += Machine_Pushed;
         }
@@ -33,7 +35,7 @@ namespace Reface.NPI.Parsers.StateMachines
 
         public void Push(TToken token)
         {
-            this.TokenStacks.Push(token);
+            this.TokenStack.Push(token);
             this.machine.Push(token.Action);
         }
     }
