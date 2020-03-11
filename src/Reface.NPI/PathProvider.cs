@@ -5,6 +5,7 @@
         private const string ResoucesPath = "./Resources";
         public const string MACHINE_NAME_SELECT = "Select";
         public const string MACHINE_NAME_DELETE = "Delete";
+        public const string MACHINE_NAME_UPDATE = "Update";
 
         public static string GetResourcePath(string path)
         {
@@ -14,22 +15,6 @@
         public static string GetStateMachine(string mathineName)
         {
             return PathProvider.GetResourcePath($"/StateMachines/{mathineName}.csv");
-        }
-
-        public static string SelectStateMachine
-        {
-            get
-            {
-                return PathProvider.GetStateMachine(PathProvider.MACHINE_NAME_SELECT);
-            }
-        }
-
-        public static string DeleteStateMachine
-        {
-            get
-            {
-                return PathProvider.GetStateMachine(PathProvider.MACHINE_NAME_DELETE);
-            }
         }
     }
 }

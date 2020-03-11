@@ -62,6 +62,7 @@
     <Compile Include="Parsers\StateMachines\DefaultParseStateMachine.cs" />
     <Compile Include="Parsers\StateMachines\DeleteStateMachine.cs" />
     <Compile Include="Parsers\StateMachines\SelectStateMachine.cs" />
+    <Compile Include="Parsers\StateMachines\UpdateStateMachine.cs" />
     <Compile Include="Parsers\States\UpdateParseStates.cs" />
     <Compile Include="Parsers\Tokens\SelectToken.cs" />
     <Compile Include="Parsers\States\DeleteParseStates.cs" />
