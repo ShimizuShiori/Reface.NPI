@@ -1,5 +1,4 @@
 ﻿using Reface.NPI.Parsers.Actions;
-using System;
 
 namespace Reface.NPI.Parsers.Tokens
 {
