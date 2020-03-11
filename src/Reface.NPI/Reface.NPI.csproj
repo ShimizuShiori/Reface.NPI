@@ -47,14 +47,24 @@
     <Compile Include="Ext.cs" />
     <Compile Include="Models\ConditionInfo.cs" />
     <Compile Include="Models\ConditionJoiners.cs" />
+    <Compile Include="Models\DeleteInfo.cs" />
     <Compile Include="Models\OrderInfo.cs" />
     <Compile Include="Models\OrderTypes.cs" />
+    <Compile Include="Parsers\Actions\DeleteParseActions.cs" />
+    <Compile Include="Parsers\DefaultDeleteParser.cs" />
     <Compile Include="Parsers\DefaultSelectParser.cs" />
+    <Compile Include="Parsers\Events\DeleteTokenParsingEvenrArgs.cs" />
     <Compile Include="Parsers\Events\SelectTokenParsingEvenrArgs.cs" />
+    <Compile Include="Parsers\IDeleteParser.cs" />
     <Compile Include="Parsers\ISelectParser.cs" />
+    <Compile Include="Parsers\IToken.cs" />
     <Compile Include="Parsers\SelectParseStateMachineBuilder.cs" />
+    <Compile Include="Parsers\StateMachines\DeleteStateMachine.cs" />
     <Compile Include="Parsers\StateMachines\SelectStateMachine.cs" />
     <Compile Include="Parsers\SelectToken.cs" />
+    <Compile Include="Parsers\States\DeleteParseStates.cs" />
+    <Compile Include="Parsers\TokenStack.cs" />
+    <Compile Include="Parsers\Tokens\DeleteToken.cs" />
     <Compile Include="PathProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\SelectInfo.cs" />
@@ -62,7 +72,9 @@
     <Compile Include="Parsers\SelectParseStates.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\StateMachines\Delete.csv" />
+    <None Include="Resources\StateMachines\Delete.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\StateMachines\Select.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

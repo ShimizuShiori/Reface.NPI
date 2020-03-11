@@ -4,6 +4,7 @@
     {
         private const string ResoucesPath = "./Resources";
         private const string MACHINE_NAME_SELECT = "Select";
+        private const string MACHINE_NAME_DELETE = "Delete";
 
         public static string GetResourcePath(string path)
         {
@@ -20,6 +21,14 @@
             get
             {
                 return PathProvider.GetStateMachine(PathProvider.MACHINE_NAME_SELECT);
+            }
+        }
+
+        public static string DeleteStateMachine
+        {
+            get
+            {
+                return PathProvider.GetStateMachine(PathProvider.MACHINE_NAME_DELETE);
             }
         }
     }

@@ -55,6 +55,8 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="ExtTests.cs" />
+    <Compile Include="Parsers\DefaultDeleteParserTests.cs" />
     <Compile Include="Parsers\DefaultSelectParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
