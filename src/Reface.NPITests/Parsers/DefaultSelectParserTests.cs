@@ -1,11 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Reface.NPI.Models;
-using Reface.NPI.Parsers;
-using System;
+using Reface.NPI.Parsers.Actions;
+using Reface.NPI.Parsers.Tokens;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Reface.NPI.Parsers.Tests
 {

@@ -1,4 +1,4 @@
-﻿namespace Reface.NPI.Parsers
+﻿namespace Reface.NPI.Parsers.Actions
 {
     public enum SelectParseActions
     {

@@ -1,4 +1,4 @@
-﻿namespace Reface.NPI.Parsers
+﻿namespace Reface.NPI.Parsers.States
 {
     public enum SelectParseStates
     {

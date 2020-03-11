@@ -1,4 +1,7 @@
-﻿using Reface.NPI.Parsers.Events;
+﻿using Reface.NPI.Parsers.Actions;
+using Reface.NPI.Parsers.Events;
+using Reface.NPI.Parsers.States;
+using Reface.NPI.Parsers.Tokens;
 using Reface.StateMachine;
 using Reface.StateMachine.CsvBuilder;
 using System;

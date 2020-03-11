@@ -1,5 +1,7 @@
 ﻿using Reface.NPI.Models;
 using Reface.NPI.Parsers.StateMachines;
+using Reface.NPI.Parsers.States;
+using Reface.NPI.Parsers.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Text;

@@ -1,6 +1,8 @@
-﻿namespace Reface.NPI.Parsers
+﻿using Reface.NPI.Parsers.Actions;
+
+namespace Reface.NPI.Parsers.Tokens
 {
-    public class SelectToken
+    public class SelectToken : IToken<SelectParseActions>
     {
         public const string TEXT_AND = "And";
         public const string TEXT_OR = "Or";

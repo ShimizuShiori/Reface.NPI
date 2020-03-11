@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Reface.NPI.Parsers.States;
+using System;
 
 namespace Reface.NPI.Parsers.Events
 {
