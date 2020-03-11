@@ -1,22 +1,11 @@
 ﻿using Reface.NPI.Parsers.States;
-using System;
 
 namespace Reface.NPI.Parsers.Events
 {
-    public class SelectTokenParsingEvenrArgs : EventArgs
+    public class SelectTokenParsingEvenrArgs : TokenParsingEventArgs<SelectParseStates>
     {
-        public SelectParseStates FromState { get; private set; }
-        public SelectParseStates NowState { get; private set; }
-
-        public SelectTokenParsingEvenrArgs(SelectParseStates fromState, SelectParseStates nowState)
+        public SelectTokenParsingEvenrArgs(SelectParseStates fromState, SelectParseStates nowState) : base(fromState, nowState)
         {
-            FromState = fromState;
-            NowState = nowState;
-        }
-
-        public override string ToString()
-        {
-            return $"[{FromState.ToString()}] --> [{NowState.ToString()}]";
         }
     }
 }

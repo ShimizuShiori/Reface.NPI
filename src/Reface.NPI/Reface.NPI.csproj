@@ -55,9 +55,12 @@
     <Compile Include="Parsers\DefaultSelectParser.cs" />
     <Compile Include="Parsers\Events\DeleteTokenParsingEvenrArgs.cs" />
     <Compile Include="Parsers\Events\SelectTokenParsingEvenrArgs.cs" />
+    <Compile Include="Parsers\Events\TokenParsingEventArgs.cs" />
     <Compile Include="Parsers\IDeleteParser.cs" />
+    <Compile Include="Parsers\IParseStateMachine.cs" />
     <Compile Include="Parsers\ISelectParser.cs" />
     <Compile Include="Parsers\IToken.cs" />
+    <Compile Include="Parsers\StateMachines\DefaultParseStateMachine.cs" />
     <Compile Include="Parsers\StateMachines\DeleteStateMachine.cs" />
     <Compile Include="Parsers\StateMachines\SelectStateMachine.cs" />
     <Compile Include="Parsers\Tokens\SelectToken.cs" />

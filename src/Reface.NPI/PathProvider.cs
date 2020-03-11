@@ -3,8 +3,8 @@
     class PathProvider
     {
         private const string ResoucesPath = "./Resources";
-        private const string MACHINE_NAME_SELECT = "Select";
-        private const string MACHINE_NAME_DELETE = "Delete";
+        public const string MACHINE_NAME_SELECT = "Select";
+        public const string MACHINE_NAME_DELETE = "Delete";
 
         public static string GetResourcePath(string path)
         {
