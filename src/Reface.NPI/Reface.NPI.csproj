@@ -62,6 +62,7 @@
     <Compile Include="Parsers\SelectParseStates.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\StateMachines\Delete.csv" />
     <None Include="Resources\StateMachines\Select.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
