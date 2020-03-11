@@ -51,6 +51,7 @@
     <Compile Include="Models\OrderInfo.cs" />
     <Compile Include="Models\OrderTypes.cs" />
     <Compile Include="Parsers\Actions\DeleteParseActions.cs" />
+    <Compile Include="Parsers\Actions\UpdateParseActions.cs" />
     <Compile Include="Parsers\DefaultDeleteParser.cs" />
     <Compile Include="Parsers\DefaultSelectParser.cs" />
     <Compile Include="Parsers\Events\DeleteTokenParsingEvenrArgs.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Parsers\StateMachines\DefaultParseStateMachine.cs" />
     <Compile Include="Parsers\StateMachines\DeleteStateMachine.cs" />
     <Compile Include="Parsers\StateMachines\SelectStateMachine.cs" />
+    <Compile Include="Parsers\States\UpdateParseStates.cs" />
     <Compile Include="Parsers\Tokens\SelectToken.cs" />
     <Compile Include="Parsers\States\DeleteParseStates.cs" />
     <Compile Include="Parsers\TokenStack.cs" />

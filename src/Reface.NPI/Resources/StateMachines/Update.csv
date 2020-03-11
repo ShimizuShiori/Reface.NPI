@@ -1,5 +1,7 @@
 ,Word,And,Or,By,End
-Start,,,,Condition,
+Start,SetField,,,Condition,
+SetField,,NextSetField,,,
+NextSetField,SetField,,,,
 Condition,ConditionField,,,,
 ConditionField,ConditionOperator,NextCondition,NextCondition,,End
 ConditionOperator,,NextCondition,NextCondition,,End
