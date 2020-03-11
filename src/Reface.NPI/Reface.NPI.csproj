@@ -74,6 +74,9 @@
     <Compile Include="Parsers\States\SelectParseStates.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\StateMachines\Update.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\StateMachines\Delete.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
