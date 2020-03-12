@@ -58,6 +58,7 @@
     <Compile Include="ExtTests.cs" />
     <Compile Include="Parsers\DefaultDeleteParserTests.cs" />
     <Compile Include="Parsers\DefaultSelectParserTests.cs" />
+    <Compile Include="Parsers\DefaultUpdateParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

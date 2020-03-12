@@ -12,7 +12,7 @@ namespace Reface.NPI.Parsers.Tests
         [DataRow("ByIdIsAndNameLike", 2)]
         [DataRow("ByIdIsOrNameLike", 2)]
         [TestMethod()]
-        public void ParseTest(string command, int conditionCount)
+        public void DeleteParseTest(string command, int conditionCount)
         {
             DefaultDeleteParser defaultDeleteParser = new DefaultDeleteParser();
             DeleteInfo deleteInfo = defaultDeleteParser.Parse(command);
