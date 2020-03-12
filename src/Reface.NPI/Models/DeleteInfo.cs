@@ -2,9 +2,11 @@
 
 namespace Reface.NPI.Models
 {
-    public class DeleteInfo
+    public class DeleteInfo : ICommandInfo
     {
         public List<ConditionInfo> ConditionInfos { get; private set; }
+
+        public CommandInfoTypes Type => CommandInfoTypes.Delete;
 
         public DeleteInfo()
         {

@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Reface.NPI.Models
 {
-    public class SelectInfo
+    public class SelectInfo : ICommandInfo
     {
         public List<string> Fields { get; private set; } = new List<string>();
         public List<ConditionInfo> Conditions { get; private set; } = new List<ConditionInfo>();
 
         public List<OrderInfo> Orders { get; private set; } = new List<OrderInfo>();
+
+        public CommandInfoTypes Type => CommandInfoTypes.Select;
 
         public override string ToString()
         {
