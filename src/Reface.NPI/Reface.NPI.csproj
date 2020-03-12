@@ -45,7 +45,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ext.cs" />
-    <Compile Include="Logger.cs" />
+    <Compile Include="Generators\ISqlCommandGenerator.cs" />
+    <Compile Include="Generators\SqlCommandDescription.cs" />
+    <Compile Include="Generators\SqlCommandGeneratorBase.cs" />
+    <Compile Include="Generators\SqlServer\SqlCommandGenerator.cs" />
+    <Compile Include="DebugLogger.cs" />
     <Compile Include="Models\CommandInfoTypes.cs" />
     <Compile Include="Models\ConditionInfo.cs" />
     <Compile Include="Models\ConditionJoiners.cs" />
