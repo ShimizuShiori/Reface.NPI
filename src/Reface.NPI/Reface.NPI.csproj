@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ext.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="Models\CommandInfoTypes.cs" />
     <Compile Include="Models\ConditionInfo.cs" />
     <Compile Include="Models\ConditionJoiners.cs" />
@@ -56,10 +57,12 @@
     <Compile Include="Models\UpdateInfo.cs" />
     <Compile Include="Parsers\Actions\DeleteParseActions.cs" />
     <Compile Include="Parsers\Actions\UpdateParseActions.cs" />
+    <Compile Include="Parsers\DefaultCommandParser.cs" />
     <Compile Include="Parsers\DefaultDeleteParser.cs" />
     <Compile Include="Parsers\DefaultSelectParser.cs" />
     <Compile Include="Parsers\DefaultUpdateParser.cs" />
     <Compile Include="Parsers\Events\TokenParsingEventArgs.cs" />
+    <Compile Include="Parsers\ICommandParser.cs" />
     <Compile Include="Parsers\IDeleteParser.cs" />
     <Compile Include="Parsers\IParseStateMachine.cs" />
     <Compile Include="Parsers\ISelectParser.cs" />
