@@ -46,10 +46,15 @@
   <ItemGroup>
     <Compile Include="Ext.cs" />
     <Compile Include="Generators\ISqlCommandGenerator.cs" />
+    <Compile Include="Generators\OperatorMappings\OperatorMapperBase.cs" />
+    <Compile Include="Generators\OperatorMappings\IOperatorMapper.cs" />
+    <Compile Include="Generators\OperatorMappings\Models\Mapping.cs" />
+    <Compile Include="Generators\OperatorMappings\Models\Mappings.cs" />
     <Compile Include="Generators\SqlCommandDescription.cs" />
     <Compile Include="Generators\SqlCommandGeneratorBase.cs" />
     <Compile Include="Generators\SqlServer\SqlCommandGenerator.cs" />
     <Compile Include="DebugLogger.cs" />
+    <Compile Include="Generators\SqlServer\SqlServerOperatorMapper.cs" />
     <Compile Include="Models\CommandInfoTypes.cs" />
     <Compile Include="Models\ConditionInfo.cs" />
     <Compile Include="Models\ConditionJoiners.cs" />
@@ -98,6 +103,12 @@
     <None Include="Resources\StateMachines\Select.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Resources\OperatorMappings\SqlServer.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

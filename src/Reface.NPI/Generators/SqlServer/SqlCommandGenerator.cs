@@ -7,6 +7,8 @@ namespace Reface.NPI.Generators.SqlServer
 {
     public class SqlCommandGenerator : SqlCommandGeneratorBase
     {
+        private readonly SqlServerOperatorMapper operatorMapper = new SqlServerOperatorMapper();
+
         protected override SqlCommandDescription Generate(SelectInfo selectInfo)
         {
             StringBuilder sqlBuilder = new StringBuilder();
@@ -25,9 +27,7 @@ namespace Reface.NPI.Generators.SqlServer
                 foreach (var condition in selectInfo.Conditions)
                 {
                     sqlBuilder.Append($" [{condition.Field}]");
-                    if (string.IsNullOrEmpty(condition.Operators))
-                        condition.Operators = "=";
-                    sqlBuilder.Append($" {condition.Operators} @{condition.Field}");
+                    sqlBuilder.Append($" {operatorMapper.GetOperatorByText(condition.Operators)} @{condition.Field}");
                     if (condition.JoinerToNext != ConditionJoiners.Null)
                         sqlBuilder.Append($" {condition.JoinerToNext.ToString()}");
                 }
@@ -35,7 +35,7 @@ namespace Reface.NPI.Generators.SqlServer
             if (selectInfo.Orders.Any())
             {
                 sqlBuilder.Append(" ORDER BY ");
-                string orderBy = selectInfo.Orders.Join(",", x => 
+                string orderBy = selectInfo.Orders.Join(",", x =>
                 {
                     return $"[{x.Field}] {x.Type.ToString()}";
                 });

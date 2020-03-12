@@ -1,4 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Reface.NPI.Generators.OperatorMappings.Models;
+using System;
 using System.Collections.Generic;
 
 namespace Reface.NPI.Tests
@@ -19,6 +21,33 @@ namespace Reface.NPI.Tests
             {
                 Assert.AreEqual(exceptWords[i], realWords[i]);
             }
+        }
+
+        [TestMethod]
+        public void ToXmlTest()
+        {
+            Mapping operatorMapping = new Mapping()
+            {
+                Operator = "="
+            };
+            operatorMapping.Texts.Add("");
+            operatorMapping.Texts.Add("Is");
+            operatorMapping.Texts.Add("Equal");
+            operatorMapping.Texts.Add("Equals");
+
+            Mappings operatorMappings = new Mappings();
+            operatorMappings.Add(operatorMapping);
+            string xml = operatorMappings.ToXml();
+            Console.WriteLine(xml);
+
+            Mappings operatorMappings2 = xml.ToObjectAsXml<Mappings>();
+            Assert.AreEqual(1, operatorMappings2.Count);
+            var mapping = operatorMappings2[0];
+            Assert.AreEqual("=", mapping.Operator);
+            Assert.AreEqual("", mapping.Texts[0]);
+            Assert.AreEqual("Is", mapping.Texts[1]);
+            Assert.AreEqual("Equal", mapping.Texts[2]);
+            Assert.AreEqual("Equals", mapping.Texts[3]);
         }
     }
 }

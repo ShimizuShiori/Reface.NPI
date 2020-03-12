@@ -1,0 +1,32 @@
+﻿<?xml version="1.0"?>
+<Mappings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Mapping Operator="=">
+    <Text />
+    <Text>Is</Text>
+    <Text>Equal</Text>
+    <Text>Equals</Text>
+  </Mapping>
+  <Mapping Operator="&gt;">
+    <Text>Greaterthan</Text>
+    <Text>Gt</Text>
+  </Mapping>
+  <Mapping Operator="&gt;=">
+    <Text>Greaterthanandequals</Text>
+    <Text>Gteq</Text>
+  </Mapping>
+  <Mapping Operator="&lt;">
+    <Text>Lessthan</Text>
+    <Text>lt</Text>
+  </Mapping>
+  <Mapping Operator="&lt;=">
+    <Text>Lessthanandequals</Text>
+    <Text>Lteq</Text>
+  </Mapping>
+  <Mapping Operator="Like">
+    <Text>Like</Text>
+    <Text>Likes</Text>
+  </Mapping>
+  <Mapping Operator="In">
+    <Text>In</Text>
+  </Mapping>
+</Mappings>
