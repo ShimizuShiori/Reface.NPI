@@ -2,8 +2,8 @@
 {
     public class OrderInfo
     {
-        public string Field { get; private set; }
-        public OrderTypes Type { get; private set; }
+        public string Field { get; set; }
+        public OrderTypes Type { get; set; }
 
         public OrderInfo(string field, OrderTypes type)
         {

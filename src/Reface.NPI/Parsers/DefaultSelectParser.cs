@@ -4,6 +4,7 @@ using Reface.NPI.Parsers.States;
 using Reface.NPI.Parsers.Tokens;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Reface.NPI.Parsers
@@ -15,10 +16,8 @@ namespace Reface.NPI.Parsers
         public SelectInfo Parse(string command)
         {
             selectInfo = new SelectInfo();
-            List<SelectToken> tokens = this.SplitCommandToTokens(command);
-            Console.WriteLine("Tokens : ");
-            foreach (var token in tokens)
-                Console.WriteLine($"    {token.Action.ToString()} : {token.Text}");
+            IEnumerable<string> words = command.SplitToWords();
+            IEnumerable<SelectToken> tokens = words.Select(x => SelectToken.Create(x));
             var machine = new SelectStateMachine();
             machine.Parsing += Machine_Parsing;
             foreach (var token in tokens)
@@ -28,12 +27,9 @@ namespace Reface.NPI.Parsers
 
         private void Machine_Parsing(object sender, Events.TokenParsingEventArgs<States.SelectParseStates> e)
         {
+            const string CONTEXT_KEY_CONDITION = "Condition";
+            const string CONTEXT_KEY_ORDER = "Order";
             SelectStateMachine machine = (SelectStateMachine)sender;
-            ConditionJoiners joiner = ConditionJoiners.And;
-            SelectToken token;
-            string field = "";
-            OrderTypes orderTypes = OrderTypes.Asc;
-            string opr;
             switch (e.NowState)
             {
                 case SelectParseStates.OutputField:
@@ -42,118 +38,51 @@ namespace Reface.NPI.Parsers
                             machine.TokenStack.Pop().Text
                         );
                     break;
-                case SelectParseStates.Condition:
-                case SelectParseStates.NextOutputField:
-                    machine.TokenStack.Pop();
-                    break;
                 case SelectParseStates.ConditionField:
-                    break;
-                case SelectParseStates.OrderBy:
-                    machine.TokenStack.Pop();
-                    if (e.FromState == SelectParseStates.ConditionField)
                     {
-                        field = machine.TokenStack.Pop().Text;
-                        selectInfo.Conditions.Add(new ConditionInfo(field, ""));
-                        break;
-                    }
-                    if (e.FromState == SelectParseStates.ConditionOperator)
-                    {
-                        opr = machine.TokenStack.Pop().Text;
-                        field = machine.TokenStack.Pop().Text;
-                        selectInfo.Conditions.Add(new ConditionInfo(field, opr));
-                        break;
+                        ConditionInfo condition = new ConditionInfo();
+                        condition.Field = machine.TokenStack.Pop().Text;
+                        machine.Context[CONTEXT_KEY_CONDITION] = condition;
+                        selectInfo.Conditions.Add(condition);
                     }
                     break;
                 case SelectParseStates.ConditionOperator:
+                    {
+                        ConditionInfo condition = (ConditionInfo)machine.Context[CONTEXT_KEY_CONDITION];
+                        condition.Operators = machine.TokenStack.Pop().Text;
+                    }
                     break;
                 case SelectParseStates.NextCondition:
-                    token = machine.TokenStack.Pop();
-                    if (token.Text == SelectToken.TEXT_OR)
-                        joiner = ConditionJoiners.Or;
-                    else if (token.Text == SelectToken.TEXT_AND)
-                        joiner = ConditionJoiners.And;
-                    if (e.FromState == SelectParseStates.ConditionField)
                     {
-                        field = machine.TokenStack.Pop().Text;
-                        selectInfo.Conditions.Add(new ConditionInfo(field, "", joiner));
-                        break;
+                        ConditionInfo condition = (ConditionInfo)machine.Context[CONTEXT_KEY_CONDITION];
+                        condition.JoinerToNext = machine.TokenStack.Pop().Action == Actions.SelectParseActions.Or
+                            ? ConditionJoiners.Or
+                            : ConditionJoiners.And;
                     }
-
-                    opr = machine.TokenStack.Pop().Text;
-                    field = machine.TokenStack.Pop().Text;
-                    selectInfo.Conditions.Add(new ConditionInfo(field, opr, joiner));
                     break;
                 case SelectParseStates.OrderByField:
-                    if (e.FromState == SelectParseStates.OrderByField)
                     {
-                        field = machine.TokenStack.Pop().Text;
-                        selectInfo.Orders.Add(new OrderInfo(field));
-                        break;
+                        OrderInfo order = new OrderInfo(machine.TokenStack.Pop().Text);
+                        selectInfo.Orders.Add(order);
+                        machine.Context[CONTEXT_KEY_ORDER] = order;
                     }
                     break;
                 case SelectParseStates.AscOrDesc:
-                    token = machine.TokenStack.Pop();
-                    if (token.Text == SelectToken.TEXT_DESC)
-                        orderTypes = OrderTypes.Desc;
-                    token = machine.TokenStack.Pop();
-                    field = token.Text;
-                    selectInfo.Orders.Add(new OrderInfo(field, orderTypes));
+                    {
+                        OrderInfo order = (OrderInfo)machine.Context[CONTEXT_KEY_ORDER];
+                        order.Type = machine.TokenStack.Pop().Text == SelectToken.TEXT_DESC
+                            ? OrderTypes.Desc
+                            : OrderTypes.Asc;
+                    }
                     break;
-                case SelectParseStates.End:
+                case SelectParseStates.Condition:
+                case SelectParseStates.NextOutputField:
+                case SelectParseStates.OrderBy:
                     machine.TokenStack.Pop();
-                    if (e.FromState == SelectParseStates.ConditionField)
-                    {
-                        field = machine.TokenStack.Pop().Text;
-                        selectInfo.Conditions.Add(new ConditionInfo(field, ""));
-                        break;
-                    }
-                    if (e.FromState == SelectParseStates.ConditionOperator)
-                    {
-                        opr = machine.TokenStack.Pop().Text;
-                        field = machine.TokenStack.Pop().Text;
-                        selectInfo.Conditions.Add(new ConditionInfo(field, opr));
-                        break;
-                    }
-                    if (e.FromState == SelectParseStates.OrderByField)
-                    {
-                        field = machine.TokenStack.Pop().Text;
-                        selectInfo.Orders.Add(new OrderInfo(field));
-                        break;
-                    }
                     break;
                 default:
                     break;
             }
-        }
-
-        public List<SelectToken> SplitCommandToTokens(string command)
-        {
-
-            List<SelectToken> result = new List<SelectToken>();
-            if (string.IsNullOrEmpty(command))
-                return result;
-            StringBuilder sb = new StringBuilder();
-            foreach (var c in command)
-            {
-                if (!Char.IsUpper(c))
-                {
-                    sb.Append(c);
-                    continue;
-                }
-
-                if (sb.Length == 0)
-                {
-                    sb.Append(c);
-                    continue;
-                }
-
-                result.Add(SelectToken.Create(sb.ToString()));
-                sb.Clear();
-                sb.Append(c);
-            }
-            result.Add(SelectToken.Create(sb.ToString()));
-            result.Add(SelectToken.CreateEndToken());
-            return result;
         }
     }
 }
