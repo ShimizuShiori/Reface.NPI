@@ -10,28 +10,31 @@ namespace Reface.NPITests.Generators.SqlServer
     {
         interface IUserDao
         {
-            [Description("SELECT * WHERE [Id] = @Id")]
+            [Description("SELECT * FROM #TABLE# WHERE [Id] = @Id")]
             void SelectById(int id);
 
-            [Description("SELECT * WHERE [Id] = @Id")]
+            [Description("SELECT * FROM #TABLE# WHERE [Id] = @Id")]
             void GetById(int id);
 
-            [Description("SELECT [Name] WHERE [Id] = @Id")]
+            [Description("SELECT [Name] FROM #TABLE# WHERE [Id] = @Id")]
             void GetNameById(int id);
 
-            [Description("SELECT [Id],[Name] WHERE [Birthday] > @Birthday")]
+            [Description("SELECT [Id],[Name] FROM #TABLE# WHERE [Birthday] > @Birthday")]
             void GetIdAndNameByBirthdayGreaterthan(int id);
 
-            [Description("SELECT [Id],[Name] WHERE [Birthday] > @Birthday ORDER BY [Sn] Asc")]
+            [Description("SELECT [Id],[Name] FROM #TABLE# WHERE [Birthday] > @Birthday ORDER BY [Sn] Asc")]
             void GetIdAndNameByBirthdayGreaterthanOrderbySn(int id);
 
-            [Description("SELECT [Id],[Name] WHERE [Birthday] > @Birthday ORDER BY [Sn] Asc,[Type] Desc")]
+            [Description("SELECT [Id],[Name] FROM #TABLE# WHERE [Birthday] > @Birthday ORDER BY [Sn] Asc,[Type] Desc")]
             void GetIdAndNameByBirthdayGreaterthanOrderbySnTypeDesc(int id);
+
+            [Description("DELETE FROM #TABLE# WHERE [Id] = @Id")]
+            void DeleteById(int id);
         }
 
 
         [TestMethod]
-        public void GenSelectCommand()
+        public void GenerateCommand()
         {
             var g = new SqlCommandGenerator();
             Type daoType = typeof(IUserDao);

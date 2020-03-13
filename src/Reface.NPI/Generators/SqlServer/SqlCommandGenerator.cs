@@ -21,6 +21,8 @@ namespace Reface.NPI.Generators.SqlServer
             else
                 sqlBuilder.Append(selectInfo.Fields.Join(",", x => $"[{x}]"));
 
+            sqlBuilder.Append(" FROM #TABLE#");
+
             if (selectInfo.Conditions.Any())
             {
                 sqlBuilder.Append(" WHERE");
@@ -52,7 +54,21 @@ namespace Reface.NPI.Generators.SqlServer
 
         protected override SqlCommandDescription Generate(DeleteInfo deleteInfo)
         {
-            throw new NotImplementedException();
+            StringBuilder sqlBuilder = new StringBuilder();
+            SqlCommandDescription description = new SqlCommandDescription();
+            sqlBuilder.Append("DELETE FROM #TABLE#");
+            if (deleteInfo.ConditionInfos.Any())
+            {
+                sqlBuilder.Append(" WHERE");
+                foreach (var condition in deleteInfo.ConditionInfos)
+                {
+                    sqlBuilder.Append($" [{condition.Field}] {operatorMapper.GetOperatorByText(condition.Operators)} @{condition.Field}");
+                    if (condition.JoinerToNext != ConditionJoiners.Null)
+                        sqlBuilder.Append($" {condition.JoinerToNext.ToString()}");
+                }
+            }
+            description.SqlCommand = sqlBuilder.ToString();
+            return description;
         }
 
         protected override SqlCommandDescription Generate(InsertInfo insertInfo)
