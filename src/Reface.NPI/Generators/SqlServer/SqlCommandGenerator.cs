@@ -9,7 +9,7 @@ namespace Reface.NPI.Generators.SqlServer
     {
         private readonly SqlServerOperatorMapper operatorMapper = new SqlServerOperatorMapper();
 
-        protected override SqlCommandDescription Generate(SelectInfo selectInfo)
+        protected override SqlCommandDescription Generate(SelectInfo selectInfo, string tableName)
         {
             StringBuilder sqlBuilder = new StringBuilder();
             SqlCommandDescription result = new SqlCommandDescription();
@@ -21,7 +21,7 @@ namespace Reface.NPI.Generators.SqlServer
             else
                 sqlBuilder.Append(selectInfo.Fields.Join(",", x => $"[{x}]"));
 
-            sqlBuilder.Append(" FROM #TABLE#");
+            sqlBuilder.Append($" FROM [{tableName}]");
 
             if (selectInfo.Conditions.Any())
             {
@@ -30,6 +30,7 @@ namespace Reface.NPI.Generators.SqlServer
                 {
                     sqlBuilder.Append($" [{condition.Field}]");
                     sqlBuilder.Append($" {operatorMapper.GetOperatorByText(condition.Operators)} @{condition.Field}");
+                    result.AddParameter(new ParameterInfo(condition.Field, ParameterUses.ForCondition));
                     if (condition.JoinerToNext != ConditionJoiners.Null)
                         sqlBuilder.Append($" {condition.JoinerToNext.ToString()}");
                 }
@@ -47,16 +48,38 @@ namespace Reface.NPI.Generators.SqlServer
             return result;
         }
 
-        protected override SqlCommandDescription Generate(UpdateInfo updateInfo)
+        protected override SqlCommandDescription Generate(UpdateInfo updateInfo, string tableName)
         {
-            throw new NotImplementedException();
+            StringBuilder sqlBuilder = new StringBuilder();
+            SqlCommandDescription result = new SqlCommandDescription();
+
+            sqlBuilder.Append($"UPDATE [{tableName}] SET ");
+
+            string setCommand = updateInfo.SetFields.Join(",", x =>
+            {
+                result.AddParameter(new ParameterInfo(x, ParameterUses.ForSet));
+                return $"[{x}] = @{x}";
+            });
+
+            sqlBuilder.Append(setCommand);
+            sqlBuilder.Append(" WHERE");
+
+            foreach (var condition in updateInfo.Conditions)
+            {
+                sqlBuilder.Append($" [{condition.Field}] {operatorMapper.GetOperatorByText(condition.Operators)} @{condition.Field}");
+                if (condition.JoinerToNext != ConditionJoiners.Null)
+                    sqlBuilder.Append($" {condition.JoinerToNext.ToString()}");
+                result.AddParameter(new ParameterInfo(condition.Field, ParameterUses.ForCondition));
+            }
+            result.SqlCommand = sqlBuilder.ToString();
+            return result;
         }
 
-        protected override SqlCommandDescription Generate(DeleteInfo deleteInfo)
+        protected override SqlCommandDescription Generate(DeleteInfo deleteInfo, string tableName)
         {
             StringBuilder sqlBuilder = new StringBuilder();
             SqlCommandDescription description = new SqlCommandDescription();
-            sqlBuilder.Append("DELETE FROM #TABLE#");
+            sqlBuilder.Append($"DELETE FROM [{tableName}]");
             if (deleteInfo.ConditionInfos.Any())
             {
                 sqlBuilder.Append(" WHERE");
@@ -65,15 +88,11 @@ namespace Reface.NPI.Generators.SqlServer
                     sqlBuilder.Append($" [{condition.Field}] {operatorMapper.GetOperatorByText(condition.Operators)} @{condition.Field}");
                     if (condition.JoinerToNext != ConditionJoiners.Null)
                         sqlBuilder.Append($" {condition.JoinerToNext.ToString()}");
+                    description.AddParameter(new ParameterInfo(condition.Field, ParameterUses.ForCondition));
                 }
             }
             description.SqlCommand = sqlBuilder.ToString();
             return description;
-        }
-
-        protected override SqlCommandDescription Generate(InsertInfo insertInfo)
-        {
-            throw new NotImplementedException();
         }
     }
 }

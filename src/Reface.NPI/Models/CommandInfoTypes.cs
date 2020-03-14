@@ -2,7 +2,6 @@
 {
     public enum CommandInfoTypes
     {
-        Insert,
         Delete,
         Update,
         Select

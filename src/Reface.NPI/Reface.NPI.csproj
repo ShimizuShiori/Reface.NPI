@@ -48,22 +48,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\TableAttribute.cs" />
+    <Compile Include="Generators\DefaultTableNameProvider.cs" />
     <Compile Include="Generators\ISqlCommandGenerator.cs" />
+    <Compile Include="Generators\ITableNameProvider.cs" />
     <Compile Include="Generators\OperatorMappings\OperatorMapperBase.cs" />
     <Compile Include="Generators\OperatorMappings\IOperatorMapper.cs" />
     <Compile Include="Generators\OperatorMappings\Models\Mapping.cs" />
     <Compile Include="Generators\OperatorMappings\Models\Mappings.cs" />
+    <Compile Include="Generators\ParameterInfo.cs" />
+    <Compile Include="Generators\ParameterUses.cs" />
     <Compile Include="Generators\SqlCommandDescription.cs" />
     <Compile Include="Generators\SqlCommandGeneratorBase.cs" />
     <Compile Include="Generators\SqlServer\SqlCommandGenerator.cs" />
-    <Compile Include="DebugLogger.cs" />
     <Compile Include="Generators\SqlServer\SqlServerOperatorMapper.cs" />
     <Compile Include="Models\CommandInfoTypes.cs" />
     <Compile Include="Models\ConditionInfo.cs" />
     <Compile Include="Models\ConditionJoiners.cs" />
     <Compile Include="Models\DeleteInfo.cs" />
     <Compile Include="Models\ICommandInfo.cs" />
-    <Compile Include="Models\InsertInfo.cs" />
     <Compile Include="Models\OrderInfo.cs" />
     <Compile Include="Models\OrderTypes.cs" />
     <Compile Include="Models\UpdateInfo.cs" />
