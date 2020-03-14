@@ -30,7 +30,7 @@ namespace Reface.NPI.Generators.SqlServer
                 {
                     sqlBuilder.Append($" [{condition.Field}]");
                     sqlBuilder.Append($" {operatorMapper.GetOperatorByText(condition.Operators)} @{condition.Field}");
-                    result.AddParameter(new ParameterInfo(condition.Field, ParameterUses.ForCondition));
+                    result.AddParameter(new SqlParameterInfo(condition.Field, ParameterUses.ForCondition));
                     if (condition.JoinerToNext != ConditionJoiners.Null)
                         sqlBuilder.Append($" {condition.JoinerToNext.ToString()}");
                 }
@@ -57,7 +57,7 @@ namespace Reface.NPI.Generators.SqlServer
 
             string setCommand = updateInfo.SetFields.Join(",", x =>
             {
-                result.AddParameter(new ParameterInfo(x, ParameterUses.ForSet));
+                result.AddParameter(new SqlParameterInfo(x, ParameterUses.ForSet));
                 return $"[{x}] = @{x}";
             });
 
@@ -69,7 +69,7 @@ namespace Reface.NPI.Generators.SqlServer
                 sqlBuilder.Append($" [{condition.Field}] {operatorMapper.GetOperatorByText(condition.Operators)} @{condition.Field}");
                 if (condition.JoinerToNext != ConditionJoiners.Null)
                     sqlBuilder.Append($" {condition.JoinerToNext.ToString()}");
-                result.AddParameter(new ParameterInfo(condition.Field, ParameterUses.ForCondition));
+                result.AddParameter(new SqlParameterInfo(condition.Field, ParameterUses.ForCondition));
             }
             result.SqlCommand = sqlBuilder.ToString();
             return result;
@@ -88,7 +88,7 @@ namespace Reface.NPI.Generators.SqlServer
                     sqlBuilder.Append($" [{condition.Field}] {operatorMapper.GetOperatorByText(condition.Operators)} @{condition.Field}");
                     if (condition.JoinerToNext != ConditionJoiners.Null)
                         sqlBuilder.Append($" {condition.JoinerToNext.ToString()}");
-                    description.AddParameter(new ParameterInfo(condition.Field, ParameterUses.ForCondition));
+                    description.AddParameter(new SqlParameterInfo(condition.Field, ParameterUses.ForCondition));
                 }
             }
             description.SqlCommand = sqlBuilder.ToString();

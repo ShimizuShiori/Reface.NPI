@@ -5,16 +5,16 @@ namespace Reface.NPI.Generators
     public class SqlCommandDescription
     {
         public string SqlCommand { get; set; }
-        public Dictionary<string, ParameterInfo> Parameters { get; private set; }
+        public Dictionary<string, SqlParameterInfo> Parameters { get; private set; }
 
-        public void AddParameter(ParameterInfo info)
+        public void AddParameter(SqlParameterInfo info)
         {
             this.Parameters[info.Name] = info;
         }
 
         public SqlCommandDescription()
         {
-            this.Parameters = new Dictionary<string, ParameterInfo>();
+            this.Parameters = new Dictionary<string, SqlParameterInfo>();
         }
 
         public override string ToString()
