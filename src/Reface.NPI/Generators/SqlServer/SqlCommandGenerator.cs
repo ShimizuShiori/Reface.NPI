@@ -1,6 +1,9 @@
 ﻿using Reface.NPI.Models;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace Reface.NPI.Generators.SqlServer
@@ -9,8 +12,11 @@ namespace Reface.NPI.Generators.SqlServer
     {
         private readonly SqlServerOperatorMapper operatorMapper = new SqlServerOperatorMapper();
 
-        protected override SqlCommandDescription Generate(SelectInfo selectInfo, string tableName)
+        protected override SqlCommandDescription GenerateSelect(SqlCommandGenerateContext context)
         {
+            SelectInfo selectInfo = (SelectInfo)context.CommandInfo;
+            string tableName = context.TableName;
+
             StringBuilder sqlBuilder = new StringBuilder();
             SqlCommandDescription result = new SqlCommandDescription();
 
@@ -48,8 +54,11 @@ namespace Reface.NPI.Generators.SqlServer
             return result;
         }
 
-        protected override SqlCommandDescription Generate(UpdateInfo updateInfo, string tableName)
+        protected override SqlCommandDescription GenerateUpdate(SqlCommandGenerateContext context)
         {
+            string tableName = context.TableName;
+            UpdateInfo updateInfo = (UpdateInfo)context.CommandInfo;
+
             StringBuilder sqlBuilder = new StringBuilder();
             SqlCommandDescription result = new SqlCommandDescription();
 
@@ -75,8 +84,10 @@ namespace Reface.NPI.Generators.SqlServer
             return result;
         }
 
-        protected override SqlCommandDescription Generate(DeleteInfo deleteInfo, string tableName)
+        protected override SqlCommandDescription GenerateDelete(SqlCommandGenerateContext context)
         {
+            string tableName = context.TableName;
+            DeleteInfo deleteInfo = (DeleteInfo)context.CommandInfo;
             StringBuilder sqlBuilder = new StringBuilder();
             SqlCommandDescription description = new SqlCommandDescription();
             sqlBuilder.Append($"DELETE FROM [{tableName}]");
@@ -92,6 +103,28 @@ namespace Reface.NPI.Generators.SqlServer
                 }
             }
             description.SqlCommand = sqlBuilder.ToString();
+            return description;
+        }
+
+        protected override SqlCommandDescription GenerateInsert(SqlCommandGenerateContext context)
+        {
+            SqlCommandDescription description = new SqlCommandDescription();
+
+            IEnumerable<ColumnAttribute> columns = context.EntityType.GetProperties()
+                .Select(x =>
+                {
+                    ColumnAttribute columnAttribute = x.GetCustomAttribute<ColumnAttribute>();
+                    if (columnAttribute != null)
+                        return columnAttribute;
+                    return new ColumnAttribute(x.Name);
+                });
+            string fields = columns.Join(",", x => $"[{x.Name}]");
+            string values = columns.Join(",", x => $"@{x.Name}");
+            foreach (var p in columns)
+            {
+                description.AddParameter(new SqlParameterInfo(p.Name, ParameterUses.ForInsert));
+            }
+            description.SqlCommand = $"INSERT INTO [{context.TableName}]({fields})VALUES({values})";
             return description;
         }
     }

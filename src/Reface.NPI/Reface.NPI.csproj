@@ -52,6 +52,7 @@
     <Compile Include="Attributes\ForConditionAttribute.cs" />
     <Compile Include="Attributes\ForSetAttribute.cs" />
     <Compile Include="Attributes\ParameterAttribute.cs" />
+    <Compile Include="Constant.cs" />
     <Compile Include="Generators\DefaultParameterFiller.cs" />
     <Compile Include="Generators\ISqlCommandGenerator.cs" />
     <Compile Include="Generators\OperatorMappings\OperatorMapperBase.cs" />

@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Reface.NPI.Attributes;
 using Reface.NPI.Generators.SqlServer;
 using System;
 using System.Reflection;
