@@ -1,7 +1,6 @@
-﻿using Reface.NPI.Generators;
-using System.Reflection;
+﻿using System.Reflection;
 
-namespace Reface.NPI
+namespace Reface.NPI.Generators
 {
     public interface IParameterFiller
     {

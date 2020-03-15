@@ -4,6 +4,6 @@ namespace Reface.NPI.Generators
 {
     public interface ISqlCommandGenerator
     {
-        SqlCommandDescription Generate(MethodInfo methodInfo);
+        SqlCommandDescription Generate(MethodInfo methodInfo, object[] arguments);
     }
 }

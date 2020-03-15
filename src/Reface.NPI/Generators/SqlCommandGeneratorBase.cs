@@ -1,11 +1,7 @@
 ﻿using Reface.NPI.Models;
 using Reface.NPI.Parsers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Reface.NPI.Generators
 {
@@ -13,19 +9,24 @@ namespace Reface.NPI.Generators
     {
         private readonly ICommandParser commandParser;
         private readonly ITableNameProvider tableNameProvider;
+        private readonly IParameterFiller parameterFiller;
 
         public SqlCommandGeneratorBase()
         {
             this.commandParser = new DefaultCommandParser();
             this.tableNameProvider = new DefaultTableNameProvider();
+            this.parameterFiller = new DefaultParameterFiller();
         }
 
-        public SqlCommandDescription Generate(MethodInfo methodInfo)
+        public SqlCommandDescription Generate(MethodInfo methodInfo, object[] arguments)
         {
             string tableName = this.tableNameProvider.Provide(methodInfo);
             string methodName = methodInfo.Name;
             ICommandInfo commandInfo = this.commandParser.Parse(methodName);
-            return GetSqlCommandDescriptionFromCommandInfo(commandInfo, tableName);
+            var description = GetSqlCommandDescriptionFromCommandInfo(commandInfo, tableName);
+            if (arguments != null && arguments.Length != 0)
+                this.parameterFiller.Fill(description, methodInfo, arguments);
+            return description;
         }
 
         private SqlCommandDescription GetSqlCommandDescriptionFromCommandInfo(ICommandInfo commandInfo, string tableName)

@@ -19,7 +19,7 @@ namespace Reface.NPITests.Generators.SqlServer
             foreach (var info in infos)
             {
                 System.ComponentModel.DescriptionAttribute desc = info.GetCustomAttribute<System.ComponentModel.DescriptionAttribute>();
-                var d = g.Generate(info);
+                var d = g.Generate(info, null);
                 Console.WriteLine(d);
                 Assert.AreEqual(desc.Description, d.SqlCommand.Trim(), info.Name);
             }

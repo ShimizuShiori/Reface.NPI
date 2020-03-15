@@ -16,9 +16,7 @@ namespace Reface.NPI.Tests
             Type type = typeof(IUserDao);
             MethodInfo mi = type.GetMethod("SelectById");
             SqlCommandGenerator g = new SqlCommandGenerator();
-            SqlCommandDescription d = g.Generate(mi);
-            DefaultParameterFiller filler = new DefaultParameterFiller();
-            filler.Fill(d, mi, new object[] { 1 });
+            SqlCommandDescription d = g.Generate(mi, new object[] { 1 });
 
             Console.WriteLine(d);
         }

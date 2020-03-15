@@ -1,9 +1,8 @@
 ﻿using Reface.NPI.Attributes;
-using Reface.NPI.Generators;
 using System.Linq;
 using System.Reflection;
 
-namespace Reface.NPI
+namespace Reface.NPI.Generators
 {
     public class DefaultParameterFiller : IParameterFiller
     {
