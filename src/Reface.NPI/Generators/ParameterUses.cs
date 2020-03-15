@@ -12,6 +12,7 @@
         /// <summary>
         /// 用来作为条件
         /// </summary>
-        ForCondition
+        ForCondition,
+        ForInsert
     }
 }

@@ -4,6 +4,7 @@
     {
         Delete,
         Update,
-        Select
+        Select,
+        Insert
     }
 }

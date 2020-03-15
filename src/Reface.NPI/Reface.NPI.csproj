@@ -39,6 +39,7 @@
       <HintPath>packages\Reface.StateMachine.1.0.0\lib\net461\Reface.StateMachine.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -51,15 +52,13 @@
     <Compile Include="Attributes\ForConditionAttribute.cs" />
     <Compile Include="Attributes\ForSetAttribute.cs" />
     <Compile Include="Attributes\ParameterAttribute.cs" />
-    <Compile Include="Attributes\TableAttribute.cs" />
     <Compile Include="Generators\DefaultParameterFiller.cs" />
-    <Compile Include="Generators\DefaultTableNameProvider.cs" />
     <Compile Include="Generators\ISqlCommandGenerator.cs" />
-    <Compile Include="Generators\ITableNameProvider.cs" />
     <Compile Include="Generators\OperatorMappings\OperatorMapperBase.cs" />
     <Compile Include="Generators\OperatorMappings\IOperatorMapper.cs" />
     <Compile Include="Generators\OperatorMappings\Models\Mapping.cs" />
     <Compile Include="Generators\OperatorMappings\Models\Mappings.cs" />
+    <Compile Include="Generators\SqlCommandGenerateContext.cs" />
     <Compile Include="Generators\SqlParameterInfo.cs" />
     <Compile Include="Generators\ParameterUses.cs" />
     <Compile Include="Generators\SqlCommandDescription.cs" />
@@ -67,11 +66,13 @@
     <Compile Include="Generators\SqlServer\SqlCommandGenerator.cs" />
     <Compile Include="Generators\SqlServer\SqlServerOperatorMapper.cs" />
     <Compile Include="Generators\IParameterFiller.cs" />
+    <Compile Include="INpiDao.cs" />
     <Compile Include="Models\CommandInfoTypes.cs" />
     <Compile Include="Models\ConditionInfo.cs" />
     <Compile Include="Models\ConditionJoiners.cs" />
     <Compile Include="Models\DeleteInfo.cs" />
     <Compile Include="Models\ICommandInfo.cs" />
+    <Compile Include="Models\InsertInfo.cs" />
     <Compile Include="Models\OrderInfo.cs" />
     <Compile Include="Models\OrderTypes.cs" />
     <Compile Include="Models\UpdateInfo.cs" />

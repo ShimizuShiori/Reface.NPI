@@ -1,11 +1,11 @@
-﻿using Reface.NPI.Attributes;
+﻿using Reface.NPI;
+using Reface.NPI.Attributes;
 using System.ComponentModel;
 
 namespace Reface.NPITests
 {
 
-    [Table("User")]
-    public interface IUserDao
+    public interface IUserDao : INpiDao<User>
     {
         [Description("SELECT * FROM [User] WHERE [Id] = @Id")]
         void SelectById(int id);
@@ -41,5 +41,8 @@ namespace Reface.NPITests
 
         [Description("UPDATE [User] SET [Password] = @Password,[Name] = @Name WHERE [Id] = @Id And [Uid] = @Uid")]
         void UpdatePasswordAndNameByIdAndUid(string password, string id);
+
+        [Description("INSERT INTO [User]([Id],[Name],[Password],[CreateTime])VALUES(@Id,@Name,@Password,@CreateTime)")]
+        void Insert(User user);
     }
 }

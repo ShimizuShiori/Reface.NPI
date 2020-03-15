@@ -17,6 +17,10 @@ namespace Reface.NPI.Parsers
         public const string ACTION_REMOVE = "Remove";
         public const string ACTION_DELETE = "Delete";
 
+        public const string ACTION_INSERT = "Insert";
+        public const string ACTION_NEW = "New";
+        public const string ACTION_CREATE = "Create";
+
         public ICommandInfo Parse(string command)
         {
             List<string> words = command.SplitToWords();
@@ -34,6 +38,10 @@ namespace Reface.NPI.Parsers
                 case ACTION_REMOVE:
                 case ACTION_DELETE:
                     return new DefaultDeleteParser().Parse(realCommand);
+                case ACTION_CREATE:
+                case ACTION_NEW:
+                case ACTION_INSERT:
+                    return new InsertInfo();
                 default:
                     DebugLogger.Info($"{action} 未实现，不能处理");
                     throw new NotImplementedException($"未实现的 Action : {action}");
