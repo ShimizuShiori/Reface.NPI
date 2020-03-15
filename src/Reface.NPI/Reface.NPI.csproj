@@ -107,15 +107,15 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Reface.NPI.nuspec" />
-    <None Include="Resources\StateMachines\Update.csv">
+    <Content Include="Resources\StateMachines\Update.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\StateMachines\Delete.csv">
+    </Content>
+    <Content Include="Resources\StateMachines\Delete.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\StateMachines\Select.csv">
+    </Content>
+    <Content Include="Resources\StateMachines\Select.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
