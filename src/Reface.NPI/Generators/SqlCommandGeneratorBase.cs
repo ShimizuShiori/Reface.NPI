@@ -1,5 +1,4 @@
 ﻿using Reface.NPI.Models;
-using Reface.NPI.Parsers;
 using System;
 using System.Reflection;
 
@@ -48,25 +47,5 @@ namespace Reface.NPI.Generators
         protected abstract SqlCommandDescription GenerateUpdate(SqlCommandGenerateContext context);
         protected abstract SqlCommandDescription GenerateDelete(SqlCommandGenerateContext context);
         protected abstract SqlCommandDescription GenerateInsert(SqlCommandGenerateContext context);
-        //{
-        //    SqlCommandDescription description = new SqlCommandDescription();
-
-        //    IEnumerable<ColumnAttribute> columns = entityType.GetProperties().Where(x => x.CanWrite && x.CanRead)
-        //        .Select(x =>
-        //        {
-        //            ColumnAttribute columnAttribute = x.GetCustomAttribute<ColumnAttribute>();
-        //            if (columnAttribute != null)
-        //                return columnAttribute;
-        //            return new ColumnAttribute(x.Name);
-        //        });
-        //    string fields = columns.Join(",", x => $"[{x.Name}]");
-        //    string values = columns.Join(",", x => $"@{x.Name}");
-        //    foreach (var p in columns)
-        //    {
-        //        description.AddParameter(new SqlParameterInfo(p.Name, ParameterUses.ForInsert));
-        //    }
-        //    description.SqlCommand = $"INSERT INTO [{tableName}]({fields})VALUES({values})";
-        //    return description;
-        //}
     }
 }
