@@ -6,11 +6,11 @@ namespace Reface.NPI.Generators
 {
     public abstract class SqlCommandGeneratorBase : ISqlCommandGenerator
     {
-        private readonly IParameterFiller parameterFiller;
+        private readonly IParameterLookupFactory parameterLookupFactory;
 
         public SqlCommandGeneratorBase()
         {
-            this.parameterFiller = new DefaultParameterFiller();
+            this.parameterLookupFactory = NpiServicesCollection.GetService<IParameterLookupFactory>();
         }
 
         public SqlCommandDescription Generate(MethodInfo methodInfo, object[] arguments)
@@ -39,7 +39,7 @@ namespace Reface.NPI.Generators
             }
 
             if (arguments != null && arguments.Length != 0)
-                this.parameterFiller.Fill(description, methodInfo, arguments);
+                this.parameterLookupFactory.Lookup(description, methodInfo, arguments);
             return description;
         }
 

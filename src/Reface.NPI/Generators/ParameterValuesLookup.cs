@@ -4,9 +4,21 @@ using System.Reflection;
 
 namespace Reface.NPI.Generators
 {
-    public class DefaultParameterFiller : IParameterFiller
+    public class ParameterValuesLookup : IParameterLookup
     {
-        public void Fill(SqlCommandDescription description, MethodInfo methodInfo, object[] values)
+
+        public bool Match(SqlCommandDescription description, MethodInfo methodInfo)
+        {
+            ParameterInfo[] parameterInfos = methodInfo.GetParameters();
+            if (description.Parameters.Count() > 1)
+                return description.Parameters.Count() == parameterInfos.Length;
+
+            if (description.Parameters.Count() == 1)
+                return parameterInfos[0].ParameterType.IsValueType;
+
+            return false;
+        }
+        public void Lookup(SqlCommandDescription description, MethodInfo methodInfo, object[] values)
         {
             ParameterInfo[] parameterInfos = methodInfo.GetParameters();
             int i = 0;

@@ -23,5 +23,32 @@ namespace Reface.NPITests.Generators.SqlServer
                 Assert.AreEqual(desc.Description, d.SqlCommand.Trim(), info.Name);
             }
         }
+
+        [TestMethod]
+        public void GenCmd_SelectById()
+        {
+            var g = new SqlCommandGenerator();
+            Type daoType = typeof(IUserDao);
+            MethodInfo methodInfo = daoType.GetMethod(nameof(IUserDao.SelectById));
+            var desc = g.Generate(methodInfo, new object[] { 1 });
+            Assert.AreEqual(1, desc.Parameters["Id"].Value);
+        }
+
+        [TestMethod]
+        public void GenCmd_Insert()
+        {
+            var g = new SqlCommandGenerator();
+            Type daoType = typeof(IUserDao);
+            MethodInfo methodInfo = daoType.GetMethod(nameof(IUserDao.Insert));
+            User user = new User()
+            {
+                CreateTime = DateTime.Now,
+                Id = 1,
+                Name = "Test",
+                Password = "TestPwd"
+            };
+            var desc = g.Generate(methodInfo, new object[] { user });
+            Console.WriteLine(desc);
+        }
     }
 }

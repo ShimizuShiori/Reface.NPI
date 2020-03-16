@@ -1,5 +1,5 @@
 ﻿using Reface.NPI;
-using Reface.NPI.Attributes;
+using System;
 using System.ComponentModel;
 
 namespace Reface.NPITests
@@ -17,13 +17,13 @@ namespace Reface.NPITests
         void GetNameById(int id);
 
         [Description("SELECT [Id],[Name] FROM [User] WHERE [Birthday] > @Birthday")]
-        void GetIdAndNameByBirthdayGreaterthan(int id);
+        void GetIdAndNameByBirthdayGreaterthan(DateTime birthday);
 
         [Description("SELECT [Id],[Name] FROM [User] WHERE [Birthday] > @Birthday ORDER BY [Sn] Asc")]
-        void GetIdAndNameByBirthdayGreaterthanOrderbySn(int id);
+        void GetIdAndNameByBirthdayGreaterthanOrderbySn(DateTime birthday);
 
         [Description("SELECT [Id],[Name] FROM [User] WHERE [Birthday] > @Birthday ORDER BY [Sn] Asc,[Type] Desc")]
-        void GetIdAndNameByBirthdayGreaterthanOrderbySnTypeDesc(int id);
+        void GetIdAndNameByBirthdayGreaterthanOrderbySnTypeDesc(DateTime birthday);
 
         [Description("DELETE FROM [User] WHERE [Id] = @Id")]
         void DeleteById(int id);
@@ -36,11 +36,11 @@ namespace Reface.NPITests
 
 
         [Description("UPDATE [User] SET [Password] = @Password,[Name] = @Name WHERE [Id] = @Id")]
-        void UpdatePasswordAndNameById(string password, string id);
+        void UpdatePasswordAndNameById(string password, string name, string id);
 
 
         [Description("UPDATE [User] SET [Password] = @Password,[Name] = @Name WHERE [Id] = @Id And [Uid] = @Uid")]
-        void UpdatePasswordAndNameByIdAndUid(string password, string id);
+        void UpdatePasswordAndNameByIdAndUid(string password, string name, string id, string uid);
 
         [Description("INSERT INTO [User]([Id],[Name],[Password],[CreateTime])VALUES(@Id,@Name,@Password,@CreateTime)")]
         void Insert(User user);

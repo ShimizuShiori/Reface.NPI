@@ -53,7 +53,10 @@
     <Compile Include="Attributes\ForSetAttribute.cs" />
     <Compile Include="Attributes\ParameterAttribute.cs" />
     <Compile Include="Constant.cs" />
-    <Compile Include="Generators\DefaultParameterFiller.cs" />
+    <Compile Include="Generators\DefaultParameterLookupFactory.cs" />
+    <Compile Include="Generators\IParameterLookupFactory.cs" />
+    <Compile Include="Generators\ParameterPropertiesLookup.cs" />
+    <Compile Include="Generators\ParameterValuesLookup.cs" />
     <Compile Include="Generators\ISqlCommandGenerator.cs" />
     <Compile Include="Generators\OperatorMappings\OperatorMapperBase.cs" />
     <Compile Include="Generators\OperatorMappings\IOperatorMapper.cs" />
@@ -66,7 +69,7 @@
     <Compile Include="Generators\SqlCommandGeneratorBase.cs" />
     <Compile Include="Generators\SqlServer\SqlCommandGenerator.cs" />
     <Compile Include="Generators\SqlServer\SqlServerOperatorMapper.cs" />
-    <Compile Include="Generators\IParameterFiller.cs" />
+    <Compile Include="Generators\IParameterLookup.cs" />
     <Compile Include="INpiDao.cs" />
     <Compile Include="Models\CommandInfoTypes.cs" />
     <Compile Include="Models\ConditionInfo.cs" />
@@ -77,6 +80,7 @@
     <Compile Include="Models\OrderInfo.cs" />
     <Compile Include="Models\OrderTypes.cs" />
     <Compile Include="Models\UpdateInfo.cs" />
+    <Compile Include="NpiServicesCollection.cs" />
     <Compile Include="Parsers\Actions\DeleteParseActions.cs" />
     <Compile Include="Parsers\Actions\UpdateParseActions.cs" />
     <Compile Include="Parsers\DefaultCommandParser.cs" />

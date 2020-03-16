@@ -31,13 +31,13 @@ namespace Reface.NPI.Parsers
                 case ACTION_GET:
                 case ACTION_SELECT:
                 case ACTION_FETCH:
-                    return new DefaultSelectParser().Parse(realCommand);
+                    return NpiServicesCollection.GetService<ISelectParser>().Parse(realCommand);
                 case ACTION_UPDATE:
                 case ACTION_MODIFY:
-                    return new DefaultUpdateParser().Parse(realCommand);
+                    return NpiServicesCollection.GetService<IUpdateParser>().Parse(realCommand);
                 case ACTION_REMOVE:
                 case ACTION_DELETE:
-                    return new DefaultDeleteParser().Parse(realCommand);
+                    return NpiServicesCollection.GetService<IDeleteParser>().Parse(realCommand);
                 case ACTION_CREATE:
                 case ACTION_NEW:
                 case ACTION_INSERT:
