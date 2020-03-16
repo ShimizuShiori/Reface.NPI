@@ -1,4 +1,5 @@
 ﻿using Reface.NPI.Generators;
+using Reface.NPI.Generators.SqlServer;
 using Reface.NPI.Parsers;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,7 @@ namespace Reface.NPI
             RegisterService<IParameterLookup>(t => new ParameterValuesLookup());
             RegisterService<IParameterLookup>(t => new ParameterPropertiesLookup());
             RegisterService<IParameterLookupFactory>(t => new DefaultParameterLookupFactory());
+            RegisterService<ISqlServerCommandGenerator>(t => new DefaultSqlServerCommandGenerator());
         }
 
         public static void RegisterService<T>(Func<Type, T> factory)

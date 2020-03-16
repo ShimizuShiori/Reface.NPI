@@ -12,7 +12,7 @@ namespace Reface.NPITests.Generators.SqlServer
         [TestMethod]
         public void GenerateCommand()
         {
-            var g = new SqlCommandGenerator();
+            var g = new DefaultSqlServerCommandGenerator();
             Type daoType = typeof(IUserDao);
             MethodInfo[] infos = daoType.GetMethods();
             foreach (var info in infos)
@@ -27,7 +27,7 @@ namespace Reface.NPITests.Generators.SqlServer
         [TestMethod]
         public void GenCmd_SelectById()
         {
-            var g = new SqlCommandGenerator();
+            var g = new DefaultSqlServerCommandGenerator();
             Type daoType = typeof(IUserDao);
             MethodInfo methodInfo = daoType.GetMethod(nameof(IUserDao.SelectById));
             var desc = g.Generate(methodInfo, new object[] { 1 });
@@ -37,7 +37,7 @@ namespace Reface.NPITests.Generators.SqlServer
         [TestMethod]
         public void GenCmd_Insert()
         {
-            var g = new SqlCommandGenerator();
+            var g = new DefaultSqlServerCommandGenerator();
             Type daoType = typeof(IUserDao);
             MethodInfo methodInfo = daoType.GetMethod(nameof(IUserDao.Insert));
             User user = new User()

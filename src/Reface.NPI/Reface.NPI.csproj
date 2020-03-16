@@ -55,6 +55,7 @@
     <Compile Include="Constant.cs" />
     <Compile Include="Generators\DefaultParameterLookupFactory.cs" />
     <Compile Include="Generators\IParameterLookupFactory.cs" />
+    <Compile Include="Generators\ISqlServerCommandGenerator.cs" />
     <Compile Include="Generators\ParameterPropertiesLookup.cs" />
     <Compile Include="Generators\ParameterValuesLookup.cs" />
     <Compile Include="Generators\ISqlCommandGenerator.cs" />
@@ -67,7 +68,7 @@
     <Compile Include="Generators\ParameterUses.cs" />
     <Compile Include="Generators\SqlCommandDescription.cs" />
     <Compile Include="Generators\SqlCommandGeneratorBase.cs" />
-    <Compile Include="Generators\SqlServer\SqlCommandGenerator.cs" />
+    <Compile Include="Generators\SqlServer\DefaultSqlServerCommandGenerator.cs" />
     <Compile Include="Generators\SqlServer\SqlServerOperatorMapper.cs" />
     <Compile Include="Generators\IParameterLookup.cs" />
     <Compile Include="INpiDao.cs" />

@@ -1,4 +1,5 @@
-﻿using Reface.NPI.Models;
+﻿using Reface.NPI.Generators.OperatorMappings;
+using Reface.NPI.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -7,9 +8,9 @@ using System.Text;
 
 namespace Reface.NPI.Generators.SqlServer
 {
-    public class SqlCommandGenerator : SqlCommandGeneratorBase
+    public class DefaultSqlServerCommandGenerator : SqlCommandGeneratorBase, ISqlServerCommandGenerator
     {
-        private readonly SqlServerOperatorMapper operatorMapper = new SqlServerOperatorMapper();
+        private readonly IOperatorMapper operatorMapper = new SqlServerOperatorMapper();
 
         protected override SqlCommandDescription GenerateSelect(SqlCommandGenerateContext context)
         {
