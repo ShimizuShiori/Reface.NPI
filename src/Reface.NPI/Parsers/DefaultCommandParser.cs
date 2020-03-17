@@ -10,6 +10,7 @@ namespace Reface.NPI.Parsers
         public const string ACTION_GET = "Get";
         public const string ACTION_SELECT = "Select";
         public const string ACTION_FETCH = "Fetch";
+        public const string ACTION_FIND = "Find";
 
         public const string ACTION_UPDATE = "Update";
         public const string ACTION_MODIFY = "Modify";
@@ -31,6 +32,7 @@ namespace Reface.NPI.Parsers
                 case ACTION_GET:
                 case ACTION_SELECT:
                 case ACTION_FETCH:
+                case ACTION_FIND:
                     return NpiServicesCollection.GetService<ISelectParser>().Parse(realCommand);
                 case ACTION_UPDATE:
                 case ACTION_MODIFY:
