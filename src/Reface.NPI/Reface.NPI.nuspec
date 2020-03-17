@@ -2,17 +2,14 @@
 <package >
   <metadata>
     <id>Reface.NPI</id>
-    <version>1.0.0-alpha.6</version>
+    <version>1.0.0</version>
     <title>Reface.NPI</title>
     <authors>ShimizuShiori</authors>
     <owners>ShimizuShiori</owners>
     <license type="expression">MIT</license>
-    <!--<projectUrl>http://project_url_here_or_delete_this_line/</projectUrl>-->
+    <projectUrl>https://github.com/ShimizuShiori/Reface.NPI</projectUrl>
     <description>通过方法名称解析 Sql 的库</description>
     <!--<releaseNotes>Summary of changes made in this release of the package.</releaseNotes>-->
     <copyright>Copyright 2020</copyright>
-    <dependencies>
-      <dependency id="Reface.StateMachine" version="1.0.0"></dependency>
-    </dependencies>
   </metadata>
 </package>
