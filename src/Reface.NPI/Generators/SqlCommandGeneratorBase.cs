@@ -25,15 +25,19 @@ namespace Reface.NPI.Generators
             {
                 case CommandInfoTypes.Delete:
                     description = GenerateDelete(context);
+                    description.Type = SqlCommandTypes.Delete;
                     break;
                 case CommandInfoTypes.Update:
                     description = GenerateUpdate(context);
+                    description.Type = SqlCommandTypes.Update;
                     break;
                 case CommandInfoTypes.Select:
                     description = GenerateSelect(context);
+                    description.Type = SqlCommandTypes.Select;
                     break;
                 case CommandInfoTypes.Insert:
                     description = GenerateInsert(context);
+                    description.Type = SqlCommandTypes.Insert;
                     break;
                 default: throw new NotImplementedException($"不能处理的命令类型 : {context.CommandInfo.Type.ToString()}");
             }

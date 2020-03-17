@@ -4,6 +4,8 @@ namespace Reface.NPI.Generators
 {
     public class SqlCommandDescription
     {
+        public SqlCommandTypes Type { get; set; }
+
         public string SqlCommand { get; set; }
         public Dictionary<string, SqlParameterInfo> Parameters { get; private set; }
 
