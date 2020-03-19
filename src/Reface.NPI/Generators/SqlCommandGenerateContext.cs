@@ -44,16 +44,13 @@ namespace Reface.NPI.Generators
             {
                 var parser = new DefaultCommandParser();
                 this.context.CommandInfo = parser.Parse(this.context.Method.Name);
-
                 this.context.IDaoType = this.context.Method.DeclaringType;
-                Type baseType = this.context.IDaoType.GetInterface(Constant.TYPE_INPIDAO.FullName);
-                if (baseType == null)
-                    throw new ApplicationException("未从 INpiDao 继承"); //todo : 细化异常
-                this.context.EntityType = baseType.GetGenericArguments()[0];
 
-                this.context.TableName = this.context.EntityType.Name;
-                TableAttribute ta = this.context.EntityType.GetCustomAttribute<TableAttribute>();
-                if (ta != null) this.context.TableName = ta.Name;
+                IEntityTypeProvider entityTypeProvider = NpiServicesCollection.GetService<IEntityTypeProvider>();
+                this.context.EntityType = entityTypeProvider.Provide(this.context.Method);
+
+                ITableNameProvider tableNameProvider = NpiServicesCollection.GetService<ITableNameProvider>();
+                this.context.TableName = tableNameProvider.Provide(this.context.EntityType);
 
                 this.context.Properties = this.context.EntityType.GetProperties();
                 return this.context;

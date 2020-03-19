@@ -36,7 +36,7 @@
       <HintPath>packages\Reface.1.0.1\lib\netstandard2.0\Reface.dll</HintPath>
     </Reference>
     <Reference Include="Reface.StateMachine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Reface.StateMachine.1.0.2\lib\net461\Reface.StateMachine.dll</HintPath>
+      <HintPath>packages\Reface.StateMachine.1.1.0\lib\net461\Reface.StateMachine.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -53,9 +53,15 @@
     <Compile Include="Attributes\ForSetAttribute.cs" />
     <Compile Include="Attributes\ParameterAttribute.cs" />
     <Compile Include="Constant.cs" />
+    <Compile Include="Generators\DefaultEntityTypeProvider.cs" />
+    <Compile Include="Generators\DefaultFieldNameProvider.cs" />
     <Compile Include="Generators\DefaultParameterLookupFactory.cs" />
+    <Compile Include="Generators\DefaultTableNameProvider.cs" />
+    <Compile Include="Generators\IEntityTypeProvider.cs" />
+    <Compile Include="Generators\IFieldNameProvider.cs" />
     <Compile Include="Generators\IParameterLookupFactory.cs" />
     <Compile Include="Generators\ISqlServerCommandGenerator.cs" />
+    <Compile Include="Generators\ITableNameProvider.cs" />
     <Compile Include="Generators\ParameterPropertiesLookup.cs" />
     <Compile Include="Generators\ParameterValuesLookup.cs" />
     <Compile Include="Generators\ISqlCommandGenerator.cs" />

@@ -11,6 +11,12 @@ namespace Reface.NPI.Generators.SqlServer
     public class DefaultSqlServerCommandGenerator : SqlCommandGeneratorBase, ISqlServerCommandGenerator
     {
         private readonly IOperatorMapper operatorMapper = new SqlServerOperatorMapper();
+        private readonly IFieldNameProvider fieldNameProvider;
+
+        public DefaultSqlServerCommandGenerator()
+        {
+            this.fieldNameProvider = NpiServicesCollection.GetService<IFieldNameProvider>();
+        }
 
         protected override SqlCommandDescription GenerateSelect(SqlCommandGenerateContext context)
         {
@@ -110,19 +116,13 @@ namespace Reface.NPI.Generators.SqlServer
         {
             SqlCommandDescription description = new SqlCommandDescription();
 
-            IEnumerable<ColumnAttribute> columns = context.EntityType.GetProperties()
-                .Select(x =>
-                {
-                    ColumnAttribute columnAttribute = x.GetCustomAttribute<ColumnAttribute>();
-                    if (columnAttribute != null)
-                        return columnAttribute;
-                    return new ColumnAttribute(x.Name);
-                });
-            string fields = columns.Join(",", x => $"[{x.Name}]");
-            string values = columns.Join(",", x => $"@{x.Name}");
-            foreach (var p in columns)
+            IEnumerable<string> columnNames = context.EntityType.GetProperties()
+                .Select(x => fieldNameProvider.Provide(x));
+            string fields = columnNames.Join(",", x => $"[{x}]");
+            string values = columnNames.Join(",", x => $"@{x}");
+            foreach (var columnName in columnNames)
             {
-                description.AddParameter(new SqlParameterInfo(p.Name, ParameterUses.ForInsert));
+                description.AddParameter(new SqlParameterInfo(columnName, ParameterUses.ForInsert));
             }
             description.SqlCommand = $"INSERT INTO [{context.TableName}]({fields})VALUES({values})";
             return description;

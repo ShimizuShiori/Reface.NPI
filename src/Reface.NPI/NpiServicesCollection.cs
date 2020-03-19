@@ -9,7 +9,7 @@ namespace Reface.NPI
 {
     public class NpiServicesCollection
     {
-        private readonly static Dictionary<Type, List<Func<Type, Object>>> factories = new Dictionary<Type, List<Func<Type, object>>>();
+        private readonly static Dictionary<Type, List<Func<Type, object>>> factories = new Dictionary<Type, List<Func<Type, object>>>();
 
         static NpiServicesCollection()
         {
@@ -21,6 +21,9 @@ namespace Reface.NPI
             RegisterService<IParameterLookup>(t => new ParameterPropertiesLookup());
             RegisterService<IParameterLookupFactory>(t => new DefaultParameterLookupFactory());
             RegisterService<ISqlServerCommandGenerator>(t => new DefaultSqlServerCommandGenerator());
+            RegisterService<IEntityTypeProvider>(t => new DefaultEntityTypeProvider());
+            RegisterService<ITableNameProvider>(t => new DefaultTableNameProvider());
+            RegisterService<IFieldNameProvider>(t => new DefaultFieldNameProvider());
         }
 
         public static void RegisterService<T>(Func<Type, T> factory)
