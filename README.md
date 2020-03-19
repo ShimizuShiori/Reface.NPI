@@ -134,3 +134,9 @@ IEnumerable<T> GetServices<T>();
 * Insert 与 Create、New 相同
 * Update 与 Modify 相同
 * Delete 与 Remove 相同
+
+---
+
+**相关链接**
+
+[Reface.NPI nuget 页面](https://www.nuget.org/packages/Reface.StateMachine)
