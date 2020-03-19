@@ -21,6 +21,11 @@ namespace Reface.NPI.Generators
                 ;
         }
 
+        private bool IsArray(Type type)
+        {
+            return typeof(Array).IsAssignableFrom(type);
+        }
+
         public bool Match(SqlCommandDescription description, MethodInfo methodInfo)
         {
             ParameterInfo[] parameterInfos = methodInfo.GetParameters();
@@ -28,7 +33,8 @@ namespace Reface.NPI.Generators
                 return description.Parameters.Count() == parameterInfos.Length;
 
             if (description.Parameters.Count() == 1)
-                return IsBaseType(parameterInfos[0].ParameterType);
+                return IsBaseType(parameterInfos[0].ParameterType)
+                    || IsArray(parameterInfos[0].ParameterType);
 
             return false;
         }

@@ -60,5 +60,22 @@ namespace Reface.NPITests.Generators.SqlServer
             var desc = g.Generate(methodInfo, new object[] { "Shiori" });
             Assert.AreEqual("Shiori", desc.Parameters["Name"].Value);
         }
+
+        [TestMethod]
+        public void GenCmd_IdIn()
+        {
+            var g = new DefaultSqlServerCommandGenerator();
+            Type daoType = typeof(IUserDao);
+            MethodInfo methodInfo = daoType.GetMethod(nameof(IUserDao.GetByIdIn));
+            var desc = g.Generate(methodInfo, new object[] { new int[] { 1, 2, 3 } });
+            var value = desc.Parameters["Id"].Value;
+            Assert.IsInstanceOfType(value, typeof(int[]));
+            int[] array = (int[])value;
+            Assert.AreEqual(3, array.Length);
+            Assert.AreEqual(1, array[0]);
+            Assert.AreEqual(2, array[1]);
+            Assert.AreEqual(3, array[2]);
+
+        }
     }
 }
