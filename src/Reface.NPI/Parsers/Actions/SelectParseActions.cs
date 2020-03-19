@@ -2,13 +2,12 @@
 {
     public enum SelectParseActions
     {
-        Field,
+        Word,
         And,
         Or,
         By,
         OrderBy,
         AscOrDesc,
-        Operator,
         End
     }
 }
