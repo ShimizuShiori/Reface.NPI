@@ -28,6 +28,9 @@ namespace Reface.NPITests
         [Description("DELETE FROM [User] WHERE [Id] = @Id")]
         void DeleteById(int id);
 
+        [Description("DELETE FROM [User] WHERE [Name] = @Name")]
+        void DeleteByName(string name);
+
         [Description("DELETE FROM [User] WHERE [Id] = @Id And [State] = @State")]
         void DeleteByIdAndState(int id);
 

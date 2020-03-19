@@ -11,6 +11,8 @@ namespace Reface.NPI.Parsers.StateMachines
 {
     public class DefaultParseStateMachine<TToken, TState, TAction> : IParseStateMachine<TToken, TState, TAction>
         where TToken : IToken<TAction>
+        where TState : struct
+        where TAction : struct
     {
         public TokenStack<TToken, TAction> TokenStack { get; private set; }
 
