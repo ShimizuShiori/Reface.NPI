@@ -78,7 +78,7 @@ IEnumerable<T> GetServices<T>();
 
 期望的数据层访问接口形式。
 目前主要用途是通过该接口获取到实现类型，以便生 Insert 语句中的字段信息。
-后期可以考虑优化成别的形式，以减少对上层引用的要求，提高透明性。
+建议使用该接口，可以减少对 实体分析、表名分析、字段名分析 等操作。
 
 ### 3.4 IParameterLookup
 
@@ -101,6 +101,21 @@ IEnumerable<T> GetServices<T>();
 ```
 
 状态机的定义方法可以参见这个库 : [Reface.StateMachine](https://github.com/ShimizuShiori/Reface.StateMachine)
+
+### 3.6 Providers
+
+一共包括以下几样
+
+* IEntityTypeProvider
+* ITableNameProvider
+* IFieldNameProvider
+
+这三样，分别是在生成 **SqlCommandDescription** 阶段时获取实体类型、表名、字段名使用的组件。
+
+目前是按照 INpiDao&lt;TEntity>, TableAttribute, ColumnAttribute 的逻辑实现的。
+
+开发者可以根据自己的需要替换这些逻辑，使用 **NpiServicesCollection.ReplaceService** 可以替换这些默认的组件
+
 
 ## 4 注意事项
 
