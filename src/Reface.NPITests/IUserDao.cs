@@ -50,5 +50,8 @@ namespace Reface.NPITests
 
         [Description("UPDATE [User] SET [Loginname] = @Loginname WHERE [Id] = @Id")]
         void UpdateLoginnameById(string name, string id);
+
+        [Description("SELECT * FROM [User] WHERE [Id] In @Id")]
+        void GetByIdIn(int[] id);
     }
 }
