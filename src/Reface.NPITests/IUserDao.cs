@@ -47,5 +47,8 @@ namespace Reface.NPITests
 
         [Description("INSERT INTO [User]([Id],[Name],[Password],[CreateTime])VALUES(@Id,@Name,@Password,@CreateTime)")]
         void Insert(User user);
+
+        [Description("UPDATE [User] SET [Loginname] = @Loginname WHERE [Id] = @Id")]
+        void UpdateLoginnameById(string name, string id);
     }
 }

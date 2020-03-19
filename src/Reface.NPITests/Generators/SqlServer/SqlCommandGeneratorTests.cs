@@ -50,5 +50,15 @@ namespace Reface.NPITests.Generators.SqlServer
             var desc = g.Generate(methodInfo, new object[] { user });
             Console.WriteLine(desc);
         }
+
+        [TestMethod]
+        public void GenCmd_DelByStr()
+        {
+            var g = new DefaultSqlServerCommandGenerator();
+            Type daoType = typeof(IUserDao);
+            MethodInfo methodInfo = daoType.GetMethod(nameof(IUserDao.DeleteByName));
+            var desc = g.Generate(methodInfo, new object[] { "Shiori" });
+            Assert.AreEqual("Shiori", desc.Parameters["Name"].Value);
+        }
     }
 }
