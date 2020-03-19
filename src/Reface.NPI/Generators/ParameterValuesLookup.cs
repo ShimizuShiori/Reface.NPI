@@ -1,4 +1,5 @@
 ﻿using Reface.NPI.Attributes;
+using System;
 using System.Linq;
 using System.Reflection;
 
@@ -6,6 +7,19 @@ namespace Reface.NPI.Generators
 {
     public class ParameterValuesLookup : IParameterLookup
     {
+        private bool IsBaseType(Type type)
+        {
+            return type == typeof(string)
+                || type == typeof(int)
+                || type == typeof(long)
+                || type == typeof(float)
+                || type == typeof(double)
+                || type == typeof(short)
+                || type == typeof(byte)
+                || type == typeof(DateTime)
+                || type == typeof(bool)
+                ;
+        }
 
         public bool Match(SqlCommandDescription description, MethodInfo methodInfo)
         {
@@ -14,7 +28,7 @@ namespace Reface.NPI.Generators
                 return description.Parameters.Count() == parameterInfos.Length;
 
             if (description.Parameters.Count() == 1)
-                return parameterInfos[0].ParameterType.IsValueType;
+                return IsBaseType(parameterInfos[0].ParameterType);
 
             return false;
         }
