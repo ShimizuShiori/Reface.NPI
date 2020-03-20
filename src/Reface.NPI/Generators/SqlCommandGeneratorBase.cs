@@ -7,10 +7,12 @@ namespace Reface.NPI.Generators
     public abstract class SqlCommandGeneratorBase : ISqlCommandGenerator
     {
         private readonly IParameterLookupFactory parameterLookupFactory;
+        private readonly ICache cache;
 
         public SqlCommandGeneratorBase()
         {
             this.parameterLookupFactory = NpiServicesCollection.GetService<IParameterLookupFactory>();
+            this.cache = NpiServicesCollection.GetService<ICache>();
         }
 
         public SqlCommandDescription Generate(MethodInfo methodInfo, object[] arguments)
@@ -19,6 +21,16 @@ namespace Reface.NPI.Generators
                 .SetMethod(methodInfo)
                 .Build();
 
+            string cacheKey = $"GetDescription_{context.ToString()}";
+            SqlCommandDescription description = cache.GetOrCreate<SqlCommandDescription>(cacheKey, key => GetSqlCommandDescriptionWithourParameterFilled(context));
+
+            if (arguments != null && arguments.Length != 0)
+                this.parameterLookupFactory.Lookup(description, methodInfo, arguments);
+            return description;
+        }
+
+        private SqlCommandDescription GetSqlCommandDescriptionWithourParameterFilled(SqlCommandGenerateContext context)
+        {
             SqlCommandDescription description;
 
             switch (context.CommandInfo.Type)
@@ -41,9 +53,6 @@ namespace Reface.NPI.Generators
                     break;
                 default: throw new NotImplementedException($"不能处理的命令类型 : {context.CommandInfo.Type.ToString()}");
             }
-
-            if (arguments != null && arguments.Length != 0)
-                this.parameterLookupFactory.Lookup(description, methodInfo, arguments);
             return description;
         }
 

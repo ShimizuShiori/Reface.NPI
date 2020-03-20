@@ -57,5 +57,10 @@ namespace Reface.NPI.Generators
             }
         }
 
+        public override string ToString()
+        {
+            return $"{IDaoType.FullName}.{Method.Name}";
+        }
+
     }
 }

@@ -7,6 +7,8 @@ namespace Reface.NPI.Parsers
 {
     public class DefaultCommandParser : ICommandParser
     {
+        private readonly ICache cache;
+
         public const string ACTION_GET = "Get";
         public const string ACTION_SELECT = "Select";
         public const string ACTION_FETCH = "Fetch";
@@ -22,7 +24,18 @@ namespace Reface.NPI.Parsers
         public const string ACTION_NEW = "New";
         public const string ACTION_CREATE = "Create";
 
+        public DefaultCommandParser()
+        {
+            this.cache = NpiServicesCollection.GetService<ICache>();
+        }
+
         public ICommandInfo Parse(string command)
+        {
+            string cacheKey = $"COMMAND_INFO_{command}";
+            return this.cache.GetOrCreate<ICommandInfo>(cacheKey, key => ParseFromCommand(command));
+        }
+
+        private ICommandInfo ParseFromCommand(string command)
         {
             List<string> words = command.SplitToWords();
             string action = words.FirstOrDefault();
