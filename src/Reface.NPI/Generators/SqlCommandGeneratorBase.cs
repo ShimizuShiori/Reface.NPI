@@ -32,7 +32,6 @@ namespace Reface.NPI.Generators
         private SqlCommandDescription GetSqlCommandDescriptionWithourParameterFilled(SqlCommandGenerateContext context)
         {
             SqlCommandDescription description;
-
             switch (context.CommandInfo.Type)
             {
                 case CommandInfoTypes.Delete:

@@ -2,13 +2,13 @@
 <package >
   <metadata>
     <id>Reface.NPI</id>
-    <version>1.1.3-alpha.1</version>
+    <version>1.1.3-alpha.2</version>
     <title>Reface.NPI</title>
     <authors>ShimizuShiori</authors>
     <owners>ShimizuShiori</owners>
     <license type="expression">MIT</license>
     <projectUrl>https://github.com/ShimizuShiori/Reface.NPI</projectUrl>
-    <description>通过方法名称解析 Sql 的库</description>
+    <description>通过方法名称解析出 Sql语句 的库</description>
     <!--<releaseNotes>Summary of changes made in this release of the package.</releaseNotes>-->
     <copyright>Copyright 2020</copyright>
   </metadata>
