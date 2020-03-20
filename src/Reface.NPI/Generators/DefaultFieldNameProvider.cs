@@ -5,14 +5,26 @@ namespace Reface.NPI.Generators
 {
     public class DefaultFieldNameProvider : IFieldNameProvider
     {
+        private readonly ICache cache;
+
+        public DefaultFieldNameProvider()
+        {
+            this.cache = NpiServicesCollection.GetService<ICache>();
+        }
+
         public string Provide(PropertyInfo propertyInfo)
         {
-            string result = propertyInfo.Name;
+            string cacheKey = $"FieldName_{propertyInfo.DeclaringType.FullName}.{propertyInfo.Name}";
 
-            ColumnAttribute column = propertyInfo.GetCustomAttribute<ColumnAttribute>();
-            if (column != null) result = column.Name;
+            return this.cache.GetOrCreate<string>(cacheKey, key =>
+            {
+                string result = propertyInfo.Name;
 
-            return result;
+                ColumnAttribute column = propertyInfo.GetCustomAttribute<ColumnAttribute>();
+                if (column != null) result = column.Name;
+
+                return result;
+            });
         }
     }
 }

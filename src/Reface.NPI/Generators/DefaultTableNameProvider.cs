@@ -6,14 +6,26 @@ namespace Reface.NPI.Generators
 {
     public class DefaultTableNameProvider : ITableNameProvider
     {
+        private readonly ICache cache;
+
+        public DefaultTableNameProvider()
+        {
+            this.cache = NpiServicesCollection.GetService<ICache>();
+        }
         public string Provide(Type entityType)
         {
-            string tableName = entityType.Name;
+            string cacheKey = $"TableName_{entityType.FullName}";
 
-            TableAttribute ta = entityType.GetCustomAttribute<TableAttribute>();
-            if (ta != null) tableName = ta.Name;
+            return this.cache.GetOrCreate<string>(cacheKey, key =>
+            {
+                string tableName = entityType.Name;
 
-            return tableName;
+                TableAttribute ta = entityType.GetCustomAttribute<TableAttribute>();
+                if (ta != null) tableName = ta.Name;
+
+                return tableName;
+            });
+
         }
     }
 }

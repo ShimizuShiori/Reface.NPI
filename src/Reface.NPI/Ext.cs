@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace Reface.NPI
 {
@@ -8,6 +9,11 @@ namespace Reface.NPI
         {
             object obj = cache.GetOrCreate(key, k => creator(k));
             return (T)obj;
+        }
+
+        public static string GetFullName(this MethodInfo method)
+        {
+            return $"{method.DeclaringType.FullName}.{method.Name}";
         }
     }
 }

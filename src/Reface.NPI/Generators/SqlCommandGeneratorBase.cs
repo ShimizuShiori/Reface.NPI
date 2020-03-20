@@ -21,7 +21,7 @@ namespace Reface.NPI.Generators
                 .SetMethod(methodInfo)
                 .Build();
 
-            string cacheKey = $"GetDescription_{context.ToString()}";
+            string cacheKey = $"SqlCOmmandDescription_{context.ToString()}";
             SqlCommandDescription description = cache.GetOrCreate<SqlCommandDescription>(cacheKey, key => GetSqlCommandDescriptionWithourParameterFilled(context));
 
             if (arguments != null && arguments.Length != 0)

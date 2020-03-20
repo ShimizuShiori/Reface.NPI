@@ -35,6 +35,16 @@ namespace Reface.NPITests.Generators.SqlServer
         }
 
         [TestMethod]
+        public void GenCmd_SelectById2()
+        {
+            var g = new DefaultSqlServerCommandGenerator();
+            Type daoType = typeof(IUserDao);
+            MethodInfo methodInfo = daoType.GetMethod(nameof(IUserDao.SelectById));
+            var desc = g.Generate(methodInfo, new object[] { 1 });
+            Assert.AreEqual(1, desc.Parameters["Id"].Value);
+        }
+
+        [TestMethod]
         public void GenCmd_Insert()
         {
             var g = new DefaultSqlServerCommandGenerator();
