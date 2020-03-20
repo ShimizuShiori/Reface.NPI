@@ -14,6 +14,13 @@ namespace Reface.NPI.Parsers.StateMachines
         where TState : struct
         where TAction : struct
     {
+        private static readonly IStateMachineBuilderFactory stateMachineBuilderFactory;
+
+        static DefaultParseStateMachine()
+        {
+            stateMachineBuilderFactory = NpiServicesCollection.GetService<IStateMachineBuilderFactory>();
+        }
+
         public TokenStack<TToken, TAction> TokenStack { get; private set; }
 
         public Dictionary<string, object> Context { get; private set; }
@@ -22,11 +29,13 @@ namespace Reface.NPI.Parsers.StateMachines
 
         private readonly IStateMachine<TState, TAction> machine;
 
+
         public DefaultParseStateMachine(string stateMachineName)
         {
+
             this.TokenStack = new TokenStack<TToken, TAction>();
             this.Context = new Dictionary<string, object>();
-            machine = CsvStateMachineBuilder<TState, TAction>.FromFile(PathProvider.GetStateMachine(stateMachineName)).Build();
+            machine = stateMachineBuilderFactory.Create<TState, TAction>(stateMachineName).Build();
             machine.Pushed += Machine_Pushed;
         }
 

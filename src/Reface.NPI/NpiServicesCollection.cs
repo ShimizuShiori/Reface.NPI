@@ -1,6 +1,7 @@
 ﻿using Reface.NPI.Generators;
 using Reface.NPI.Generators.SqlServer;
 using Reface.NPI.Parsers;
+using Reface.NPI.Parsers.StateMachines;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,8 @@ namespace Reface.NPI
             RegisterService<IEntityTypeProvider>(t => new DefaultEntityTypeProvider());
             RegisterService<ITableNameProvider>(t => new DefaultTableNameProvider());
             RegisterService<IFieldNameProvider>(t => new DefaultFieldNameProvider());
+            RegisterService<IStateMachineBuilderFactory>(t => new DefaultStateMachineBuilderFactory());
+            RegisterService<ICache>(t => new DefaultCache());
         }
 
         public static void RegisterService<T>(Func<Type, T> factory)

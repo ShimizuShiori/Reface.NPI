@@ -53,6 +53,8 @@
     <Compile Include="Attributes\ForSetAttribute.cs" />
     <Compile Include="Attributes\ParameterAttribute.cs" />
     <Compile Include="Constant.cs" />
+    <Compile Include="DefaultCache.cs" />
+    <Compile Include="Ext.cs" />
     <Compile Include="Generators\DefaultEntityTypeProvider.cs" />
     <Compile Include="Generators\DefaultFieldNameProvider.cs" />
     <Compile Include="Generators\DefaultParameterLookupFactory.cs" />
@@ -78,6 +80,7 @@
     <Compile Include="Generators\SqlServer\DefaultSqlServerCommandGenerator.cs" />
     <Compile Include="Generators\SqlServer\SqlServerOperatorMapper.cs" />
     <Compile Include="Generators\IParameterLookup.cs" />
+    <Compile Include="ICache.cs" />
     <Compile Include="INpiDao.cs" />
     <Compile Include="Models\CommandInfoTypes.cs" />
     <Compile Include="Models\ConditionInfo.cs" />
@@ -103,7 +106,9 @@
     <Compile Include="Parsers\IToken.cs" />
     <Compile Include="Parsers\IUpdateParser.cs" />
     <Compile Include="Parsers\StateMachines\DefaultParseStateMachine.cs" />
+    <Compile Include="Parsers\StateMachines\DefaultStateMachineBuilderFactory.cs" />
     <Compile Include="Parsers\StateMachines\DeleteStateMachine.cs" />
+    <Compile Include="Parsers\StateMachines\IStateMachineBuilderFactory.cs" />
     <Compile Include="Parsers\StateMachines\SelectStateMachine.cs" />
     <Compile Include="Parsers\StateMachines\UpdateStateMachine.cs" />
     <Compile Include="Parsers\States\UpdateParseStates.cs" />
