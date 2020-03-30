@@ -18,6 +18,7 @@ namespace Reface.NPI.Generators
                 || type == typeof(byte)
                 || type == typeof(DateTime)
                 || type == typeof(bool)
+                || type == typeof(Guid)
                 ;
         }
 
