@@ -87,5 +87,15 @@ namespace Reface.NPITests.Generators.SqlServer
             Assert.AreEqual(3, array[2]);
 
         }
+
+        [TestMethod]
+        public void SelectByGid()
+        {
+            var g = new DefaultSqlServerCommandGenerator();
+            Type daoType = typeof(IUserDao);
+            MethodInfo methodInfo = daoType.GetMethod(nameof(IUserDao.SelectByGid));
+            var desc = g.Generate(methodInfo, new object[] { Guid.Empty });
+            Assert.AreEqual(Guid.Empty, desc.Parameters["Gid"].Value);
+        }
     }
 }

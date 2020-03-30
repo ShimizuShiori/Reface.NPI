@@ -7,6 +7,10 @@ namespace Reface.NPITests
 
     public interface IUserDao : INpiDao<User>
     {
+
+        [Description("SELECT * FROM [User] WHERE [Gid] = @Gid")]
+        void SelectByGid(Guid gid);
+
         [Description("SELECT * FROM [User] WHERE [Id] = @Id")]
         void SelectById(int id);
 
@@ -53,5 +57,6 @@ namespace Reface.NPITests
 
         [Description("SELECT * FROM [User] WHERE [Id] In @Id")]
         void GetByIdIn(int[] id);
+
     }
 }
