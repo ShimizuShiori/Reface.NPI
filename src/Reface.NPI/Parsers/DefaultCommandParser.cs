@@ -1,7 +1,6 @@
-﻿using Reface.NPI.Models;
-using System;
+﻿using Reface.NPI.Errors;
+using Reface.NPI.Models;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Reface.NPI.Parsers
 {
@@ -13,6 +12,8 @@ namespace Reface.NPI.Parsers
         public const string ACTION_SELECT = "Select";
         public const string ACTION_FETCH = "Fetch";
         public const string ACTION_FIND = "Find";
+
+        public const string ACTION_PAGING = "Paging";
 
         public const string ACTION_UPDATE = "Update";
         public const string ACTION_MODIFY = "Modify";
@@ -38,10 +39,24 @@ namespace Reface.NPI.Parsers
         private ICommandInfo ParseFromCommand(string command)
         {
             List<string> words = command.SplitToWords();
-            string action = words.FirstOrDefault();
-            string realCommand = command.Replace(action, "");
+            Queue<string> wordQueue = new Queue<string>(words);
+            return ParseFromCommand(wordQueue);
+        }
+
+        private ICommandInfo ParseFromCommand(Queue<string> wordQueue)
+        {
+            string action = wordQueue.Dequeue();
+            string realCommand = wordQueue.Join("", x => x);
             switch (action)
             {
+                case ACTION_PAGING:
+                    {
+                        SelectInfo info = this.ParseFromCommand(wordQueue) as SelectInfo;
+                        if (info == null)
+                            throw new PagingMustBeFollowedBySelectException();
+                        info.Paging = true;
+                        return info;
+                    }
                 case ACTION_GET:
                 case ACTION_SELECT:
                 case ACTION_FETCH:
@@ -58,8 +73,7 @@ namespace Reface.NPI.Parsers
                 case ACTION_INSERT:
                     return new InsertInfo();
                 default:
-                    DebugLogger.Info($"{action} 未实现，不能处理");
-                    throw new NotImplementedException($"未实现的 Action : {action}");
+                    throw new NotSupportActionException(action);
             }
         }
     }

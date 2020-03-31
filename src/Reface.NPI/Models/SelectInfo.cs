@@ -4,6 +4,7 @@ namespace Reface.NPI.Models
 {
     public class SelectInfo : ICommandInfo
     {
+        public bool Paging { get; set; } = false;
         public List<string> Fields { get; private set; } = new List<string>();
         public List<ConditionInfo> Conditions { get; private set; } = new List<ConditionInfo>();
 
