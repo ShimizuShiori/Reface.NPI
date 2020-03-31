@@ -54,6 +54,10 @@
     <Compile Include="Attributes\ParameterAttribute.cs" />
     <Compile Include="Constant.cs" />
     <Compile Include="DefaultCache.cs" />
+    <Compile Include="Errors\NotSupportActionException.cs" />
+    <Compile Include="Errors\NPIException.cs" />
+    <Compile Include="Errors\PagingMustBeFollowedBySelectException.cs" />
+    <Compile Include="Errors\PagingParameterMustBeGivenExpcetion.cs" />
     <Compile Include="Ext.cs" />
     <Compile Include="Generators\DefaultEntityTypeProvider.cs" />
     <Compile Include="Generators\DefaultFieldNameProvider.cs" />
@@ -64,8 +68,9 @@
     <Compile Include="Generators\IParameterLookupFactory.cs" />
     <Compile Include="Generators\ISqlServerCommandGenerator.cs" />
     <Compile Include="Generators\ITableNameProvider.cs" />
-    <Compile Include="Generators\ParameterPropertiesLookup.cs" />
-    <Compile Include="Generators\ParameterValuesLookup.cs" />
+    <Compile Include="Generators\ParameterLookups\PagingParameterLookup.cs" />
+    <Compile Include="Generators\ParameterLookups\ParameterPropertiesLookup.cs" />
+    <Compile Include="Generators\ParameterLookups\ParameterValuesLookup.cs" />
     <Compile Include="Generators\ISqlCommandGenerator.cs" />
     <Compile Include="Generators\OperatorMappings\OperatorMapperBase.cs" />
     <Compile Include="Generators\OperatorMappings\IOperatorMapper.cs" />
@@ -92,6 +97,7 @@
     <Compile Include="Models\OrderTypes.cs" />
     <Compile Include="Models\UpdateInfo.cs" />
     <Compile Include="NpiServicesCollection.cs" />
+    <Compile Include="Paging.cs" />
     <Compile Include="Parsers\Actions\DeleteParseActions.cs" />
     <Compile Include="Parsers\Actions\UpdateParseActions.cs" />
     <Compile Include="Parsers\DefaultCommandParser.cs" />

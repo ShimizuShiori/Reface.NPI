@@ -1,4 +1,5 @@
 ﻿using Reface.NPI.Generators;
+using Reface.NPI.Generators.ParameterLookups;
 using Reface.NPI.Generators.SqlServer;
 using Reface.NPI.Parsers;
 using Reface.NPI.Parsers.StateMachines;
@@ -20,6 +21,7 @@ namespace Reface.NPI
             RegisterService<ICommandParser>(t => new DefaultCommandParser());
             RegisterService<IParameterLookup>(t => new ParameterValuesLookup());
             RegisterService<IParameterLookup>(t => new ParameterPropertiesLookup());
+            RegisterService<IParameterLookup>(t => new PagingParameterLookup());
             RegisterService<IParameterLookupFactory>(t => new DefaultParameterLookupFactory());
             RegisterService<ISqlServerCommandGenerator>(t => new DefaultSqlServerCommandGenerator());
             RegisterService<IEntityTypeProvider>(t => new DefaultEntityTypeProvider());

@@ -11,6 +11,19 @@ namespace Reface.NPITests
         [Description("SELECT * FROM [User] WHERE [Gid] = @Gid")]
         void SelectByGid(Guid gid);
 
+        [Description("SELECT * FROM ( SELECT *,ROW_NUMBER() OVER ( ORDER BY [Createtime] Asc ) AS __RN__ FROM ( SELECT * FROM [User] WHERE [Gid] = @Gid) t ) t WHERE t.__RN__ > @BEGINRN AND t.__RN__ <= @ENDRN")]
+        void PagingSelectByGidOrderbyCreatetime(Guid gid, Paging page);
+
+
+        [Description("SELECT * FROM ( SELECT *,ROW_NUMBER() OVER ( ORDER BY [Createtime] Asc ) AS __RN__ FROM ( SELECT * FROM [User] WHERE [Uid] = @Uid) t ) t WHERE t.__RN__ > @BEGINRN AND t.__RN__ <= @ENDRN")]
+        void PagingSelectByUidOrderbyCreatetime(Guid uid);
+
+        [Description("SELECT * FROM ( SELECT *,ROW_NUMBER() OVER ( ORDER BY [Id] Asc ) AS __RN__ FROM ( SELECT * FROM [User]) t ) t WHERE t.__RN__ > @BEGINRN AND t.__RN__ <= @ENDRN")]
+        void PagingSelectOrderbyId(Paging page);
+
+        [Description("SELECT * FROM ( SELECT *,ROW_NUMBER() OVER ( ORDER BY [Id] Desc ) AS __RN__ FROM ( SELECT * FROM [User]) t ) t WHERE t.__RN__ > @BEGINRN AND t.__RN__ <= @ENDRN")]
+        void PagingSelectOrderbyIdDesc(Paging page);
+
         [Description("SELECT * FROM [User] WHERE [Id] = @Id")]
         void SelectById(int id);
 

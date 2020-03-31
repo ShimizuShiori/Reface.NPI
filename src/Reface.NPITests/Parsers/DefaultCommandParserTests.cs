@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Reface.NPI.Errors;
 using Reface.NPI.Models;
 using System;
 
@@ -21,7 +22,7 @@ namespace Reface.NPI.Parsers.Tests
             ICommandParser parser = new DefaultCommandParser();
             if (hasError)
             {
-                Assert.ThrowsException<NotImplementedException>(() => parser.Parse(command));
+                Assert.ThrowsException<NotSupportActionException>(() => parser.Parse(command));
             }
             else
             {

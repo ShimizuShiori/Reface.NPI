@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Reface.NPI;
 using Reface.NPI.Generators.SqlServer;
 using System;
 using System.Reflection;
@@ -96,6 +97,32 @@ namespace Reface.NPITests.Generators.SqlServer
             MethodInfo methodInfo = daoType.GetMethod(nameof(IUserDao.SelectByGid));
             var desc = g.Generate(methodInfo, new object[] { Guid.Empty });
             Assert.AreEqual(Guid.Empty, desc.Parameters["Gid"].Value);
+        }
+
+        [TestMethod]
+        public void PagingSelectOrderbyId()
+        {
+            var g = new DefaultSqlServerCommandGenerator();
+            Type daoType = typeof(IUserDao);
+            MethodInfo methodInfo = daoType.GetMethod(nameof(IUserDao.PagingSelectOrderbyId));
+            var desc = g.Generate(methodInfo, new object[] { new Paging() { PageSize = 10, PageIndex = 0 } });
+            Console.WriteLine(desc);
+            Assert.AreEqual(0, desc.Parameters["BEGINRN"].Value);
+            Assert.AreEqual(10, desc.Parameters["ENDRN"].Value);
+        }
+
+        [TestMethod]
+        public void PagingSelectByGidOrderbyCreatetime()
+        {
+
+            var g = new DefaultSqlServerCommandGenerator();
+            Type daoType = typeof(IUserDao);
+            MethodInfo methodInfo = daoType.GetMethod(nameof(IUserDao.PagingSelectByGidOrderbyCreatetime));
+            var desc = g.Generate(methodInfo, new object[] { Guid.Empty, new Paging() { PageSize = 10, PageIndex = 0 } });
+            Console.WriteLine(desc);
+            Assert.AreEqual(Guid.Empty, desc.Parameters["Gid"].Value);
+            Assert.AreEqual(0, desc.Parameters["BEGINRN"].Value);
+            Assert.AreEqual(10, desc.Parameters["ENDRN"].Value);
         }
     }
 }

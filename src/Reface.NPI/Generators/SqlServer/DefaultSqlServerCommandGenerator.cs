@@ -1,5 +1,6 @@
 ﻿using Reface.NPI.Generators.OperatorMappings;
 using Reface.NPI.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -47,16 +48,38 @@ namespace Reface.NPI.Generators.SqlServer
                         sqlBuilder.Append($" {condition.JoinerToNext.ToString()}");
                 }
             }
-            if (selectInfo.Orders.Any())
+            string orderBy;
+            if (!selectInfo.Paging)
             {
-                sqlBuilder.Append(" ORDER BY ");
-                string orderBy = selectInfo.Orders.Join(",", x =>
+                if (selectInfo.Orders.Any())
                 {
-                    return $"[{x.Field}] {x.Type.ToString()}";
-                });
-                sqlBuilder.Append(orderBy);
+                    sqlBuilder.Append(" ORDER BY ");
+                    orderBy = selectInfo.Orders.Join(",", x =>
+                    {
+                        return $"[{x.Field}] {x.Type.ToString()}";
+                    });
+                    sqlBuilder.Append(orderBy);
+                }
+                result.SqlCommand = sqlBuilder.ToString();
+                return result;
             }
-            result.SqlCommand = sqlBuilder.ToString();
+
+            if (!selectInfo.Orders.Any())
+                throw new NotImplementedException("分页查询必须具有排序字段");
+
+            StringBuilder shellBuilder = new StringBuilder();
+            shellBuilder.Append("SELECT * FROM ( SELECT *,ROW_NUMBER() OVER ( ORDER BY ");
+            orderBy = selectInfo.Orders.Join(",", x =>
+            {
+                return $"[{x.Field}] {x.Type.ToString()}";
+            });
+            shellBuilder.Append(orderBy);
+            shellBuilder.Append(" ) AS __RN__ FROM ( ");
+            shellBuilder.Append(sqlBuilder.ToString());
+            shellBuilder.Append(") t ) t WHERE t.__RN__ > @BEGINRN AND t.__RN__ <= @ENDRN");
+            result.AddParameter(new SqlParameterInfo() { Name = Constant.PARAMETER_NAME_BEGIN_ROW_NUMBER, Use = ParameterUses.ForCondition });
+            result.AddParameter(new SqlParameterInfo() { Name = Constant.PARAMETER_NAME_END_ROW_NUMBER, Use = ParameterUses.ForCondition });
+            result.SqlCommand = shellBuilder.ToString();
             return result;
         }
 

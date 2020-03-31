@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace Reface.NPI.Generators
+namespace Reface.NPI.Generators.ParameterLookups
 {
     public class ParameterPropertiesLookup : IParameterLookup
     {
@@ -40,16 +40,5 @@ namespace Reface.NPI.Generators
             }
         }
 
-        public bool Match(SqlCommandDescription description, MethodInfo methodInfo)
-        {
-            ParameterInfo[] parameterInfos = methodInfo.GetParameters();
-            if (description.Parameters.Count() > 1)
-                return parameterInfos.Length == 1;
-
-            if (description.Parameters.Count() == 1)
-                return !parameterInfos[0].ParameterType.IsValueType;
-
-            return false;
-        }
     }
 }

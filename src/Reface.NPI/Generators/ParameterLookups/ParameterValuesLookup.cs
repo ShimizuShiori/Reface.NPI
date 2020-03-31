@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace Reface.NPI.Generators
+namespace Reface.NPI.Generators.ParameterLookups
 {
     public class ParameterValuesLookup : IParameterLookup
     {
@@ -26,27 +26,16 @@ namespace Reface.NPI.Generators
         {
             return typeof(Array).IsAssignableFrom(type);
         }
-
-        public bool Match(SqlCommandDescription description, MethodInfo methodInfo)
-        {
-            ParameterInfo[] parameterInfos = methodInfo.GetParameters();
-            if (description.Parameters.Count() > 1)
-                return description.Parameters.Count() == parameterInfos.Length;
-
-            if (description.Parameters.Count() == 1)
-                return IsBaseType(parameterInfos[0].ParameterType)
-                    || IsArray(parameterInfos[0].ParameterType);
-
-            return false;
-        }
         public void Lookup(SqlCommandDescription description, MethodInfo methodInfo, object[] values)
         {
             ParameterInfo[] parameterInfos = methodInfo.GetParameters();
             int i = 0;
             foreach (var pi in parameterInfos)
             {
+                if (!(IsArray(pi.ParameterType) || IsBaseType(pi.ParameterType)))
+                    continue;
                 bool isSet = false,
-                    isCondition = false;
+                isCondition = false;
                 string pName = "";
 
                 pName = pi.Name;
