@@ -4,8 +4,8 @@
     <id>Reface.NPI</id>
     <version>1.2.0</version>
     <title>Reface.NPI</title>
-    <authors>ShimizuShiori</authors>
-    <owners>ShimizuShiori</owners>
+    <authors>Shiori</authors>
+    <owners>Shiori</owners>
     <license type="expression">MIT</license>
     <projectUrl>https://github.com/ShimizuShiori/Reface.NPI</projectUrl>
     <description>通过方法名称解析出 Sql语句 的库</description>
