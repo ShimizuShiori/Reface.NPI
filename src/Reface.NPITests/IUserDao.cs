@@ -71,5 +71,17 @@ namespace Reface.NPITests
         [Description("SELECT * FROM [User] WHERE [Id] In @Id")]
         void GetByIdIn(int[] id);
 
+        #region 带参数的语句生成
+
+        [Description("SELECT * FROM [User] WHERE [Name] Like @Aname Or [Name] Like @Bname Or [Name] Like @Cname")]
+        void SelectByNameLikeAnameOrNameLikeBnameOrNameLikeCname();
+
+        [Description("DELETE FROM [User] WHERE [Name] Like @Aname Or [Name] Like @Bname Or [Name] Like @Cname")]
+        void DeleteByNameLikeAnameOrNameLikeBnameOrNameLikeCname();
+
+        [Description("UPDATE [User] SET [Password] = @Newpassword WHERE [Userid] = @Userid And [Password] = @Oldpassword")]
+        void UpdatePasswordEqualsNewpasswordByUseridAndPasswordIsOldpassword(string newPassword, string userId, string oldPassword);
+
+        #endregion
     }
 }

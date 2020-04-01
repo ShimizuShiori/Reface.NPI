@@ -2,6 +2,7 @@
 using Reface.NPI;
 using Reface.NPI.Generators.SqlServer;
 using System;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace Reface.NPITests.Generators.SqlServer
@@ -123,6 +124,20 @@ namespace Reface.NPITests.Generators.SqlServer
             Assert.AreEqual(Guid.Empty, desc.Parameters["Gid"].Value);
             Assert.AreEqual(0, desc.Parameters["BEGINRN"].Value);
             Assert.AreEqual(10, desc.Parameters["ENDRN"].Value);
+        }
+
+        [TestMethod]
+        public void UpdatePasswordEqualsNewpasswordByUseridAndPasswordIsOldpassword()
+        {
+            var g = new DefaultSqlServerCommandGenerator();
+            StackFrame sf = new StackFrame();
+            Type type = typeof(IUserDao);
+            var method = type.GetMethod(sf.GetMethod().Name);
+            var d = g.Generate(method, new object[] { "888888", "123", "123456" });
+            Console.WriteLine(d);
+            Assert.AreEqual("888888", d.Parameters["Newpassword"].Value);
+            Assert.AreEqual("123", d.Parameters["Userid"].Value);
+            Assert.AreEqual("123456", d.Parameters["Oldpassword"].Value);
         }
     }
 }

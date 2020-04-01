@@ -2,9 +2,7 @@
 using Reface.NPI.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 
 namespace Reface.NPI.Generators.SqlServer
@@ -26,6 +24,7 @@ namespace Reface.NPI.Generators.SqlServer
 
             StringBuilder sqlBuilder = new StringBuilder();
             SqlCommandDescription result = new SqlCommandDescription();
+            var generateContext = new GenerateContext(result, sqlBuilder);
 
             sqlBuilder.Append("SELECT ");
 
@@ -36,30 +35,12 @@ namespace Reface.NPI.Generators.SqlServer
 
             sqlBuilder.Append($" FROM [{tableName}]");
 
-            if (selectInfo.Conditions.Any())
-            {
-                sqlBuilder.Append(" WHERE");
-                foreach (var condition in selectInfo.Conditions)
-                {
-                    sqlBuilder.Append($" [{condition.Field}]");
-                    sqlBuilder.Append($" {operatorMapper.GetOperatorByText(condition.Operators)} @{condition.Field}");
-                    result.AddParameter(new SqlParameterInfo(condition.Field, ParameterUses.ForCondition));
-                    if (condition.JoinerToNext != ConditionJoiners.Null)
-                        sqlBuilder.Append($" {condition.JoinerToNext.ToString()}");
-                }
-            }
+            GenerateByConditions(ref generateContext, selectInfo.Conditions);
+
             string orderBy;
             if (!selectInfo.Paging)
             {
-                if (selectInfo.Orders.Any())
-                {
-                    sqlBuilder.Append(" ORDER BY ");
-                    orderBy = selectInfo.Orders.Join(",", x =>
-                    {
-                        return $"[{x.Field}] {x.Type.ToString()}";
-                    });
-                    sqlBuilder.Append(orderBy);
-                }
+                GenerateSqlByOrders(ref generateContext, selectInfo.Orders);
                 result.SqlCommand = sqlBuilder.ToString();
                 return result;
             }
@@ -68,12 +49,9 @@ namespace Reface.NPI.Generators.SqlServer
                 throw new NotImplementedException("分页查询必须具有排序字段");
 
             StringBuilder shellBuilder = new StringBuilder();
-            shellBuilder.Append("SELECT * FROM ( SELECT *,ROW_NUMBER() OVER ( ORDER BY ");
-            orderBy = selectInfo.Orders.Join(",", x =>
-            {
-                return $"[{x.Field}] {x.Type.ToString()}";
-            });
-            shellBuilder.Append(orderBy);
+            shellBuilder.Append("SELECT * FROM ( SELECT *,ROW_NUMBER() OVER (");
+            generateContext.StringBuilder = shellBuilder;
+            GenerateSqlByOrders(ref generateContext, selectInfo.Orders);
             shellBuilder.Append(" ) AS __RN__ FROM ( ");
             shellBuilder.Append(sqlBuilder.ToString());
             shellBuilder.Append(") t ) t WHERE t.__RN__ > @BEGINRN AND t.__RN__ <= @ENDRN");
@@ -90,25 +68,20 @@ namespace Reface.NPI.Generators.SqlServer
 
             StringBuilder sqlBuilder = new StringBuilder();
             SqlCommandDescription result = new SqlCommandDescription();
+            GenerateContext generateContext = new GenerateContext(result, sqlBuilder);
 
             sqlBuilder.Append($"UPDATE [{tableName}] SET ");
 
             string setCommand = updateInfo.SetFields.Join(",", x =>
             {
-                result.AddParameter(new SqlParameterInfo(x.Field, ParameterUses.ForSet));
-                return $"[{x}] = @{x}";
+                result.AddParameter(new SqlParameterInfo(x.Parameter, ParameterUses.ForSet));
+                return $"[{x.Field}] = @{x.Parameter}";
             });
 
             sqlBuilder.Append(setCommand);
-            sqlBuilder.Append(" WHERE");
 
-            foreach (var condition in updateInfo.Conditions)
-            {
-                sqlBuilder.Append($" [{condition.Field}] {operatorMapper.GetOperatorByText(condition.Operators)} @{condition.Field}");
-                if (condition.JoinerToNext != ConditionJoiners.Null)
-                    sqlBuilder.Append($" {condition.JoinerToNext.ToString()}");
-                result.AddParameter(new SqlParameterInfo(condition.Field, ParameterUses.ForCondition));
-            }
+            GenerateByConditions(ref generateContext, updateInfo.Conditions);
+
             result.SqlCommand = sqlBuilder.ToString();
             return result;
         }
@@ -119,18 +92,11 @@ namespace Reface.NPI.Generators.SqlServer
             DeleteInfo deleteInfo = (DeleteInfo)context.CommandInfo;
             StringBuilder sqlBuilder = new StringBuilder();
             SqlCommandDescription description = new SqlCommandDescription();
+            GenerateContext generateContext = new GenerateContext(description, sqlBuilder);
+
             sqlBuilder.Append($"DELETE FROM [{tableName}]");
-            if (deleteInfo.ConditionInfos.Any())
-            {
-                sqlBuilder.Append(" WHERE");
-                foreach (var condition in deleteInfo.ConditionInfos)
-                {
-                    sqlBuilder.Append($" [{condition.Field}] {operatorMapper.GetOperatorByText(condition.Operators)} @{condition.Field}");
-                    if (condition.JoinerToNext != ConditionJoiners.Null)
-                        sqlBuilder.Append($" {condition.JoinerToNext.ToString()}");
-                    description.AddParameter(new SqlParameterInfo(condition.Field, ParameterUses.ForCondition));
-                }
-            }
+            GenerateByConditions(ref generateContext, deleteInfo.ConditionInfos);
+
             description.SqlCommand = sqlBuilder.ToString();
             return description;
         }
@@ -149,6 +115,41 @@ namespace Reface.NPI.Generators.SqlServer
             }
             description.SqlCommand = $"INSERT INTO [{context.TableName}]({fields})VALUES({values})";
             return description;
+        }
+
+        private void GenerateByConditions(ref GenerateContext context, IEnumerable<ConditionInfo> conditions)
+        {
+            if (conditions == null) return;
+            if (!conditions.Any()) return;
+            var sqlBuilder = context.StringBuilder;
+            var result = context.SqlCommandDescription;
+            sqlBuilder.Append(" WHERE");
+            foreach (var condition in conditions)
+            {
+                GenerateSqlByCondition(ref sqlBuilder, condition);
+                result.AddParameter(new SqlParameterInfo(condition.Parameter, ParameterUses.ForCondition));
+            }
+        }
+
+        private void GenerateSqlByCondition(ref StringBuilder sqlBuilder, ConditionInfo condition)
+        {
+            sqlBuilder.Append($" [{condition.Field}]");
+            sqlBuilder.Append($" {operatorMapper.GetOperatorByText(condition.Operators)} @{condition.Parameter}");
+            if (condition.JoinerToNext != ConditionJoiners.Null)
+                sqlBuilder.Append($" {condition.JoinerToNext.ToString()}");
+        }
+
+        private void GenerateSqlByOrders(ref GenerateContext context, IEnumerable<OrderInfo> orders)
+        {
+            if (orders == null) return;
+            if (orders.Count() == 0) return;
+            var sqlBuilder = context.StringBuilder;
+            var description = context.SqlCommandDescription;
+            sqlBuilder.Append(" ORDER BY ");
+            sqlBuilder.Append(orders.Join(",", x =>
+            {
+                return $"[{x.Field}] {x.Type.ToString()}";
+            }));
         }
     }
 }

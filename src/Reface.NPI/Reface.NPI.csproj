@@ -83,6 +83,7 @@
     <Compile Include="Generators\SqlCommandDescription.cs" />
     <Compile Include="Generators\SqlCommandGeneratorBase.cs" />
     <Compile Include="Generators\SqlServer\DefaultSqlServerCommandGenerator.cs" />
+    <Compile Include="Generators\SqlServer\GenerateContext.cs" />
     <Compile Include="Generators\SqlServer\SqlServerOperatorMapper.cs" />
     <Compile Include="Generators\IParameterLookup.cs" />
     <Compile Include="ICache.cs" />
