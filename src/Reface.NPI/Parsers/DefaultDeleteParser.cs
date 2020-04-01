@@ -38,6 +38,7 @@ namespace Reface.NPI.Parsers
                     {
                         ConditionInfo conditionInfo = new ConditionInfo();
                         conditionInfo.Field = machine.TokenStack.Pop().Text;
+                        conditionInfo.Parameter = conditionInfo.Field;
                         machine.Context[CONTEXT_KEY_CONDITION] = conditionInfo;
                         deleteInfo.ConditionInfos.Add(conditionInfo);
                     }
@@ -46,6 +47,12 @@ namespace Reface.NPI.Parsers
                     {
                         ConditionInfo conditionInfo = machine.Context[CONTEXT_KEY_CONDITION] as ConditionInfo;
                         conditionInfo.Operators = machine.TokenStack.Pop().Text;
+                    }
+                    break;
+                case States.DeleteParseStates.ConditionParameter:
+                    {
+                        ConditionInfo conditionInfo = machine.Context[CONTEXT_KEY_CONDITION] as ConditionInfo;
+                        conditionInfo.Parameter = machine.TokenStack.Pop().Text;
                     }
                     break;
                 case States.DeleteParseStates.NextCondition:

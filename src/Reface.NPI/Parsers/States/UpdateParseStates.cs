@@ -9,7 +9,10 @@
         ConditionField,
         ConditionOperator,
         NextCondition,
-        End
+        End,
+        ConditionParameter,
+        SetParameter,
+        SetEquals
 
     }
 }

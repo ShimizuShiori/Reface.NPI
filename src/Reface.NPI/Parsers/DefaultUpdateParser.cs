@@ -27,13 +27,24 @@ namespace Reface.NPI.Parsers
         private void Machine_Parsing(object sender, Events.TokenParsingEventArgs<States.UpdateParseStates> e)
         {
             const string CONTEXT_KEY_CONDITION = "Condition";
+            const string CONTEXT_KEY_SET = "Set";
             var machine = sender as UpdateStateMachine;
             switch (e.NowState)
             {
                 case States.UpdateParseStates.SetField:
                     {
                         string field = machine.TokenStack.Pop().Text;
-                        info.SetFields.Add(field);
+                        SetInfo setInfo = new SetInfo();
+                        setInfo.Field = field;
+                        setInfo.Parameter = field;
+                        machine.Context[CONTEXT_KEY_SET] = setInfo;
+                        info.SetFields.Add(setInfo);
+                    }
+                    break;
+                case States.UpdateParseStates.SetParameter:
+                    {
+                        SetInfo info = (SetInfo)machine.Context[CONTEXT_KEY_SET];
+                        info.Parameter = machine.TokenStack.Pop().Text;
                     }
                     break;
                 case States.UpdateParseStates.ConditionField:
@@ -41,6 +52,7 @@ namespace Reface.NPI.Parsers
                         string field = machine.TokenStack.Pop().Text;
                         ConditionInfo condition = new ConditionInfo();
                         condition.Field = field;
+                        condition.Parameter = field;
                         info.Conditions.Add(condition);
                         machine.Context[CONTEXT_KEY_CONDITION] = condition;
                     }
@@ -50,6 +62,12 @@ namespace Reface.NPI.Parsers
                         string opr = machine.TokenStack.Pop().Text;
                         ConditionInfo condition = machine.Context[CONTEXT_KEY_CONDITION] as ConditionInfo;
                         condition.Operators = opr;
+                    }
+                    break;
+                case States.UpdateParseStates.ConditionParameter:
+                    {
+                        ConditionInfo condition = machine.Context[CONTEXT_KEY_CONDITION] as ConditionInfo;
+                        condition.Parameter = machine.TokenStack.Pop().Text;
                     }
                     break;
                 case States.UpdateParseStates.NextCondition:
@@ -62,6 +80,7 @@ namespace Reface.NPI.Parsers
                         condition.JoinerToNext = joiners;
                     }
                     break;
+                case States.UpdateParseStates.SetEquals:
                 case States.UpdateParseStates.NextSetField:
                 case States.UpdateParseStates.Condition:
                     machine.TokenStack.Pop();

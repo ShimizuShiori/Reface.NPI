@@ -1,12 +1,15 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Reface.NPI.Models;
 using System;
+using System.Diagnostics;
 
 namespace Reface.NPI.Parsers.Tests
 {
     [TestClass()]
     public class DefaultDeleteParserTests
     {
+        private readonly DefaultDeleteParser defaultDeleteParser = new DefaultDeleteParser();
+
         [DataRow("ById", 1)]
         [DataRow("ByIdAndName", 2)]
         [DataRow("ByIdIsAndNameLike", 2)]
@@ -14,7 +17,6 @@ namespace Reface.NPI.Parsers.Tests
         [TestMethod()]
         public void DeleteParseTest(string command, int conditionCount)
         {
-            DefaultDeleteParser defaultDeleteParser = new DefaultDeleteParser();
             DeleteInfo deleteInfo = defaultDeleteParser.Parse(command);
             Assert.AreEqual(conditionCount, deleteInfo.ConditionInfos.Count);
             Console.WriteLine(deleteInfo);
@@ -22,10 +24,30 @@ namespace Reface.NPI.Parsers.Tests
 
         public void ParseCommand_ByIdIsAndNameLike()
         {
-            DefaultDeleteParser defaultDeleteParser = new DefaultDeleteParser();
             DeleteInfo deleteInfo = defaultDeleteParser.Parse("ByIdIsAndNameLike");
+        }
 
-            //ssert.AreEqual("Id",deleteInfo.)
+        [TestMethod]
+        public void ByCdateGtBegindateAndCdateLtEnddate()
+        {
+            StackFrame sf = new StackFrame();
+            var method = sf.GetMethod();
+            DeleteInfo info = defaultDeleteParser.Parse(method.Name);
+
+            int i = 0;
+
+            Assert.AreEqual(2, info.ConditionInfos.Count);
+
+            Assert.AreEqual("Cdate", info.ConditionInfos[i].Field);
+            Assert.AreEqual("Gt", info.ConditionInfos[i].Operators);
+            Assert.AreEqual("Begindate", info.ConditionInfos[i].Parameter);
+            Assert.AreEqual(ConditionJoiners.And, info.ConditionInfos[i].JoinerToNext);
+
+            i++;
+            Assert.AreEqual("Cdate", info.ConditionInfos[i].Field);
+            Assert.AreEqual("Lt", info.ConditionInfos[i].Operators);
+            Assert.AreEqual("Enddate", info.ConditionInfos[i].Parameter);
+            Assert.AreEqual(ConditionJoiners.Null, info.ConditionInfos[i].JoinerToNext);
         }
     }
 }

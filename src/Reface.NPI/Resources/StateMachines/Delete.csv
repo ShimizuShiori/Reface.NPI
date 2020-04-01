@@ -2,6 +2,7 @@
 Start,,,,Condition,
 Condition,ConditionField,,,,
 ConditionField,ConditionOperator,NextCondition,NextCondition,,End
-ConditionOperator,,NextCondition,NextCondition,,End
+ConditionOperator,ConditionParameter,NextCondition,NextCondition,,End
 NextCondition,ConditionField,,,,
 End,,,,,
+ConditionParameter,,NextCondition,NextCondition,,End

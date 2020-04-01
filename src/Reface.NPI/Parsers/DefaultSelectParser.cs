@@ -42,6 +42,7 @@ namespace Reface.NPI.Parsers
                     {
                         ConditionInfo condition = new ConditionInfo();
                         condition.Field = machine.TokenStack.Pop().Text;
+                        condition.Parameter = condition.Field;
                         machine.Context[CONTEXT_KEY_CONDITION] = condition;
                         selectInfo.Conditions.Add(condition);
                     }
@@ -58,6 +59,13 @@ namespace Reface.NPI.Parsers
                         condition.JoinerToNext = machine.TokenStack.Pop().Action == Actions.SelectParseActions.Or
                             ? ConditionJoiners.Or
                             : ConditionJoiners.And;
+                    }
+                    break;
+
+                case SelectParseStates.ConditionParameter:
+                    {
+                        ConditionInfo condition = (ConditionInfo)machine.Context[CONTEXT_KEY_CONDITION];
+                        condition.Parameter = machine.TokenStack.Pop().Text;
                     }
                     break;
                 case SelectParseStates.OrderByField:

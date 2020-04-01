@@ -4,9 +4,10 @@ OutputField,,NextOutputField,,Condition,OrderBy,,End
 NextOutputField,OutputField,,,,,,
 Condition,ConditionField,,,,,,
 ConditionField,ConditionOperator,NextCondition,NextCondition,,OrderBy,,End
-ConditionOperator,,NextCondition,NextCondition,,OrderBy,,End
+ConditionOperator,ConditionParameter,NextCondition,NextCondition,,OrderBy,,End
 NextCondition,ConditionField,,,,,,
 OrderBy,OrderByField,,,,,,
 OrderByField,OrderByField,,,,,AscOrDesc,End
 AscOrDesc,OrderByField,,,,,,End
 End,,,,,,,
+ConditionParameter,,NextCondition,NextCondition,,OrderBy,,End

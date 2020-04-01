@@ -95,7 +95,7 @@ namespace Reface.NPI.Generators.SqlServer
 
             string setCommand = updateInfo.SetFields.Join(",", x =>
             {
-                result.AddParameter(new SqlParameterInfo(x, ParameterUses.ForSet));
+                result.AddParameter(new SqlParameterInfo(x.Field, ParameterUses.ForSet));
                 return $"[{x}] = @{x}";
             });
 

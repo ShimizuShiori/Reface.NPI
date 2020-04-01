@@ -95,6 +95,7 @@
     <Compile Include="Models\InsertInfo.cs" />
     <Compile Include="Models\OrderInfo.cs" />
     <Compile Include="Models\OrderTypes.cs" />
+    <Compile Include="Models\SetInfo.cs" />
     <Compile Include="Models\UpdateInfo.cs" />
     <Compile Include="NpiServicesCollection.cs" />
     <Compile Include="Paging.cs" />

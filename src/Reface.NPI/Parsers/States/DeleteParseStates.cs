@@ -7,7 +7,8 @@
         ConditionField,
         ConditionOperator,
         NextCondition,
-        End
+        End,
+        ConditionParameter
 
     }
 }

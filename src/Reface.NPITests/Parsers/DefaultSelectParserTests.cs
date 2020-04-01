@@ -1,8 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Reface.NPI.Models;
-using Reface.NPI.Parsers.Actions;
-using Reface.NPI.Parsers.Tokens;
-using System.Collections.Generic;
 
 namespace Reface.NPI.Parsers.Tests
 {
@@ -81,6 +78,72 @@ namespace Reface.NPI.Parsers.Tests
 
             Assert.AreEqual("Id", info.Orders[1].Field);
             Assert.AreEqual(OrderTypes.Asc, info.Orders[1].Type);
+        }
+
+
+        [TestMethod]
+        public void ParseCommand_NameByIdIsMyid()
+        {
+            DefaultSelectParser parser = new DefaultSelectParser();
+            SelectInfo info = parser.Parse("NameByIdIsMyid");
+            Assert.AreEqual("Name", info.Fields[0]);
+
+            Assert.AreEqual("Id", info.Conditions[0].Field);
+            Assert.AreEqual("Is", info.Conditions[0].Operators);
+            Assert.AreEqual(ConditionJoiners.Null, info.Conditions[0].JoinerToNext);
+            Assert.AreEqual("Myid", info.Conditions[0].Parameter);
+        }
+
+        [TestMethod]
+        public void ParseCommand_NameByIdIsMyidAndAgeGtMyage()
+        {
+            DefaultSelectParser parser = new DefaultSelectParser();
+            SelectInfo info = parser.Parse("NameByIdIsMyidAndAgeGtMyage");
+            Assert.AreEqual("Name", info.Fields[0]);
+
+            Assert.AreEqual("Id", info.Conditions[0].Field);
+            Assert.AreEqual("Is", info.Conditions[0].Operators);
+            Assert.AreEqual(ConditionJoiners.And, info.Conditions[0].JoinerToNext);
+            Assert.AreEqual("Myid", info.Conditions[0].Parameter);
+
+            Assert.AreEqual("Age", info.Conditions[1].Field);
+            Assert.AreEqual("Gt", info.Conditions[1].Operators);
+            Assert.AreEqual(ConditionJoiners.Null, info.Conditions[1].JoinerToNext);
+            Assert.AreEqual("Myage", info.Conditions[1].Parameter);
+        }
+
+        [TestMethod]
+        public void ParseCommand_NameByIdIs()
+        {
+            DefaultSelectParser parser = new DefaultSelectParser();
+            SelectInfo info = parser.Parse("NameByIdIs");
+            Assert.AreEqual("Name", info.Fields[0]);
+
+            Assert.AreEqual("Id", info.Conditions[0].Field);
+            Assert.AreEqual("Is", info.Conditions[0].Operators);
+            Assert.AreEqual(ConditionJoiners.Null, info.Conditions[0].JoinerToNext);
+            Assert.AreEqual("Id", info.Conditions[0].Parameter);
+        }
+
+        [TestMethod]
+        public void ParseCommand_NameByIdIsMyidAndAgeGtMyageOrderbyId()
+        {
+            DefaultSelectParser parser = new DefaultSelectParser();
+            SelectInfo info = parser.Parse("NameByIdIsMyidAndAgeGtMyageOrderbyId");
+            Assert.AreEqual("Name", info.Fields[0]);
+
+            Assert.AreEqual("Id", info.Conditions[0].Field);
+            Assert.AreEqual("Is", info.Conditions[0].Operators);
+            Assert.AreEqual(ConditionJoiners.And, info.Conditions[0].JoinerToNext);
+            Assert.AreEqual("Myid", info.Conditions[0].Parameter);
+
+            Assert.AreEqual("Age", info.Conditions[1].Field);
+            Assert.AreEqual("Gt", info.Conditions[1].Operators);
+            Assert.AreEqual(ConditionJoiners.Null, info.Conditions[1].JoinerToNext);
+            Assert.AreEqual("Myage", info.Conditions[1].Parameter);
+
+            Assert.AreEqual("Id", info.Orders[0].Field);
+            Assert.AreEqual(OrderTypes.Asc, info.Orders[0].Type);
         }
     }
 }
