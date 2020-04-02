@@ -8,6 +8,7 @@
         public const string MACHINE_NAME_SELECT = "Select";
         public const string MACHINE_NAME_DELETE = "Delete";
         public const string MACHINE_NAME_UPDATE = "Update";
+        public const string MACHINE_NAME_INSERT = "Insert";
 
         public static string GetResourcePath(string path)
         {

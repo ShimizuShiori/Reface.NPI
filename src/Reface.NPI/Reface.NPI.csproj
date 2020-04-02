@@ -101,14 +101,17 @@
     <Compile Include="NpiServicesCollection.cs" />
     <Compile Include="Paging.cs" />
     <Compile Include="Parsers\Actions\DeleteParseActions.cs" />
+    <Compile Include="Parsers\Actions\InsertParseActions.cs" />
     <Compile Include="Parsers\Actions\UpdateParseActions.cs" />
     <Compile Include="Parsers\DefaultCommandParser.cs" />
     <Compile Include="Parsers\DefaultDeleteParser.cs" />
+    <Compile Include="Parsers\DefaultInsertParser.cs" />
     <Compile Include="Parsers\DefaultSelectParser.cs" />
     <Compile Include="Parsers\DefaultUpdateParser.cs" />
     <Compile Include="Parsers\Events\TokenParsingEventArgs.cs" />
     <Compile Include="Parsers\ICommandParser.cs" />
     <Compile Include="Parsers\IDeleteParser.cs" />
+    <Compile Include="Parsers\IInsertParser.cs" />
     <Compile Include="Parsers\IParseStateMachine.cs" />
     <Compile Include="Parsers\ISelectParser.cs" />
     <Compile Include="Parsers\IToken.cs" />
@@ -116,10 +119,13 @@
     <Compile Include="Parsers\StateMachines\DefaultParseStateMachine.cs" />
     <Compile Include="Parsers\StateMachines\DefaultStateMachineBuilderFactory.cs" />
     <Compile Include="Parsers\StateMachines\DeleteStateMachine.cs" />
+    <Compile Include="Parsers\StateMachines\InsertStateMachine.cs" />
     <Compile Include="Parsers\StateMachines\IStateMachineBuilderFactory.cs" />
     <Compile Include="Parsers\StateMachines\SelectStateMachine.cs" />
     <Compile Include="Parsers\StateMachines\UpdateStateMachine.cs" />
+    <Compile Include="Parsers\States\InsertParseStates.cs" />
     <Compile Include="Parsers\States\UpdateParseStates.cs" />
+    <Compile Include="Parsers\Tokens\InsertToken.cs" />
     <Compile Include="Parsers\Tokens\SelectToken.cs" />
     <Compile Include="Parsers\States\DeleteParseStates.cs" />
     <Compile Include="Parsers\TokenStack.cs" />
@@ -141,6 +147,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\StateMachines\Select.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\StateMachines\Insert.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

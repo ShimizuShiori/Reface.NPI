@@ -71,7 +71,7 @@ namespace Reface.NPI.Parsers
                 case ACTION_CREATE:
                 case ACTION_NEW:
                 case ACTION_INSERT:
-                    return new InsertInfo();
+                    return NpiServicesCollection.GetService<IInsertParser>().Parse(realCommand);
                 default:
                     throw new NotSupportActionException(action);
             }

@@ -18,6 +18,7 @@ namespace Reface.NPI
             RegisterService<ISelectParser>(t => new DefaultSelectParser());
             RegisterService<IUpdateParser>(t => new DefaultUpdateParser());
             RegisterService<IDeleteParser>(t => new DefaultDeleteParser());
+            RegisterService<IInsertParser>(t => new DefaultInsertParser());
             RegisterService<ICommandParser>(t => new DefaultCommandParser());
             RegisterService<IParameterLookup>(t => new ParameterValuesLookup());
             RegisterService<IParameterLookup>(t => new ParameterPropertiesLookup());

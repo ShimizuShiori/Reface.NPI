@@ -68,6 +68,7 @@
     <Compile Include="IUserDao.cs" />
     <Compile Include="Parsers\DefaultCommandParserTests.cs" />
     <Compile Include="Parsers\DefaultDeleteParserTests.cs" />
+    <Compile Include="Parsers\DefaultInsertParserTests.cs" />
     <Compile Include="Parsers\DefaultSelectParserTests.cs" />
     <Compile Include="Parsers\DefaultUpdateParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
