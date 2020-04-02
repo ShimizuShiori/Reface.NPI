@@ -105,8 +105,16 @@ namespace Reface.NPI.Generators.SqlServer
         {
             SqlCommandDescription description = new SqlCommandDescription();
 
+            InsertInfo info = (InsertInfo)context.CommandInfo;
+
+            HashSet<string> lowerCaseWithoutFields = new HashSet<string>
+                (
+                    info.WithoutFields.Select(x => x.ToLower())
+                );
+
             IEnumerable<string> columnNames = context.EntityType.GetProperties()
-                .Select(x => fieldNameProvider.Provide(x));
+                .Select(x => fieldNameProvider.Provide(x))
+                .Where(x => !lowerCaseWithoutFields.Contains(x.ToLower()));
             string fields = columnNames.Join(",", x => $"[{x}]");
             string values = columnNames.Join(",", x => $"@{x}");
             foreach (var columnName in columnNames)

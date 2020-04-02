@@ -83,5 +83,12 @@ namespace Reface.NPITests
         void UpdatePasswordEqualsNewpasswordByUseridAndPasswordIsOldpassword(string newPassword, string userId, string oldPassword);
 
         #endregion
+
+        #region 带 Without 的 Insert
+
+        [Description("INSERT INTO [User]([Name],[Password])VALUES(@Name,@Password)")]
+        void InsertWithoutIdCreatetime(User user);
+
+        #endregion
     }
 }
