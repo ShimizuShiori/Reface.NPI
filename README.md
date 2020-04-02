@@ -125,6 +125,8 @@ IEnumerable<T> GetServices<T>();
 
 ## 5 方法名规则
 
+详细的规则可以点击 [此处](docs/Rules.md) 阅读
+
 | 方法名称 | 期望的 Sql |
 |---|---|
 | SelectById | select * from [table] where id = ? |

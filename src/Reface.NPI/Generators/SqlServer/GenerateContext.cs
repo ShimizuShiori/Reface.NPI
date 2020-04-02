@@ -2,7 +2,7 @@
 
 namespace Reface.NPI.Generators.SqlServer
 {
-    public class GenerateContext
+    class GenerateContext
     {
         public SqlCommandDescription SqlCommandDescription { get; set; }
 
