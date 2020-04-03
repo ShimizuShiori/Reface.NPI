@@ -2,9 +2,6 @@
 {
     public interface IResourceNameProvider
     {
-        string SelectStateMachineCsv { get; }
-        string InsertStateMachineCsv { get; }
-        string UpdateStateMachineCsv { get; }
-        string DeleteStateMachineCsv { get; }
+        string GetStateMachineCsv(string stateMachineName);
     }
 }

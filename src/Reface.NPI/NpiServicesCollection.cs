@@ -31,6 +31,7 @@ namespace Reface.NPI
             RegisterService<IStateMachineBuilderFactory>(t => new DefaultStateMachineBuilderFactory());
             RegisterService<ICache>(t => new DefaultCache());
             RegisterService<IResourceNameProvider>(t => new DefaultResourceNameProvider());
+            RegisterService<IResourceProvider>(t => new DefaultResourceProvider());
         }
 
         public static void RegisterService<T>(Func<Type, T> factory)

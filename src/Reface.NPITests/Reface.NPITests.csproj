@@ -69,6 +69,7 @@
     <Compile Include="Parsers\DefaultSelectParserTests.cs" />
     <Compile Include="Parsers\DefaultUpdateParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResourceNameProviderTests.cs" />
     <Compile Include="User.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -54,6 +54,8 @@
     <Compile Include="Attributes\ParameterAttribute.cs" />
     <Compile Include="Constant.cs" />
     <Compile Include="DefaultCache.cs" />
+    <Compile Include="DefaultResourceNameProvider.cs" />
+    <Compile Include="DefaultResourceProvider.cs" />
     <Compile Include="Errors\NotSupportActionException.cs" />
     <Compile Include="Errors\NPIException.cs" />
     <Compile Include="Errors\PagingMustBeFollowedBySelectException.cs" />
@@ -88,6 +90,8 @@
     <Compile Include="Generators\IParameterLookup.cs" />
     <Compile Include="ICache.cs" />
     <Compile Include="INpiDao.cs" />
+    <Compile Include="IResourceNameProvider.cs" />
+    <Compile Include="IResourceProvider.cs" />
     <Compile Include="Models\CommandInfoTypes.cs" />
     <Compile Include="Models\ConditionInfo.cs" />
     <Compile Include="Models\ConditionJoiners.cs" />
@@ -155,9 +159,9 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="Resources\OperatorMappings\SqlServer.xml">
+    <EmbeddedResource Include="Resources\OperatorMappings\SqlServer.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
