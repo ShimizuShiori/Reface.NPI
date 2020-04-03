@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Reface.NPI.Parsers.Events;
+﻿using Reface.NPI.Parsers.Events;
 using Reface.StateMachine;
-using Reface.StateMachine.CsvBuilder;
+using System;
+using System.Collections.Generic;
 
 namespace Reface.NPI.Parsers.StateMachines
 {
