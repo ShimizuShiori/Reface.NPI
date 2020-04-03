@@ -140,18 +140,18 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Reface.NPI.nuspec" />
-    <Content Include="Resources\StateMachines\Update.csv">
+    <EmbeddedResource Include="Resources\StateMachines\Update.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\StateMachines\Delete.csv">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\StateMachines\Delete.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\StateMachines\Select.csv">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\StateMachines\Select.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\StateMachines\Insert.csv">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\StateMachines\Insert.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
