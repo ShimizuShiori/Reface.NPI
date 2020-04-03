@@ -6,7 +6,7 @@ namespace Reface.NPI.Parsers.StateMachines
 {
     public class DeleteStateMachine : DefaultParseStateMachine<DeleteToken, DeleteParseStates, DeleteParseActions>
     {
-        public DeleteStateMachine() : base(PathProvider.MACHINE_NAME_DELETE)
+        public DeleteStateMachine() : base(Constant.MACHINE_NAME_DELETE)
         {
         }
     }

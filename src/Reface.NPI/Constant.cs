@@ -9,5 +9,10 @@ namespace Reface.NPI
         public const string PARAMETER_NAME_BEGIN_ROW_NUMBER = "BEGINRN";
 
         public const string PARAMETER_NAME_END_ROW_NUMBER = "ENDRN";
+
+        public const string MACHINE_NAME_SELECT = "Select";
+        public const string MACHINE_NAME_INSERT = "Insert";
+        public const string MACHINE_NAME_UPDATE = "Update";
+        public const string MACHINE_NAME_DELETE = "Delete";
     }
 }

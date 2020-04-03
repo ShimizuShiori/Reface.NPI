@@ -6,7 +6,7 @@ namespace Reface.NPI.Parsers.StateMachines
 {
     public class InsertStateMachine : DefaultParseStateMachine<InsertToken, InsertParseStates, InsertParseActions>
     {
-        public InsertStateMachine() : base(PathProvider.MACHINE_NAME_INSERT)
+        public InsertStateMachine() : base(Constant.MACHINE_NAME_INSERT)
         {
         }
     }

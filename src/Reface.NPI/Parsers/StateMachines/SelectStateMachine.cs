@@ -6,7 +6,7 @@ namespace Reface.NPI.Parsers.StateMachines
 {
     public class SelectStateMachine : DefaultParseStateMachine<SelectToken, SelectParseStates, SelectParseActions>
     {
-        public SelectStateMachine() : base(PathProvider.MACHINE_NAME_SELECT)
+        public SelectStateMachine() : base(Constant.MACHINE_NAME_SELECT)
         {
         }
     }

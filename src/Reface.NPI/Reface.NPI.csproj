@@ -135,7 +135,6 @@
     <Compile Include="Parsers\TokenStack.cs" />
     <Compile Include="Parsers\Tokens\DeleteToken.cs" />
     <Compile Include="Parsers\Tokens\UpdateToken.cs" />
-    <Compile Include="PathProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\SelectInfo.cs" />
     <Compile Include="Parsers\Actions\SelectParseActions.cs" />
