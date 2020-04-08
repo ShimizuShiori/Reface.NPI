@@ -1,37 +1,49 @@
-# Reface.NPI
+[TOC]
 
-## 1 简介
+# 什么是 NPI
 
-**.Net Persistent Interface**，简称 **NPI**
+*NPI* 全名 *.Net Persistent Interface* 。
 
-编写此库是为了能够在不编写 Sql 的前提下，灵活的对数据进行增删改查。
+这是一个利用 *interface* 实现的轻量级 **ORM** 框架，
 
-该库主要实现的功能是从 **方法名称** 解析出最终的 Sql 语句的过程，本库专注于此功能，而不实现以下功能
+它与市面上大多数的 **ORM** 框架不同，它不基于 *Linq* 进行数据库操作，而是基于 *Method Name*。
+
+**例如**
+```csharp
+IList<User> SelectById(int id);
+
+IList<User> SelecyByNameLike(string name);
+
+void UpdatePasswordById(int id, string password);
+
+bool DeleteById(int id);
+```
+
+*NPI* 提供了将上述 **MethodName** 和 **实际运算时的入参** 生成 **Sql执行信息** 的方法。
+
+此库不实现以下功能
 * 通过 *AOP* 产生 *interface* 的 *Proxy* ( 这个功能会在 *Reface.AppStarter.NPI* 中基于 *Castle.DynamicProxy* 实现 )
 * 对 **Sql执行信息** 的执行
 * 将查询结果映射到对应的实体中 ( 这个功能会在 *Reface.AppStarter.NPI* 以基于 *Dapper* 实现 )
 * 对事务的管理 ( 这个功能预计在一个由 *Reface.AppStarter* 构建的一个业务框架中实现 )
 
-该库不直接面向业务实现，而希望向 Orm 框架提供更灵活的查询、删除、更新的方式。
+不建议直接将此库用于业务功能的开发，
+建议对该库进行一定的二次开发或封装后再投入使用，
+开发者可以根据系统当前已经依赖的库进行封装。
 
-开发者可以使用此库进行二次开发
+**计划在未来转为 .NetStandard 版本，以同时提供给 .NetCore 使用。**
 
-* 重新定义方法名的解析过程
-* 对不同的数据库进行不同的 Sql 生成
-* 后续的 Sql 执行
-* 后续的结果映射
-* 更多的后续操作
 
-## 2 依赖项
+# 依赖项
 
-* **Reface.StateMachine**, 库中对方法名称解析的过程依赖于此库
-* **Reface**, 提供了一些基础的功能和方法，使用 .NetStandard2.0 编写
+* *Reface.StateMachine* ( 库中对方法名称解析的过程依赖于此库 )
+* *Reface* ( 提供了一些基础的功能和方法，使用 .NetStandard2.0 编写 )
 
 由于使用了 .NetStrand2.0，因此本库需要 .Net framework 4.6.1 及以上版本才能使用。
 
-## 3 使用方法
+# 使用方法
 
-### 3.1 四个分析器
+## 四个分析器
 
 系统中针对四种数据库不同的操作（增删改查），分别提供了四个不同的语义分析器
 * ISelectParser
@@ -60,7 +72,7 @@ SelectInfo info = parser.Parse(command);
 
 这些 *xxxInfo* 的结构并不复杂，这里将不对其展开进行更多的介绍。
 
-### 3.2 四个分析器的整合
+## 四个分析器的整合
 
 *ICommandParser* 对四个分析器做了整合，以便我们不关心对方法的区分而直接得到 *ICommandInfo* , *SelectInfo* , *InsertInfo* , *UpdateIfo* 和 *DeleteInfo* 都实现了 *ICommandInfo* 接口。
 
@@ -104,7 +116,7 @@ UpdateInfo updateInfo = (UpdateInfo)info;
 // updateInfo.Conditions[0].Field = "Id";
 ```
 
-### 3.3 通过方名和参数生成执行信息
+## 通过方名和参数生成执行信息
 
 执行信息包含两个信息
 * Sql 语句
@@ -135,52 +147,35 @@ namespace Reface.NPI.Generators
 
 *SqlCommandDescripion* 是一个简单的数据结构，它包含 *SqlCommand* 和 *Parameters* 两个主要的属性，使用这两个属性可以完成后续的 *Sql* 执行。
 
+# 注意事项
 
-
-
-
-
-
-
-
-
-
-## 4 注意事项
-
-对于表名的获取，是基于 **INpiDao&lt;TEntity&gt;** 中的 TEntity 来完成的，
+* 对于表名的获取，是基于 **INpiDao&lt;TEntity&gt;** 中的 TEntity 来完成的，
 通过反射 TEntity 上的 **System.ComponentModel.DataAnnotations.Schema.TableAttibute** 特征来获取表名。
-由于 **TableAttribute** 在很多库中，所以要注意不要引用错了。
+* 由于 **TableAttribute** 在很多常见库中出现，所以要注意不要引用错了。
+* *Reface.NPI* 允许你重写对表名的获取，对字段的获取等逻辑，重写方法会在后面的文章中介绍。
 
-## 5 方法名规则
+# 方法名及预期 Sql 参照表
 
-详细的规则可以点击 [此处](docs/Rules.md) 阅读
 
-| 方法名称 | 期望的 Sql |
-|---|---|
-| SelectById | select * from [table] where id = ? |
-| SelectNameAndAgeById | select name, age from [table] where id = ? |
-| SelectByRegistertimeGreaterthan | select * from [table] where Registertime > ? |
-| SelectByRegistertimeGteq | select * from [table] where Registertime >= ? |
-| SelectByIdAndName | select * from [table] where id = ? and name = ? |
-| SelectByIdOrName | select * from [table] where id = ? or name = ? |
-| SelectByIdOrNameLike | select * from [table] where id = ? or name like ? |
-| SelectByIdOrderbyName | select * from [table] where id = ? order by name |
-| SelectByIdOrderByNameDesc | select * from [table] where id = ? order by name desc |
-| DeleteById | delete from [table] where id = ? |
-| UpdatePasswordById | update [table] set password = ? where id = ? |
-| UpdatePasswordByNameLike | update [table] set password = ? where name like ? |
-| UpdateStateAndTokenByLastoprtimeGt | update [table] set state=?,token=? where lastoprtime > ? |
-
-说明:
-* Select、Update、Delete 中条件的部分的解析模式是相同的
-* Insert 语句不涉及，因为模式单一
-* By部分的，不写操作符视作 Equals
-* Select 与 Get、Fetch 解析相同
-* Insert 与 Create、New 相同
-* Update 与 Modify 相同
-* Delete 与 Remove 相同
-
----
+| 方法名称 | 期望的 Sql | 说明 |
+|---|---|---|
+| SelectById | select * from [table] where id = ? | 以 Id 作为条件查询实体 |
+| SelectNameAndAgeById | select name, age from [table] where id = ? | 以 Id 作为条件，只查询 Name 和 Age 字段 |
+| SelectByRegistertimeGreaterthan | select * from [table] where Registertime > ? | 查询 RegisterTime 大于参数的实体 |
+| SelectByRegistertimeGteq | select * from [table] where Registertime >= ? |查询 RegisterTime 大于等于参数的实体 |
+| SelectByIdAndName | select * from [table] where id = ? and name = ? | 按 Id 且 Name 作为条件查询实体 |
+| SelectByIdOrName | select * from [table] where id = ? or name = ? | 以 Id 或 Name 作为条件查询实体 |
+| SelectByIdOrNameLike | select * from [table] where id = ? or name like ? | 以 Id 或 Name Like 作为条件查询实体 |
+| SelectByIdOrderbyName | select * from [table] where id = ? order by name | 以 Id 查询并以 Name 排序 |
+| SelectByIdOrderByNameDesc | select * from [table] where id = ? order by name desc | 以 Id 作为条件并以 Name 倒序排序 |
+| DeleteById | delete from [table] where id = ? | 以 Id 作为条件删除 |
+| UpdatePasswordById | update [table] set password = ? where id = ? | 以 Id 作为条件更新 Password |
+| UpdatePasswordByNameLike | update [table] set password = ? where name like ? | 以 Name Like 作为条件更新 Password |
+| UpdateStateAndTokenByLastoprtimeGt | update [table] set state=?,token=? where lastoprtime > ? | 以 LastOprTime 大于 作为条件更新 state 和 token |
+| UpdateById | update [table] set ... where id = ? | 以 Id 作为条件，并以 Id 以外的字段作为 Set 子句 |
+| UpdateWithoutCreatetimeById | update [table] set ... where id = ? | 以 Id 作为条件，并以 Id 和 Createtime 以外的字段作为 Set 子句 |
+| UpdateWithoutStateCreatetimeById | update [table] set ... where id = ? | 以 Id 作为条件，并以 Id 、State 和 Createtime 以外的字段作为 Set 子句 |
+| InsertWithoutIdCreatetime(Entity) | insert into [table] (...) values(?,...,?) | 排除 Id 和 Createtime 字段新增实现 |
 
 **相关链接**
 
