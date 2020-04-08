@@ -71,14 +71,29 @@ namespace Reface.NPI.Generators.SqlServer
             GenerateContext generateContext = new GenerateContext(result, sqlBuilder);
 
             sqlBuilder.Append($"UPDATE [{tableName}] SET ");
-
-            
-
-            string setCommand = updateInfo.SetFields.Join(",", x =>
+            string setCommand;
+            if (updateInfo.SetFields.Any())
             {
-                result.AddParameter(new SqlParameterInfo(x.Parameter, ParameterUses.ForSet));
-                return $"[{x.Field}] = @{x.Parameter}";
-            });
+                setCommand = updateInfo.SetFields.Join(",", x =>
+                {
+                    result.AddParameter(new SqlParameterInfo(x.Parameter, ParameterUses.ForSet));
+                    return $"[{x.Field}] = @{x.Parameter}";
+                });
+            }
+            else
+            {
+                HashSet<string> conditionField = new HashSet<string>(updateInfo.Conditions.Select(x => x.Field));
+                HashSet<string> lowerCaseWithoutFields = new HashSet<string>(updateInfo.WithoutFields.Select(x => x.ToLower()));
+                setCommand = GetColumnNames(context)
+                    .Where(x => !conditionField.Contains(x))
+                    .Where(x=>!lowerCaseWithoutFields.Contains(x.ToLower()))
+                    .Join(",", x =>
+                    {
+                        result.AddParameter(new SqlParameterInfo(x, ParameterUses.ForSet));
+                        return $"[{x}] = @{x}";
+                    });
+
+            }
 
             sqlBuilder.Append(setCommand);
 
@@ -114,8 +129,7 @@ namespace Reface.NPI.Generators.SqlServer
                     info.WithoutFields.Select(x => x.ToLower())
                 );
 
-            IEnumerable<string> columnNames = context.EntityType.GetProperties()
-                .Select(x => fieldNameProvider.Provide(x))
+            IEnumerable<string> columnNames = GetColumnNames(context)
                 .Where(x => !lowerCaseWithoutFields.Contains(x.ToLower()));
             string fields = columnNames.Join(",", x => $"[{x}]");
             string values = columnNames.Join(",", x => $"@{x}");
@@ -160,6 +174,12 @@ namespace Reface.NPI.Generators.SqlServer
             {
                 return $"[{x.Field}] {x.Type.ToString()}";
             }));
+        }
+
+        private IEnumerable<string> GetColumnNames(SqlCommandGenerateContext context)
+        {
+            return context.EntityType.GetProperties()
+                .Select(x => fieldNameProvider.Provide(x));
         }
     }
 }

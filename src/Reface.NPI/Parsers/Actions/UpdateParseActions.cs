@@ -7,6 +7,7 @@
         Or,
         By,
         End,
-        Equals
+        Equals,
+        Without
     }
 }

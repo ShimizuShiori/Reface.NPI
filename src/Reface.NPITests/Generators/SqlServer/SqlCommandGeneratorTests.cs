@@ -139,5 +139,25 @@ namespace Reface.NPITests.Generators.SqlServer
             Assert.AreEqual("123", d.Parameters["Userid"].Value);
             Assert.AreEqual("123456", d.Parameters["Oldpassword"].Value);
         }
+
+        [TestMethod]
+        public void UpdateWithoutCreatetimeById()
+        {
+            var g = new DefaultSqlServerCommandGenerator();
+            StackFrame sf = new StackFrame();
+            Type type = typeof(IUserDao);
+            var method = type.GetMethod(sf.GetMethod().Name);
+            var d = g.Generate(method, new object[] { new User()
+            {
+                Id=1,
+                Name="NewName",
+                Password="NewPassword"
+            } });
+            Console.WriteLine(d);
+            Assert.AreEqual(3, d.Parameters.Count);
+            Assert.AreEqual(1, d.Parameters["Id"].Value);
+            Assert.AreEqual("NewName", d.Parameters["Name"].Value);
+            Assert.AreEqual("NewPassword", d.Parameters["Password"].Value);
+        }
     }
 }

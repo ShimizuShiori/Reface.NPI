@@ -80,9 +80,16 @@ namespace Reface.NPI.Parsers
                         condition.JoinerToNext = joiners;
                     }
                     break;
+                case States.UpdateParseStates.WithoutField:
+                    {
+                        info.WithoutFields.Add(machine.TokenStack.Pop().Text);
+                    }
+                    break;
+                case States.UpdateParseStates.NextWithoutField:
                 case States.UpdateParseStates.SetEquals:
                 case States.UpdateParseStates.NextSetField:
                 case States.UpdateParseStates.Condition:
+                case States.UpdateParseStates.Without:
                     machine.TokenStack.Pop();
                     break;
                 default:

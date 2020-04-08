@@ -90,5 +90,16 @@ namespace Reface.NPITests
         void InsertWithoutIdCreatetime(User user);
 
         #endregion
+
+        #region 不带 Set 的 Update
+
+        [Description("UPDATE [User] SET [Name] = @Name,[Password] = @Password,[CreateTime] = @CreateTime WHERE [Id] = @Id")]
+        void UpdateById(User user);
+
+
+        [Description("UPDATE [User] SET [Name] = @Name,[Password] = @Password WHERE [Id] = @Id")]
+        void UpdateWithoutCreatetimeById(User user);
+
+        #endregion
     }
 }
