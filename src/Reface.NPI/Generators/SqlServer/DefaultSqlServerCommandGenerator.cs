@@ -72,6 +72,8 @@ namespace Reface.NPI.Generators.SqlServer
 
             sqlBuilder.Append($"UPDATE [{tableName}] SET ");
 
+            
+
             string setCommand = updateInfo.SetFields.Join(",", x =>
             {
                 result.AddParameter(new SqlParameterInfo(x.Parameter, ParameterUses.ForSet));

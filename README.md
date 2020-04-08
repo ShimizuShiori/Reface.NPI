@@ -6,13 +6,17 @@
 
 编写此库是为了能够在不编写 Sql 的前提下，灵活的对数据进行增删改查。
 
-该库主要实现的功能是从 **方法名称** 解析出最终的 Sql 语句的过程，并不实现对 Sql 的执行，对数据库返回结果解析的逻辑。
+该库主要实现的功能是从 **方法名称** 解析出最终的 Sql 语句的过程，本库专注于此功能，而不实现以下功能
+* 通过 *AOP* 产生 *interface* 的 *Proxy* ( 这个功能会在 *Reface.AppStarter.NPI* 中基于 *Castle.DynamicProxy* 实现 )
+* 对 **Sql执行信息** 的执行
+* 将查询结果映射到对应的实体中 ( 这个功能会在 *Reface.AppStarter.NPI* 以基于 *Dapper* 实现 )
+* 对事务的管理 ( 这个功能预计在一个由 *Reface.AppStarter* 构建的一个业务框架中实现 )
 
-该库不直接面向业务实现，而是面向功能库提供核心的功能。
+该库不直接面向业务实现，而希望向 Orm 框架提供更灵活的查询、删除、更新的方式。
 
 开发者可以使用此库进行二次开发
 
-* 重次定义方法名的解析过程
+* 重新定义方法名的解析过程
 * 对不同的数据库进行不同的 Sql 生成
 * 后续的 Sql 执行
 * 后续的结果映射
@@ -20,101 +24,125 @@
 
 ## 2 依赖项
 
-* Reface.StateMachine, 提供了对方法名解析的状态下推
-* Reface, 提供了一些基础的功能和方法，使用 .NetStandard2.0 编写
+* **Reface.StateMachine**, 库中对方法名称解析的过程依赖于此库
+* **Reface**, 提供了一些基础的功能和方法，使用 .NetStandard2.0 编写
 
-因此本库需要 .Net framework 4.6.1 及以上版本才能使用。
+由于使用了 .NetStrand2.0，因此本库需要 .Net framework 4.6.1 及以上版本才能使用。
 
-## 3 成员介绍
+## 3 使用方法
 
-### 3.1 ISqlCommandGenerator
+### 3.1 四个分析器
 
-这个接口是面向外部的最主要的接口，通过传入的方法信息和参数列表，返回一个待执行的 SqlCommandDescription，它包含一个方法。
+系统中针对四种数据库不同的操作（增删改查），分别提供了四个不同的语义分析器
+* ISelectParser
+* IInsertParser
+* IUpdateParser
+* IDeleteParser
+
+这四种转化器能够将一个字符串分析成为结构化的数据库处理结构，如
+```csharp
+ISelectParser parser = new DefaultSelectParser();
+string command = "ByIdAndName";
+SelectInfo info = parser.Parse(command);
+// info.Fields = [];
+// info.Conditions[0].Field = "Id";
+// info.Conditions[1].Field = "Name";
+// info.Orders = [];
+```
+
+四种分析器分别能生成四种不同的语句结构：
+| Parser | 结果的类型 |
+|---|---|
+| ISelectParser | SelectInfo |
+| IInsertParser | InsertInfo |
+| IUpdateParser | UpdateInfo |
+| IDeleteParser | DeleteInfo |
+
+这些 *xxxInfo* 的结构并不复杂，这里将不对其展开进行更多的介绍。
+
+### 3.2 四个分析器的整合
+
+*ICommandParser* 对四个分析器做了整合，以便我们不关心对方法的区分而直接得到 *ICommandInfo* , *SelectInfo* , *InsertInfo* , *UpdateIfo* 和 *DeleteInfo* 都实现了 *ICommandInfo* 接口。
+
+*ICommandParser* 通过方法的第一个单词对方法名进行分类，哪些前缀属于查询、哪些前缀属于更新，都是由它的实现的。
+
+库中的 *DefaultCommandParser* 按照下面的进行逻辑区分 :
+
+**查询语句**
+* Get
+* Select
+* Fetch
+* Find
+* PagingGet
+* PagingSelect
+* PagingFetch
+* PagingFind
+
+**新增语句**
+* Insert
+* New
+* Create
+
+**更新语句**
+* Update
+* Modify
+
+**删除语句**
+* Delete
+* Remove
+
+下面的例子是分析了一个更新语句。
+*ICommandInfo* 中的 *Type* 字段有助于你判断应当转化至四个 *Info* 中的哪一个。
 
 ```csharp
-SqlCommandDescription Generate(MethodInfo methodInfo, object[] arguments);
+string command = "UpdateNameById";
+ICommandParser parser = new DefaultCommandParser();
+ICommandInfo info = parser.Parse(command);
+// info.Type = CommandInfos.Update
+UpdateInfo updateInfo = (UpdateInfo)info;
+// updateInfo.SetFields[0].Field = "Name";
+// updateInfo.Conditions[0].Field = "Id";
 ```
 
-目前这个接口有两个实现类
-* SqlCommandGeneratorBase
-* DefaultSqlServerCommandGenerator
+### 3.3 通过方名和参数生成执行信息
 
-#### 3.1.1 SqlCommandGeneratorBase
+执行信息包含两个信息
+* Sql 语句
+* Sql 参数
 
-这是 **ISqlCommandGenerator** 的基本实现，
-它实现的逻辑是：
-1. 将 MethodInfo 通过前缀分别进行 Select、Udpate、Delete 方法的名称进行解析，对于 Insert 的情况，不需要解析，解析结果以 ICommandInfo 的形式表达。对 Select、Update、Delete 的解析分别使用相应的 IParser 完成
-    * ISelectParser
-    * IUpdateParser
-    * IDeleteParser
-2. 根据不同的 ICommandInfo.Type 分别交给子类的 GenerateSelect, GenerateUpdate, GenerateDelete, GenerateInsert 来生成 SqlCommand
-3. 根据 MethodInfo 中的参数信息 和 arguments 开始填充执行参数。填充过程由 IParameterLookup 完成，IParameterLookup 由多个，并通过 IParameterLookupFactory 来进行调度。
-
-#### 3.1.2 DefaultSqlServerCommandGenerator
-
-继承于 **SqlCommandGeneratorBase**。
-是面向 SqlServer 的实现。
-
-
-### 3.2 NpiServicesCollection
-
-该库的服务集合，这是一个 IOC 组件，用于解除组件之间的耦合性，让它们仅通过接口类型进行耦合。
-该类型提供了四个静态方法
+在库中，生成执行信息是由 *ISqlCommandGenerator* 完成的。
 ```csharp
-// 注册一个组件，如果 T 已经 ServicesCollection 中存在，则追加
-void RegsiterService<T>(Func<T, object> factory);
+// ISqlCommandGenerator.cs
+using System.Reflection;
 
-// 替换一个组件，如果 T 已经存在，则替换，二次开发可以利用这个方法替换默认的组件
-void ReplaceService<T>(Func<T, object> facotory);
-
-// 获取一个服务实例
-T GetService<T>();
-
-// 获取多个服务实现，通过 RegisterService 可以注册多个相同 T 的组件，并通过这个方法获取它们
-IEnumerable<T> GetServices<T>();
+namespace Reface.NPI.Generators
+{
+    public interface ISqlCommandGenerator
+    {
+        SqlCommandDescription Generate(MethodInfo methodInfo, object[] arguments);
+    }
+}
 ```
 
-### 3.3 INpiDao&lt;TEntity&gt;
+设计该接口的初衷是希望使用方是以 **AOP** 的方式拦截某个方法的执行，
+并将 *MethodInfo* 和 **拦截到的入参** 传递给 *ISqlCommandGenerator*，
+再根据生成的执行信息直接执行，得到结果。
 
-期望的数据层访问接口形式。
-目前主要用途是通过该接口获取到实现类型，以便生 Insert 语句中的字段信息。
-建议使用该接口，可以减少对 实体分析、表名分析、字段名分析 等操作。
+目前库中有一个它的实现类型 : *DefaultSqlServerCommandGenerator* 。
+你会从名字上发现，它是面向 *SqlServer* 的实现，
+很明显，不同的 **数据库** 往往支持的语句并不相同。
+因此，为不同的 **数据库** 编写不同的 *ISqlCommandGenerator* 是有必要的。
 
-### 3.4 IParameterLookup
+*SqlCommandDescripion* 是一个简单的数据结构，它包含 *SqlCommand* 和 *Parameters* 两个主要的属性，使用这两个属性可以完成后续的 *Sql* 执行。
 
-该组件负责从方法的参数中查询 Sql 语句的参数，并填充到 SqlCommandDescription 中。
-开发者可以实现自己的 IParameterLookup, 并通过 NpiServicesCollection.RegsiterService 方法注册到服务集合中。
-当 **SqlCommandGeneratorBase** 开始解析参数时，会从 **ServicesCollection** 得到它们，并运用它们解析参数。
-该接口提供的两个方法分别是用来匹配和查询的。匹配用来决定该组件在什么条件下可以进行查询，查询则是具体的过程。
 
-### 3.5 Resources文件夹
 
-文档结构如下 : 
-```shell
-- Resources
-    - OperatorMappings # 这是用来将方法名称中的条件运算符转化为 Sql 条件运算符的映射文件
-        - SqlServer.xml # 这是用于 SqlServer 的映射
-    - StateMachines # 这里存在的是解析语句用到的状态机
-        - Select.csv
-        - Update.csv
-        - Delete.csv
-```
 
-状态机的定义方法可以参见这个库 : [Reface.StateMachine](https://github.com/ShimizuShiori/Reface.StateMachine)
 
-### 3.6 Providers
 
-一共包括以下几样
 
-* IEntityTypeProvider
-* ITableNameProvider
-* IFieldNameProvider
 
-这三样，分别是在生成 **SqlCommandDescription** 阶段时获取实体类型、表名、字段名使用的组件。
 
-目前是按照 INpiDao&lt;TEntity>, TableAttribute, ColumnAttribute 的逻辑实现的。
-
-开发者可以根据自己的需要替换这些逻辑，使用 **NpiServicesCollection.ReplaceService** 可以替换这些默认的组件
 
 
 ## 4 注意事项
