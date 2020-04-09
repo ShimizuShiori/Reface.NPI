@@ -180,3 +180,9 @@ namespace Reface.NPI.Generators
 **相关链接**
 
 [Reface.NPI nuget 页面](https://www.nuget.org/packages/Reface.StateMachine)
+
+---
+
+更多信息可关注公众号 
+
+![WX](pics/wxqrcode.jpg)
