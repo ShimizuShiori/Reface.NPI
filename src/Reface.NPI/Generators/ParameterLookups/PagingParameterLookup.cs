@@ -7,8 +7,10 @@ namespace Reface.NPI.Generators.ParameterLookups
 {
     public class PagingParameterLookup : IParameterLookup
     {
-        public void Lookup(SqlCommandDescription description, MethodInfo methodInfo, object[] values)
+        public void Lookup(ParameterLookupContext context)
         {
+            var description = context.Description;
+            var values = context.Values;
             if (!description.Parameters.ContainsKey(Constant.PARAMETER_NAME_BEGIN_ROW_NUMBER))
                 return;
             if (!description.Parameters.ContainsKey(Constant.PARAMETER_NAME_END_ROW_NUMBER))

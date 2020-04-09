@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 
 namespace Reface.NPI.Generators
 {
@@ -13,11 +11,11 @@ namespace Reface.NPI.Generators
             this.lookups = NpiServicesCollection.GetServices<IParameterLookup>();
         }
 
-        public void Lookup(SqlCommandDescription description, MethodInfo methodInfo, object[] values)
+        public void Lookup(ParameterLookupContext context)
         {
             foreach (var lookup in lookups)
             {
-                lookup.Lookup(description, methodInfo, values);
+                lookup.Lookup(context);
             }
         }
     }

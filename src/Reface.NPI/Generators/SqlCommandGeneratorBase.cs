@@ -25,7 +25,17 @@ namespace Reface.NPI.Generators
             SqlCommandDescription description = cache.GetOrCreate<SqlCommandDescription>(cacheKey, key => GetSqlCommandDescriptionWithourParameterFilled(context));
 
             if (arguments != null && arguments.Length != 0)
-                this.parameterLookupFactory.Lookup(description, methodInfo, arguments);
+            {
+                ParameterLookupContext lookupContet
+                    = new ParameterLookupContext
+                    (
+                        this,
+                        description,
+                        methodInfo,
+                        arguments
+                    );
+                this.parameterLookupFactory.Lookup(lookupContet);
+            }
             return description;
         }
 
@@ -59,5 +69,7 @@ namespace Reface.NPI.Generators
         protected abstract SqlCommandDescription GenerateUpdate(SqlCommandGenerateContext context);
         protected abstract SqlCommandDescription GenerateDelete(SqlCommandGenerateContext context);
         protected abstract SqlCommandDescription GenerateInsert(SqlCommandGenerateContext context);
+
+        public abstract string GenerateParameterName(string name);
     }
 }

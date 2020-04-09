@@ -35,26 +35,30 @@ namespace Reface.NPI.Generators.ParameterLookups
             return type.IsClass && !type.IsAbstract;
         }
 
-        public void Lookup(SqlCommandDescription description, MethodInfo methodInfo, object[] values)
+
+        public void Lookup(ParameterLookupContext context)
         {
+            SqlCommandDescription description = context.Description;
+            MethodInfo methodInfo = context.MethodInfo;
+            object[] values = context.Values;
             var parameterInfos = methodInfo.GetParameters();
             int length = parameterInfos.Length;
             for (int i = 0; i < length; i++)
             {
                 var parameterInfo = parameterInfos[i];
                 var value = values[i];
-                this.Fill(description, GetParameterName(parameterInfo), parameterInfo.ParameterType, () => value);
+                this.Fill(context.SqlCommandGenerator, description, GetParameterName(parameterInfo), parameterInfo.ParameterType, () => value);
             }
         }
 
-        private void Fill(SqlCommandDescription description, string parameterName, Type valueType, Func<object> valueGetter)
+        private void Fill(ISqlCommandGenerator generator, SqlCommandDescription description, string parameterName, Type valueType, Func<object> valueGetter)
         {
             if (IsBaseType(valueType))
                 FillWithBaseType(description, parameterName, valueGetter);
             else if (IsCollectionType(valueType))
-                FillWithCollectionType(description, parameterName, valueGetter);
+                FillWithCollectionType(generator, description, parameterName, valueGetter);
             else if (IsObject(valueType))
-                FillWithObjectType(description, valueType, valueGetter);
+                FillWithObjectType(generator, description, valueType, valueGetter);
             else
                 throw new CanNotConvertToSqlParameterException(valueType);
         }
@@ -81,7 +85,7 @@ namespace Reface.NPI.Generators.ParameterLookups
             parameter.Value = valueGetter();
         }
 
-        private void FillWithCollectionType(SqlCommandDescription description, string parameterName, Func<object> valueGetter)
+        private void FillWithCollectionType(ISqlCommandGenerator generator, SqlCommandDescription description, string parameterName, Func<object> valueGetter)
         {
             var parameter = description.Parameters.Values
                 .Where(x => x.Name.ToLower() == parameterName.ToLower())
@@ -103,23 +107,23 @@ namespace Reface.NPI.Generators.ParameterLookups
                     Value = item
                 };
                 description.AddParameter(itemSqlParameter);
-                newParameterNameList.Add($"@{itemSqlParameter.Name}");
+                newParameterNameList.Add(generator.GenerateParameterName(itemSqlParameter.Name));
             }
             string newParameterNameSql = newParameterNameList.Join(",", x => x);
-            description.SqlCommand = description.SqlCommand.Replace($"@{parameter.Name}", $"({newParameterNameSql})");
+            description.SqlCommand = description.SqlCommand.Replace(generator.GenerateParameterName(parameter.Name), $"({newParameterNameSql})");
             description.Parameters.Remove(parameter.Name);
         }
 
-        private void FillWithObjectType(SqlCommandDescription description, Type valueType, Func<object> valueGetter)
+        private void FillWithObjectType(ISqlCommandGenerator generator, SqlCommandDescription description, Type valueType, Func<object> valueGetter)
         {
             var propertyInfos = valueType.GetProperties();
             foreach (var propertyInfo in propertyInfos)
             {
                 string parameterNameOnProperty = GetParameterName(propertyInfo);
-                this.Fill(description, parameterNameOnProperty, propertyInfo.PropertyType, () =>
-                {
-                    return propertyInfo.GetValue(valueGetter(), null);
-                });
+                this.Fill(generator, description, parameterNameOnProperty, propertyInfo.PropertyType, () =>
+               {
+                   return propertyInfo.GetValue(valueGetter(), null);
+               });
             }
         }
 

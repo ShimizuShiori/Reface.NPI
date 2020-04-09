@@ -73,6 +73,7 @@
     <Compile Include="Generators\IParameterLookupFactory.cs" />
     <Compile Include="Generators\ISqlServerCommandGenerator.cs" />
     <Compile Include="Generators\ITableNameProvider.cs" />
+    <Compile Include="Generators\ParameterLookupContext.cs" />
     <Compile Include="Generators\ParameterLookups\DefaultParameterLookup.cs" />
     <Compile Include="Generators\ParameterLookups\PagingParameterLookup.cs" />
     <Compile Include="Generators\ParameterLookups\ParameterPropertiesLookup.cs" />

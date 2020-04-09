@@ -181,5 +181,10 @@ namespace Reface.NPI.Generators.SqlServer
             return context.EntityType.GetProperties()
                 .Select(x => fieldNameProvider.Provide(x));
         }
+
+        public override string GenerateParameterName(string name)
+        {
+            return $"@{name}";
+        }
     }
 }
