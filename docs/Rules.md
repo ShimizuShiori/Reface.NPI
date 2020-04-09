@@ -11,11 +11,19 @@
 
 ## 1 *Insert* 规则
 
-*Insert* 方法名没有任何规则，只可以是 *Insert*
+仅使用 *Insert* 将使用实体中的所有字段的值写入。
 
 ```csharp
 void Insert(Entity entity);
 ```
+
+开发者也可以通过 *Without* 关键字排除一些字段的写入，特别是那些依赖数据库本身的字段。
+
+下面的例子不会对 *Id* 和 *CreateTime* 字段写入
+```csharp
+bool InsertWithoutIdCreatetime(User user);
+```
+
 
 ## 2 *Delete* 规则
 
@@ -78,8 +86,6 @@ int DeleteByNameLike(string name)
 
 ### 2.4 自定义参数名
 
-**v1.3 起支持此版本**
-
 在上面的例子中，参数名直接与字段名相同。
 
 我们也可以在操作符后加上参数名来改名这个默认的参数名。
@@ -131,17 +137,27 @@ int UpdateCountEqualsNewcountByIdAndCountIsOldcount(int id, int oldCount, int ne
 
 ### 3.4 不指定 *set* 子句
 
-**此功能尚未开发**
+当没有 *set* 子句的时候，
+会以排除了 *By* 子句的条件后的所有字段作为 *set* 子句。
 
-原则上，当没有指定任何 *set* 内容的时候，
-此时应当将实体上的所有 *Property* 生成为 *set* 内容，
-并排除作用条件的字段。
+下面的例子会生成 *update [user] set name = ?, password = ? where id = ?*
+```csharp
+// User : Id, Name, Password
+int UpdateById(int id, User user);
+```
 
-例如
+若表中还有一些字段在 *Update* 时即不是条件，也不打算更新。可以使用 *Without* 关键字指定。
+下面的例子中，User 包含四个属性
+* Id
+* Name
+* Password
+* CreateTime
 
 ```csharp
-bool UpdateById(Enity entity);
+// 下面的语句不会对 CreateTime 进行更新
+void UpdateWithoutCreatetimeById(int id, User user);
 ```
+
 
 ## 4 *Select* 规则
 
@@ -166,7 +182,7 @@ IList<Entity> SelectIdAndNameAndCreatetime();
 与 *Update* 和 *Delete* 一样，使用 *By* 关键字开始条件子句
 
 ```csharp
-Entity SelectById(int id);
+User SelectById(int id);
 ```
 
 ### 4.3 排序规则
@@ -190,8 +206,6 @@ IList<User> SelectOrderbyUsernameCreatetime();
 ```
 
 #### 4.3.3 分页查询
-
-**v1.3 以上的版本可以使用此功能**
 
 为 *Select* 方法前加上 *Paging* 就可以使用分页查询功能。
 
