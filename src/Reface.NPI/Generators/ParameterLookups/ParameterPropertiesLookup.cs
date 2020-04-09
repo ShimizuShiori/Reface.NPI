@@ -1,9 +1,11 @@
 ﻿using Reface.NPI.Attributes;
+using System;
 using System.Linq;
 using System.Reflection;
 
 namespace Reface.NPI.Generators.ParameterLookups
 {
+    [Obsolete("DefaultParameterLookup 中实现了此功能", true)]
     public class ParameterPropertiesLookup : IParameterLookup
     {
         public void Lookup(SqlCommandDescription description, MethodInfo methodInfo, object[] values)

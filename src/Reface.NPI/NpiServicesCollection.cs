@@ -20,9 +20,10 @@ namespace Reface.NPI
             RegisterService<IDeleteParser>(t => new DefaultDeleteParser());
             RegisterService<IInsertParser>(t => new DefaultInsertParser());
             RegisterService<ICommandParser>(t => new DefaultCommandParser());
-            RegisterService<IParameterLookup>(t => new ParameterValuesLookup());
-            RegisterService<IParameterLookup>(t => new ParameterPropertiesLookup());
+            //RegisterService<IParameterLookup>(t => new ParameterValuesLookup());
+            //RegisterService<IParameterLookup>(t => new ParameterPropertiesLookup());
             RegisterService<IParameterLookup>(t => new PagingParameterLookup());
+            RegisterService<IParameterLookup>(t => new DefaultParameterLookup());
             RegisterService<IParameterLookupFactory>(t => new DefaultParameterLookupFactory());
             RegisterService<ISqlServerCommandGenerator>(t => new DefaultSqlServerCommandGenerator());
             RegisterService<IEntityTypeProvider>(t => new DefaultEntityTypeProvider());

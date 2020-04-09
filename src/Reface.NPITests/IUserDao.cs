@@ -1,5 +1,6 @@
 ﻿using Reface.NPI;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace Reface.NPITests
@@ -70,6 +71,9 @@ namespace Reface.NPITests
 
         [Description("SELECT * FROM [User] WHERE [Id] In @Id")]
         void GetByIdIn(int[] id);
+
+        [Description("SELECT * FROM [User] WHERE [Uid] In @Uid")]
+        void GetByUidIn(List<int> uid);
 
         #region 带参数的语句生成
 

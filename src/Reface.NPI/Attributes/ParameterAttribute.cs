@@ -2,7 +2,7 @@
 
 namespace Reface.NPI.Attributes
 {
-    [AttributeUsage(AttributeTargets.Parameter)]
+    [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property)]
     public class ParameterAttribute : Attribute
     {
         public string Name { get; private set; }

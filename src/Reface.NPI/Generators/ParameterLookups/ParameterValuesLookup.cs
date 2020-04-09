@@ -6,6 +6,7 @@ using System.Reflection;
 
 namespace Reface.NPI.Generators.ParameterLookups
 {
+    [Obsolete("DefaultParameterLookup 中实现了此功能", true)]
     public class ParameterValuesLookup : IParameterLookup
     {
         private bool IsBaseType(Type type)

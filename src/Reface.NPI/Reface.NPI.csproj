@@ -56,6 +56,9 @@
     <Compile Include="DefaultCache.cs" />
     <Compile Include="DefaultResourceNameProvider.cs" />
     <Compile Include="DefaultResourceProvider.cs" />
+    <Compile Include="Errors\CanNotConvertToSqlParameterException.cs" />
+    <Compile Include="Errors\CanNotGetItemTypeFromCollectionException.cs" />
+    <Compile Include="Errors\MustBeBaseTypeException.cs" />
     <Compile Include="Errors\NotSupportActionException.cs" />
     <Compile Include="Errors\NPIException.cs" />
     <Compile Include="Errors\PagingMustBeFollowedBySelectException.cs" />
@@ -70,6 +73,7 @@
     <Compile Include="Generators\IParameterLookupFactory.cs" />
     <Compile Include="Generators\ISqlServerCommandGenerator.cs" />
     <Compile Include="Generators\ITableNameProvider.cs" />
+    <Compile Include="Generators\ParameterLookups\DefaultParameterLookup.cs" />
     <Compile Include="Generators\ParameterLookups\PagingParameterLookup.cs" />
     <Compile Include="Generators\ParameterLookups\ParameterPropertiesLookup.cs" />
     <Compile Include="Generators\ParameterLookups\ParameterValuesLookup.cs" />
