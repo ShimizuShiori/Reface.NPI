@@ -1,5 +1,6 @@
 ﻿using Reface.NPI.Attributes;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -32,8 +33,10 @@ namespace Reface.NPI.Generators.ParameterLookups
             int i = 0;
             foreach (var pi in parameterInfos)
             {
-                if (!(IsArray(pi.ParameterType) || IsBaseType(pi.ParameterType)))
+                bool isArray = IsArray(pi.ParameterType);
+                if (!(isArray || IsBaseType(pi.ParameterType)))
                     continue;
+
                 bool isSet = false,
                 isCondition = false;
                 string pName = "";
@@ -56,9 +59,33 @@ namespace Reface.NPI.Generators.ParameterLookups
                 if (isCondition)
                     matchedParameters = matchedParameters.Where(x => x.Use == ParameterUses.ForCondition);
 
+
                 if (matchedParameters.Any())
                 {
-                    matchedParameters.First().Value = values[i];
+                    var matchedParameter = matchedParameters.First();
+                    if (isArray)
+                    {
+                        Array array = (Array)values[i];
+                        int length = array.Length;
+                        List<string> newParameterNameList = new List<string>();
+                        for (int index = 0; index < length; index++)
+                        {
+                            string newParameterName = $"{matchedParameter.Name}{index}";
+                            newParameterNameList.Add(newParameterName);
+                            description.AddParameter(new SqlParameterInfo()
+                            {
+                                Name = newParameterName,
+                                Use = matchedParameter.Use,
+                                Value = array.GetValue(index)
+                            });
+                        }
+                        description.Parameters.Remove(matchedParameter.Name);
+                        string newParameterNameListStr = newParameterNameList.Join(",", x => x);
+                        description.SqlCommand = description.SqlCommand.Replace($"@{matchedParameter.Name}", $"({newParameterNameListStr})");
+
+                    }
+                    else
+                        matchedParameter.Value = values[i];
                 }
 
                 i++;

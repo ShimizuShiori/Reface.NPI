@@ -80,6 +80,7 @@ namespace Reface.NPITests.Generators.SqlServer
             Type daoType = typeof(IUserDao);
             MethodInfo methodInfo = daoType.GetMethod(nameof(IUserDao.GetByIdIn));
             var desc = g.Generate(methodInfo, new object[] { new int[] { 1, 2, 3 } });
+            Console.WriteLine(desc);
             var value = desc.Parameters["Id"].Value;
             Assert.IsInstanceOfType(value, typeof(int[]));
             int[] array = (int[])value;
