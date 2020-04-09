@@ -183,6 +183,4 @@ namespace Reface.NPI.Generators
 
 ---
 
-更多信息可关注公众号 
-
-![WX](pics/wxqrcode.jpg)
+更多信息可关注公众号 : 清水潭
