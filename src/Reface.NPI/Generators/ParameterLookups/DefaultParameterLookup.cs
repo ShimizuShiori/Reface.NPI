@@ -95,8 +95,10 @@ namespace Reface.NPI.Generators.ParameterLookups
             Type itemType = GetCollectionItemType(collection);
             int i = 0;
             List<string> newParameterNameList = new List<string>();
+            bool isCollectionEmpty = false;
             foreach (object item in collection)
             {
+                isCollectionEmpty = true;
                 if (!IsBaseType(itemType))
                     throw new MustBeBaseTypeException(itemType);
 
@@ -109,8 +111,11 @@ namespace Reface.NPI.Generators.ParameterLookups
                 description.AddParameter(itemSqlParameter);
                 newParameterNameList.Add(generator.GenerateParameterName(itemSqlParameter.Name));
             }
+            if (isCollectionEmpty)
+                throw new EmptyCollectionException(parameterName);
             string newParameterNameSql = newParameterNameList.Join(",", x => x);
             description.SqlCommand = description.SqlCommand.Replace(generator.GenerateParameterName(parameter.Name), $"({newParameterNameSql})");
+
             description.Parameters.Remove(parameter.Name);
         }
 

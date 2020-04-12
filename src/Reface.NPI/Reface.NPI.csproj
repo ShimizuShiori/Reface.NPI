@@ -58,6 +58,7 @@
     <Compile Include="DefaultResourceProvider.cs" />
     <Compile Include="Errors\CanNotConvertToSqlParameterException.cs" />
     <Compile Include="Errors\CanNotGetItemTypeFromCollectionException.cs" />
+    <Compile Include="Errors\EmptyCollectionException.cs" />
     <Compile Include="Errors\MustBeBaseTypeException.cs" />
     <Compile Include="Errors\NotSupportActionException.cs" />
     <Compile Include="Errors\NPIException.cs" />
