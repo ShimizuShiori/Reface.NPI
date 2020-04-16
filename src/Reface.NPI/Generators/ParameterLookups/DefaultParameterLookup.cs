@@ -95,10 +95,10 @@ namespace Reface.NPI.Generators.ParameterLookups
             Type itemType = GetCollectionItemType(collection);
             int i = 0;
             List<string> newParameterNameList = new List<string>();
-            bool isCollectionEmpty = false;
+            bool isCollectionEmpty = true;
             foreach (object item in collection)
             {
-                isCollectionEmpty = true;
+                isCollectionEmpty = false;
                 if (!IsBaseType(itemType))
                     throw new MustBeBaseTypeException(itemType);
 
