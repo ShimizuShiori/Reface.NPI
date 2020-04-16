@@ -60,6 +60,10 @@ namespace Reface.NPI.Generators
                     description = GenerateInsert(context);
                     description.Type = SqlCommandTypes.Insert;
                     break;
+                case CommandInfoTypes.Count:
+                    description = GenerateCount(context);
+                    description.Type = SqlCommandTypes.Count;
+                    break;
                 default: throw new NotImplementedException($"不能处理的命令类型 : {context.CommandInfo.Type.ToString()}");
             }
             return description;
@@ -70,6 +74,7 @@ namespace Reface.NPI.Generators
         protected abstract SqlCommandDescription GenerateDelete(SqlCommandGenerateContext context);
         protected abstract SqlCommandDescription GenerateInsert(SqlCommandGenerateContext context);
 
+        protected abstract SqlCommandDescription GenerateCount(SqlCommandGenerateContext context);
         public abstract string GenerateParameterName(string name);
     }
 }

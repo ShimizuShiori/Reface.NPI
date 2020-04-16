@@ -25,6 +25,8 @@ namespace Reface.NPI.Parsers
         public const string ACTION_NEW = "New";
         public const string ACTION_CREATE = "Create";
 
+        public const string ACTION_COUNT = "Count";
+
         public DefaultCommandParser()
         {
             this.cache = NpiServicesCollection.GetService<ICache>();
@@ -72,6 +74,8 @@ namespace Reface.NPI.Parsers
                 case ACTION_NEW:
                 case ACTION_INSERT:
                     return NpiServicesCollection.GetService<IInsertParser>().Parse(realCommand);
+                case ACTION_COUNT:
+                    return NpiServicesCollection.GetService<ICountParser>().Parse(realCommand);
                 default:
                     throw new NotSupportActionException(action);
             }

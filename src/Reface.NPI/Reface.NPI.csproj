@@ -101,6 +101,7 @@
     <Compile Include="Models\CommandInfoTypes.cs" />
     <Compile Include="Models\ConditionInfo.cs" />
     <Compile Include="Models\ConditionJoiners.cs" />
+    <Compile Include="Models\CountInfo.cs" />
     <Compile Include="Models\DeleteInfo.cs" />
     <Compile Include="Models\ICommandInfo.cs" />
     <Compile Include="Models\InsertInfo.cs" />
@@ -110,16 +111,19 @@
     <Compile Include="Models\UpdateInfo.cs" />
     <Compile Include="NpiServicesCollection.cs" />
     <Compile Include="Paging.cs" />
+    <Compile Include="Parsers\Actions\CountParseActions.cs" />
     <Compile Include="Parsers\Actions\DeleteParseActions.cs" />
     <Compile Include="Parsers\Actions\InsertParseActions.cs" />
     <Compile Include="Parsers\Actions\UpdateParseActions.cs" />
     <Compile Include="Parsers\DefaultCommandParser.cs" />
+    <Compile Include="Parsers\DefaultCountParser.cs" />
     <Compile Include="Parsers\DefaultDeleteParser.cs" />
     <Compile Include="Parsers\DefaultInsertParser.cs" />
     <Compile Include="Parsers\DefaultSelectParser.cs" />
     <Compile Include="Parsers\DefaultUpdateParser.cs" />
     <Compile Include="Parsers\Events\TokenParsingEventArgs.cs" />
     <Compile Include="Parsers\ICommandParser.cs" />
+    <Compile Include="Parsers\ICountParser.cs" />
     <Compile Include="Parsers\IDeleteParser.cs" />
     <Compile Include="Parsers\IInsertParser.cs" />
     <Compile Include="Parsers\IParseStateMachine.cs" />
@@ -128,13 +132,16 @@
     <Compile Include="Parsers\IUpdateParser.cs" />
     <Compile Include="Parsers\StateMachines\DefaultParseStateMachine.cs" />
     <Compile Include="Parsers\StateMachines\DefaultStateMachineBuilderFactory.cs" />
+    <Compile Include="Parsers\StateMachines\CountStateMachine.cs" />
     <Compile Include="Parsers\StateMachines\DeleteStateMachine.cs" />
     <Compile Include="Parsers\StateMachines\InsertStateMachine.cs" />
     <Compile Include="Parsers\StateMachines\IStateMachineBuilderFactory.cs" />
     <Compile Include="Parsers\StateMachines\SelectStateMachine.cs" />
     <Compile Include="Parsers\StateMachines\UpdateStateMachine.cs" />
+    <Compile Include="Parsers\States\CountParseStates.cs" />
     <Compile Include="Parsers\States\InsertParseStates.cs" />
     <Compile Include="Parsers\States\UpdateParseStates.cs" />
+    <Compile Include="Parsers\Tokens\CountToken.cs" />
     <Compile Include="Parsers\Tokens\InsertToken.cs" />
     <Compile Include="Parsers\Tokens\SelectToken.cs" />
     <Compile Include="Parsers\States\DeleteParseStates.cs" />
@@ -159,6 +166,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\StateMachines\Insert.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\StateMachines\Count.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

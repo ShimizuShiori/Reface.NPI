@@ -5,6 +5,7 @@
         Delete,
         Update,
         Select,
-        Insert
+        Insert,
+        Count
     }
 }

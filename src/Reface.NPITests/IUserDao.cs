@@ -105,5 +105,12 @@ namespace Reface.NPITests
         void UpdateWithoutCreatetimeById(User user);
 
         #endregion
+
+        #region Count 语句
+
+        [Description("SELECT COUNT(*) AS [C] FROM [User] WHERE [Id] = @Id")]
+        int CountById(int id);
+
+        #endregion
     }
 }

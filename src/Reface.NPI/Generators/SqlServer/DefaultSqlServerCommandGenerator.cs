@@ -186,5 +186,20 @@ namespace Reface.NPI.Generators.SqlServer
         {
             return $"@{name}";
         }
+
+        protected override SqlCommandDescription GenerateCount(SqlCommandGenerateContext context)
+        {
+            string tableName = context.TableName;
+            CountInfo deleteInfo = (CountInfo)context.CommandInfo;
+            StringBuilder sqlBuilder = new StringBuilder();
+            SqlCommandDescription description = new SqlCommandDescription();
+            GenerateContext generateContext = new GenerateContext(description, sqlBuilder);
+
+            sqlBuilder.Append($"SELECT COUNT(*) AS [{Constant.RESULT_FIELD_NAME_COUNT}] FROM [{tableName}]");
+            GenerateByConditions(ref generateContext, deleteInfo.ConditionInfos);
+
+            description.SqlCommand = sqlBuilder.ToString();
+            return description;
+        }
     }
 }

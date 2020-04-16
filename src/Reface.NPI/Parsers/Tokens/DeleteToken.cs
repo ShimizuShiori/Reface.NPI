@@ -2,7 +2,7 @@
 
 namespace Reface.NPI.Parsers.Tokens
 {
-    public class DeleteToken : IToken<DeleteParseActions>
+    public class CountToken : IToken<CountParseActions>
     {
         public const string TEXT_BY = "By";
         public const string TEXT_AND = "And";
@@ -10,22 +10,22 @@ namespace Reface.NPI.Parsers.Tokens
 
         public string Text { get; private set; }
 
-        public DeleteParseActions Action { get; private set; }
+        public CountParseActions Action { get; private set; }
 
-        private DeleteToken(string text, DeleteParseActions action)
+        private CountToken(string text, CountParseActions action)
         {
             Text = text;
             Action = action;
         }
 
-        public static DeleteToken Create(string text)
+        public static CountToken Create(string text)
         {
             switch (text)
             {
-                case TEXT_BY:return new DeleteToken(text, DeleteParseActions.By);
-                case TEXT_AND:return new DeleteToken(text, DeleteParseActions.And);
-                case TEXT_OR:return new DeleteToken(text, DeleteParseActions.Or);
-                default: return new DeleteToken(text, DeleteParseActions.Word);
+                case TEXT_BY:return new CountToken(text, CountParseActions.By);
+                case TEXT_AND:return new CountToken(text, CountParseActions.And);
+                case TEXT_OR:return new CountToken(text, CountParseActions.Or);
+                default: return new CountToken(text, CountParseActions.Word);
             }
         }
     }
