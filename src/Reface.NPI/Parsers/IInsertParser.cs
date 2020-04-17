@@ -2,8 +2,7 @@
 
 namespace Reface.NPI.Parsers
 {
-    public interface IInsertParser
+    public interface IInsertParser : IParser<InsertInfo>
     {
-        InsertInfo Parse(string command);
     }
 }

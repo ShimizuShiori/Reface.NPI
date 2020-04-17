@@ -1,60 +1,51 @@
 ﻿using Reface.NPI.Models;
+using Reface.NPI.Parsers.Actions;
+using Reface.NPI.Parsers.Events;
 using Reface.NPI.Parsers.StateMachines;
+using Reface.NPI.Parsers.States;
 using Reface.NPI.Parsers.Tokens;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Reface.NPI.Parsers
 {
-    public class DefaultDeleteParser : IDeleteParser
+    public class DefaultDeleteParser : DefaultParser<DeleteInfo,DeleteStateMachine,DeleteToken,DeleteParseStates,DeleteParseActions>,IDeleteParser
     {
-        private readonly DeleteInfo deleteInfo = new DeleteInfo();
 
-        public DeleteInfo Parse(string command)
+        protected override DeleteToken GetTokenByWord(string word)
         {
-            List<string> words = command.SplitToWords();
-            IEnumerable<DeleteToken> tokens = words.Select(x => DeleteToken.Create(x));
-            DeleteStateMachine deleteStateMachine = new DeleteStateMachine();
-            deleteStateMachine.Parsing += DeleteStateMachine_Parsing;
-            foreach (var token in tokens)
-            {
-                deleteStateMachine.Push(token);
-            }
-            return deleteInfo;
+            return DeleteToken.Create(word);
         }
 
-        private void DeleteStateMachine_Parsing(object sender, Events.TokenParsingEventArgs<States.DeleteParseStates> e)
+        protected override void OnParsing(ref DeleteInfo info, DeleteStateMachine machine, TokenParsingEventArgs<DeleteParseStates> e)
         {
             const string CONTEXT_KEY_CONDITION = "CONDITION";
-            DeleteStateMachine machine = sender as DeleteStateMachine;
             switch (e.NowState)
             {
-                case States.DeleteParseStates.Start:
+                case DeleteParseStates.Start:
                     break;
-                case States.DeleteParseStates.Condition:
+                case DeleteParseStates.Condition:
                     break;
-                case States.DeleteParseStates.ConditionField:
+                case DeleteParseStates.ConditionField:
                     {
                         ConditionInfo conditionInfo = new ConditionInfo();
                         conditionInfo.Field = machine.TokenStack.Pop().Text;
                         conditionInfo.Parameter = conditionInfo.Field;
                         machine.Context[CONTEXT_KEY_CONDITION] = conditionInfo;
-                        deleteInfo.ConditionInfos.Add(conditionInfo);
+                        info.ConditionInfos.Add(conditionInfo);
                     }
                     break;
-                case States.DeleteParseStates.ConditionOperator:
+                case DeleteParseStates.ConditionOperator:
                     {
                         ConditionInfo conditionInfo = machine.Context[CONTEXT_KEY_CONDITION] as ConditionInfo;
                         conditionInfo.Operators = machine.TokenStack.Pop().Text;
                     }
                     break;
-                case States.DeleteParseStates.ConditionParameter:
+                case DeleteParseStates.ConditionParameter:
                     {
                         ConditionInfo conditionInfo = machine.Context[CONTEXT_KEY_CONDITION] as ConditionInfo;
                         conditionInfo.Parameter = machine.TokenStack.Pop().Text;
                     }
                     break;
-                case States.DeleteParseStates.NextCondition:
+                case DeleteParseStates.NextCondition:
                     {
                         ConditionInfo conditionInfo = machine.Context[CONTEXT_KEY_CONDITION] as ConditionInfo;
                         DeleteToken token = machine.TokenStack.Pop();
@@ -64,7 +55,7 @@ namespace Reface.NPI.Parsers
                         machine.Context[CONTEXT_KEY_CONDITION] = null;
                     }
                     break;
-                case States.DeleteParseStates.End:
+                case DeleteParseStates.End:
                     break;
                 default:
                     break;

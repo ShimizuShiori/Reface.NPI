@@ -2,8 +2,7 @@
 
 namespace Reface.NPI.Parsers
 {
-    public interface IDeleteParser
+    public interface IDeleteParser : IParser<DeleteInfo>
     {
-        DeleteInfo Parse(string command);
     }
 }

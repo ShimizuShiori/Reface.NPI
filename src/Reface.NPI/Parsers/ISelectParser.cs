@@ -2,8 +2,7 @@
 
 namespace Reface.NPI.Parsers
 {
-    public interface ISelectParser
+    public interface ISelectParser : IParser<SelectInfo>
     {
-        SelectInfo Parse(string command);
     }
 }

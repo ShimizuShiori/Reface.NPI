@@ -1,34 +1,26 @@
 ﻿using Reface.NPI.Models;
+using Reface.NPI.Parsers.Actions;
+using Reface.NPI.Parsers.Events;
 using Reface.NPI.Parsers.StateMachines;
+using Reface.NPI.Parsers.States;
 using Reface.NPI.Parsers.Tokens;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Reface.NPI.Parsers
 {
-    public class DefaultUpdateParser : IUpdateParser
+    public class DefaultUpdateParser : DefaultParser<UpdateInfo, UpdateStateMachine, UpdateToken, UpdateParseStates, UpdateParseActions>, IUpdateParser
     {
-        private UpdateInfo info;
-
-        public UpdateInfo Parse(string command)
+       
+        protected override UpdateToken GetTokenByWord(string word)
         {
-            IEnumerable<string> words = command.SplitToWords();
-            var tokens = words.Select(x => UpdateToken.Create(x));
-            info = new UpdateInfo();
-            UpdateStateMachine machine = new UpdateStateMachine();
-            machine.Parsing += Machine_Parsing;
-            foreach (var token in tokens)
-            {
-                machine.Push(token);
-            }
-            return info;
+            return UpdateToken.Create(word);
         }
 
-        private void Machine_Parsing(object sender, Events.TokenParsingEventArgs<States.UpdateParseStates> e)
+        protected override void OnParsing(ref UpdateInfo info, UpdateStateMachine machine, TokenParsingEventArgs<UpdateParseStates> e)
         {
             const string CONTEXT_KEY_CONDITION = "Condition";
             const string CONTEXT_KEY_SET = "Set";
-            var machine = sender as UpdateStateMachine;
             switch (e.NowState)
             {
                 case States.UpdateParseStates.SetField:
@@ -43,8 +35,8 @@ namespace Reface.NPI.Parsers
                     break;
                 case States.UpdateParseStates.SetParameter:
                     {
-                        SetInfo info = (SetInfo)machine.Context[CONTEXT_KEY_SET];
-                        info.Parameter = machine.TokenStack.Pop().Text;
+                        SetInfo setInfo = (SetInfo)machine.Context[CONTEXT_KEY_SET];
+                        setInfo.Parameter = machine.TokenStack.Pop().Text;
                     }
                     break;
                 case States.UpdateParseStates.ConditionField:

@@ -2,8 +2,7 @@
 
 namespace Reface.NPI.Parsers
 {
-    public interface IUpdateParser
+    public interface IUpdateParser : IParser<UpdateInfo>
     {
-        UpdateInfo Parse(string command);
     }
 }

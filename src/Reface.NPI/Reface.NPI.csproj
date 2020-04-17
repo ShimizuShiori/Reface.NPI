@@ -119,6 +119,7 @@
     <Compile Include="Parsers\DefaultCountParser.cs" />
     <Compile Include="Parsers\DefaultDeleteParser.cs" />
     <Compile Include="Parsers\DefaultInsertParser.cs" />
+    <Compile Include="Parsers\DefaultParser.cs" />
     <Compile Include="Parsers\DefaultSelectParser.cs" />
     <Compile Include="Parsers\DefaultUpdateParser.cs" />
     <Compile Include="Parsers\Events\TokenParsingEventArgs.cs" />
@@ -126,6 +127,7 @@
     <Compile Include="Parsers\ICountParser.cs" />
     <Compile Include="Parsers\IDeleteParser.cs" />
     <Compile Include="Parsers\IInsertParser.cs" />
+    <Compile Include="Parsers\IParser.cs" />
     <Compile Include="Parsers\IParseStateMachine.cs" />
     <Compile Include="Parsers\ISelectParser.cs" />
     <Compile Include="Parsers\IToken.cs" />

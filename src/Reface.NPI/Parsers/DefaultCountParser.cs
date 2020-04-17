@@ -1,36 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Reface.NPI.Models;
+﻿using Reface.NPI.Models;
+using Reface.NPI.Parsers.Actions;
+using Reface.NPI.Parsers.Events;
 using Reface.NPI.Parsers.StateMachines;
 using Reface.NPI.Parsers.States;
 using Reface.NPI.Parsers.Tokens;
 
 namespace Reface.NPI.Parsers
 {
-    public class DefaultCountParser : ICountParser
+    public class DefaultCountParser : DefaultParser<CountInfo, CountStateMachine, CountToken, CountParseStates, CountParseActions>, ICountParser
     {
-        private CountInfo countInfo;
-        public CountInfo Parse(string command)
+        protected override CountToken GetTokenByWord(string word)
         {
-            countInfo = new CountInfo();
-            List<string> words = command.SplitToWords();
-            IEnumerable<CountToken> tokens = words.Select(x => CountToken.Create(x));
-            CountStateMachine stateMachine = new CountStateMachine();
-            stateMachine.Parsing += StateMachine_Parsing;
-            foreach (var token in tokens)
-            {
-                stateMachine.Push(token);
-            }
-            return countInfo;
+            return CountToken.Create(word);
         }
 
-        private void StateMachine_Parsing(object sender, Events.TokenParsingEventArgs<CountParseStates> e)
+        protected override void OnParsing(ref CountInfo info, CountStateMachine machine, TokenParsingEventArgs<CountParseStates> e)
         {
             const string CONTEXT_KEY_CONDITION = "CONDITION";
-            CountStateMachine machine = sender as CountStateMachine;
             switch (e.NowState)
             {
                 case States.CountParseStates.Start:
@@ -43,7 +29,7 @@ namespace Reface.NPI.Parsers
                         conditionInfo.Field = machine.TokenStack.Pop().Text;
                         conditionInfo.Parameter = conditionInfo.Field;
                         machine.Context[CONTEXT_KEY_CONDITION] = conditionInfo;
-                        countInfo.ConditionInfos.Add(conditionInfo);
+                        info.ConditionInfos.Add(conditionInfo);
                     }
                     break;
                 case States.CountParseStates.ConditionOperator:

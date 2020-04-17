@@ -2,8 +2,7 @@
 
 namespace Reface.NPI.Parsers
 {
-    public interface ICountParser
+    public interface ICountParser : IParser<CountInfo>
     {
-        CountInfo Parse(string command);
     }
 }

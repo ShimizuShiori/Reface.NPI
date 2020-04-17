@@ -1,37 +1,29 @@
 ﻿using Reface.NPI.Models;
+using Reface.NPI.Parsers.Actions;
+using Reface.NPI.Parsers.Events;
 using Reface.NPI.Parsers.StateMachines;
+using Reface.NPI.Parsers.States;
 using Reface.NPI.Parsers.Tokens;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Reface.NPI.Parsers
 {
-    public class DefaultInsertParser : IInsertParser
+    public class DefaultInsertParser : DefaultParser<InsertInfo, InsertStateMachine, InsertToken, InsertParseStates, InsertParseActions>, IInsertParser
     {
-        private InsertInfo insertInfo;
 
-        public InsertInfo Parse(string command)
+        protected override InsertToken GetTokenByWord(string word)
         {
-            this.insertInfo = new InsertInfo();
-            IEnumerable<string> words = command.SplitToWords();
-            IEnumerable<InsertToken> tokens = words.Select(x => InsertToken.Create(x));
-            var machine = new InsertStateMachine();
-            machine.Parsing += Machine_Parsing;
-            foreach (var token in tokens)
-                machine.Push(token);
-            return insertInfo;
+            return InsertToken.Create(word);
         }
 
-        private void Machine_Parsing(object sender, Events.TokenParsingEventArgs<States.InsertParseStates> e)
+        protected override void OnParsing(ref InsertInfo info, InsertStateMachine machine, TokenParsingEventArgs<InsertParseStates> e)
         {
-            var machine = (InsertStateMachine)sender;
             switch (e.NowState)
             {
                 case States.InsertParseStates.WithoutField:
-                    insertInfo.WithoutFields.Add(machine.TokenStack.Pop().Text);
+                    info.WithoutFields.Add(machine.TokenStack.Pop().Text);
                     break;
                 case States.InsertParseStates.Select:
-                    insertInfo.SelectNewRow = true;
+                    info.SelectNewRow = true;
                     break;
                 case States.InsertParseStates.Start:
                 case States.InsertParseStates.Without:
