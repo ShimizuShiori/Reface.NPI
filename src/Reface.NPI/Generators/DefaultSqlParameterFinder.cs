@@ -24,8 +24,8 @@ namespace Reface.NPI.Generators
                  queryCommand = queryCommand.Replace("\t", " ");
                  string[] words = queryCommand.Split(new char[] { ' ' });
                  return words.Select(x => x.Trim())
-                     .Where(x => x.StartsWith("@"))
-                     .Select(x => x.Replace("@", ""));
+                     .Where(x => x.StartsWith("@") || x.StartsWith(":"))
+                     .Select(x => x.Substring(1));
              });
         }
     }

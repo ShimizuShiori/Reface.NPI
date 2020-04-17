@@ -49,10 +49,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\ForConditionAttribute.cs" />
-    <Compile Include="Attributes\ForSetAttribute.cs" />
+    <Compile Include="Attributes\CountQueryAttribute.cs" />
+    <Compile Include="Attributes\DeleteQueryAttribute.cs" />
+    <Compile Include="Attributes\InsertQueryAttribute.cs" />
     <Compile Include="Attributes\ParameterAttribute.cs" />
     <Compile Include="Attributes\QueryAttribute.cs" />
+    <Compile Include="Attributes\SelectQueryAttribute.cs" />
+    <Compile Include="Attributes\UpdateQueryAttribute.cs" />
     <Compile Include="Constant.cs" />
     <Compile Include="DefaultCache.cs" />
     <Compile Include="DefaultResourceNameProvider.cs" />

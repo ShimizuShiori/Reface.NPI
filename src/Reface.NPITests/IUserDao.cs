@@ -122,12 +122,16 @@ namespace Reface.NPITests
         #region Query
 
         [Description("SELECT @@INDENTITY_SCOPE")]
-        [Query(SqlCommandTypes.Select, "SELECT @@INDENTITY_SCOPE")]
+        [SelectQuery("SELECT @@INDENTITY_SCOPE")]
         string ReturnNewId();
 
         [Description("select * from [a] where id <> @id and name <> @name")]
-        [Query(SqlCommandTypes.Select, "select * from [a] where id <> @id and name <> @name")]
+        [SelectQuery("select * from [a] where id <> @id and name <> @name")]
         int DiyQueryByIdAndName(int id, string name);
+
+        [Description("Delete from [a] where id <> @id")]
+        [DeleteQuery("Delete from [a] where id <> @id")]
+        int DiyDeleteById(int i);
 
         #endregion
     }
