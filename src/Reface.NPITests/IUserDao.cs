@@ -1,4 +1,6 @@
 ﻿using Reface.NPI;
+using Reface.NPI.Attributes;
+using Reface.NPI.Generators;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,6 +8,10 @@ using System.ComponentModel;
 namespace Reface.NPITests
 {
 
+    /// <summary>
+    /// 这个测试接口，使用 Description 代替了预期结果。
+    /// 以便测试每一个方法是否达到预期
+    /// </summary>
     public interface IUserDao : INpiDao<User>
     {
 
@@ -110,6 +116,14 @@ namespace Reface.NPITests
 
         [Description("SELECT COUNT(*) AS [C] FROM [User] WHERE [Id] = @Id")]
         int CountById(int id);
+
+        #endregion
+
+        #region Query
+
+        [Description("SELECT @@INDENTITY_SCOPE")]
+        [Query(SqlCommandTypes.Select, "SELECT @@INDENTITY_SCOPE")]
+        string ReturnNewId();
 
         #endregion
     }

@@ -48,7 +48,14 @@ namespace Reface.NPI.Generators
             public SqlCommandGenerateContext Build()
             {
                 var parser = new DefaultCommandParser();
-                this.context.CommandInfo = parser.Parse(this.context.Method.Name);
+
+                this.context.QueryAttributes = this.context.Method.GetCustomAttributes<QueryAttribute>();
+
+                this.context.HasAnyQueryAttribute = this.context.QueryAttributes != null && this.context.QueryAttributes.Any();
+
+                if (!this.context.HasAnyQueryAttribute)
+                    this.context.CommandInfo = parser.Parse(this.context.Method.Name);
+
                 this.context.IDaoType = this.context.Method.DeclaringType;
 
                 IEntityTypeProvider entityTypeProvider = NpiServicesCollection.GetService<IEntityTypeProvider>();
@@ -59,9 +66,6 @@ namespace Reface.NPI.Generators
 
                 this.context.Properties = this.context.EntityType.GetProperties();
 
-                this.context.QueryAttributes = this.context.Method.GetCustomAttributes<QueryAttribute>();
-
-                this.context.HasAnyQueryAttribute = this.context.QueryAttributes != null && this.context.QueryAttributes.Any();
 
                 return this.context;
             }

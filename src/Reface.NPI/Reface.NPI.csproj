@@ -88,7 +88,6 @@
     <Compile Include="Generators\SqlCommandGenerateContext.cs" />
     <Compile Include="Generators\SqlCommandTypes.cs" />
     <Compile Include="Generators\SqlParameterInfo.cs" />
-    <Compile Include="Generators\ParameterUses.cs" />
     <Compile Include="Generators\SqlCommandDescription.cs" />
     <Compile Include="Generators\SqlCommandGeneratorBase.cs" />
     <Compile Include="Generators\SqlServer\DefaultSqlServerCommandGenerator.cs" />

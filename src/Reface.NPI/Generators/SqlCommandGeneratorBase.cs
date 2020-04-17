@@ -1,5 +1,8 @@
-﻿using Reface.NPI.Models;
+﻿using Reface.NPI.Attributes;
+using Reface.NPI.Models;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Reface.NPI.Generators
@@ -22,7 +25,13 @@ namespace Reface.NPI.Generators
                 .Build();
 
             string cacheKey = $"SqlCOmmandDescription_{context.ToString()}";
-            SqlCommandDescription description = cache.GetOrCreate<SqlCommandDescription>(cacheKey, key => GetSqlCommandDescriptionWithourParameterFilled(context));
+            SqlCommandDescription description = cache.GetOrCreate<SqlCommandDescription>(cacheKey, key =>
+            {
+                if (context.HasAnyQueryAttribute)
+                    return GetDescriptionByQuery(context);
+                else
+                    return GetSqlCommandDescriptionWithourParameterFilled(context);
+            });
 
             if (arguments != null && arguments.Length != 0)
             {
@@ -76,5 +85,28 @@ namespace Reface.NPI.Generators
 
         protected abstract SqlCommandDescription GenerateCount(SqlCommandGenerateContext context);
         public abstract string GenerateParameterName(string name);
+
+        private SqlCommandDescription GetDescriptionByQuery(SqlCommandGenerateContext context)
+        {
+            string querySelector = NpiConfig.QuerySelector;
+            IEnumerable<QueryAttribute> queryAttributes = context.QueryAttributes.Where(x => x.Selector == querySelector);
+            if (queryAttributes.Count() > 1)
+                throw new ApplicationException("匹配到多个 QueryAttribute");
+
+            QueryAttribute queryAttribute = queryAttributes.FirstOrDefault();
+
+            SqlCommandDescription description = new SqlCommandDescription()
+            {
+                SqlCommand = queryAttribute.Sql,
+                Type = queryAttribute.SqlCommandType
+            };
+
+            foreach (var methodParameter in context.Method.GetParameters())
+            {
+                description.AddParameter(new SqlParameterInfo(methodParameter.Name));
+            }
+
+            return description;
+        }
     }
 }

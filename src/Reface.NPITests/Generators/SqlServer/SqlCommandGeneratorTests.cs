@@ -174,5 +174,14 @@ namespace Reface.NPITests.Generators.SqlServer
             Assert.AreEqual("NewName", d.Parameters["Name"].Value);
             Assert.AreEqual("NewPassword", d.Parameters["Password"].Value);
         }
+
+        [TestMethod]
+        public void NewId()
+        {
+            var g = new DefaultSqlServerCommandGenerator();
+            var method = typeof(IUserDao).GetMethod(nameof(IUserDao.ReturnNewId));
+            var d = g.Generate(method, new object[] { });
+            Console.WriteLine(d);
+        }
     }
 }
