@@ -176,12 +176,14 @@ namespace Reface.NPITests.Generators.SqlServer
         }
 
         [TestMethod]
-        public void NewId()
+        public void DiyQueryByIdAndName()
         {
             var g = new DefaultSqlServerCommandGenerator();
-            var method = typeof(IUserDao).GetMethod(nameof(IUserDao.ReturnNewId));
-            var d = g.Generate(method, new object[] { });
-            Console.WriteLine(d);
+            var method = typeof(IUserDao).GetMethod(nameof(IUserDao.DiyQueryByIdAndName));
+            var d = g.Generate(method, new object[] { 1, "fc" });
+            Assert.AreEqual(2, d.Parameters.Count);
+            Assert.AreEqual(1, d.Parameters["id"].Value);
+            Assert.AreEqual("fc", d.Parameters["name"].Value);
         }
     }
 }

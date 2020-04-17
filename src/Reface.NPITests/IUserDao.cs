@@ -125,6 +125,10 @@ namespace Reface.NPITests
         [Query(SqlCommandTypes.Select, "SELECT @@INDENTITY_SCOPE")]
         string ReturnNewId();
 
+        [Description("select * from [a] where id <> @id and name <> @name")]
+        [Query(SqlCommandTypes.Select, "select * from [a] where id <> @id and name <> @name")]
+        int DiyQueryByIdAndName(int id, string name);
+
         #endregion
     }
 }

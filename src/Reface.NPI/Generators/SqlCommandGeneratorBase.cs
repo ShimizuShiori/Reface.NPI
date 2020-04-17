@@ -11,11 +11,13 @@ namespace Reface.NPI.Generators
     {
         private readonly IParameterLookupFactory parameterLookupFactory;
         private readonly ICache cache;
+        private readonly ISqlParameterFinder sqlParameterFinder;
 
         public SqlCommandGeneratorBase()
         {
             this.parameterLookupFactory = NpiServicesCollection.GetService<IParameterLookupFactory>();
             this.cache = NpiServicesCollection.GetService<ICache>();
+            this.sqlParameterFinder = NpiServicesCollection.GetService<ISqlParameterFinder>();
         }
 
         public SqlCommandDescription Generate(MethodInfo methodInfo, object[] arguments)
@@ -101,10 +103,8 @@ namespace Reface.NPI.Generators
                 Type = queryAttribute.SqlCommandType
             };
 
-            foreach (var methodParameter in context.Method.GetParameters())
-            {
-                description.AddParameter(new SqlParameterInfo(methodParameter.Name));
-            }
+            foreach (var ps in this.sqlParameterFinder.Find(queryAttribute.Sql))
+                description.AddParameter(new SqlParameterInfo(ps));
 
             return description;
         }

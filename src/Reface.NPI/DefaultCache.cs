@@ -5,7 +5,7 @@ namespace Reface.NPI
 {
     public class DefaultCache : ICache
     {
-        private static readonly Dictionary<string, object> pool = new Dictionary<string, object>();
+        private static readonly Dictionary<int, object> pool = new Dictionary<int, object>();
 
         static DefaultCache()
         {
@@ -15,14 +15,18 @@ namespace Reface.NPI
         public object GetOrCreate(string key, Func<string, object> creator)
         {
             object result;
-            if (pool.TryGetValue(key, out result))
+
+            int hashKey = key.GetHashCode();
+            DebugLogger.Debug($"HashKey : [{key}] => [{hashKey}]");
+
+            if (pool.TryGetValue(hashKey, out result))
             {
-                DebugLogger.Debug($"发现缓存 : {key}");
+                DebugLogger.Debug($"发现缓存 : {hashKey}");
                 return result;
             }
 
             result = creator(key);
-            pool[key] = result;
+            pool[hashKey] = result;
             return result;
         }
     }

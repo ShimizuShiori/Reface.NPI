@@ -32,6 +32,7 @@ namespace Reface.NPI
             RegisterService<ICache>(t => new DefaultCache());
             RegisterService<IResourceNameProvider>(t => new DefaultResourceNameProvider());
             RegisterService<IResourceProvider>(t => new DefaultResourceProvider());
+            RegisterService<ISqlParameterFinder>(t => new DefaultSqlParameterFinder());
         }
 
         public static void RegisterService<T>(Func<Type, T> factory)

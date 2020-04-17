@@ -63,6 +63,7 @@
     <Compile Include="DefaultParameterFillerTests.cs" />
     <Compile Include="Generators\SqlServer\SqlCommandGeneratorTests.cs" />
     <Compile Include="IUserDao.cs" />
+    <Compile Include="ParameterFinderTests.cs" />
     <Compile Include="Parsers\DefaultCommandParserTests.cs" />
     <Compile Include="Parsers\DefaultDeleteParserTests.cs" />
     <Compile Include="Parsers\DefaultInsertParserTests.cs" />
