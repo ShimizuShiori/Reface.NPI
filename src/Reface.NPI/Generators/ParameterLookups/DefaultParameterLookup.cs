@@ -105,7 +105,6 @@ namespace Reface.NPI.Generators.ParameterLookups
                 var itemSqlParameter = new SqlParameterInfo()
                 {
                     Name = $"{parameter.Name}{i++}",
-                    Use = parameter.Use,
                     Value = item
                 };
                 description.AddParameter(itemSqlParameter);

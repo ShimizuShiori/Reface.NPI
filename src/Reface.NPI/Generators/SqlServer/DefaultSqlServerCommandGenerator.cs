@@ -55,8 +55,8 @@ namespace Reface.NPI.Generators.SqlServer
             shellBuilder.Append(" ) AS __RN__ FROM ( ");
             shellBuilder.Append(sqlBuilder.ToString());
             shellBuilder.Append(") t ) t WHERE t.__RN__ > @BEGINRN AND t.__RN__ <= @ENDRN");
-            result.AddParameter(new SqlParameterInfo() { Name = Constant.PARAMETER_NAME_BEGIN_ROW_NUMBER, Use = ParameterUses.ForCondition });
-            result.AddParameter(new SqlParameterInfo() { Name = Constant.PARAMETER_NAME_END_ROW_NUMBER, Use = ParameterUses.ForCondition });
+            result.AddParameter(new SqlParameterInfo() { Name = Constant.PARAMETER_NAME_BEGIN_ROW_NUMBER });
+            result.AddParameter(new SqlParameterInfo() { Name = Constant.PARAMETER_NAME_END_ROW_NUMBER });
             result.SqlCommand = shellBuilder.ToString();
             return result;
         }
@@ -76,7 +76,7 @@ namespace Reface.NPI.Generators.SqlServer
             {
                 setCommand = updateInfo.SetFields.Join(",", x =>
                 {
-                    result.AddParameter(new SqlParameterInfo(x.Parameter, ParameterUses.ForSet));
+                    result.AddParameter(new SqlParameterInfo(x.Parameter));
                     return $"[{x.Field}] = @{x.Parameter}";
                 });
             }
@@ -86,10 +86,10 @@ namespace Reface.NPI.Generators.SqlServer
                 HashSet<string> lowerCaseWithoutFields = new HashSet<string>(updateInfo.WithoutFields.Select(x => x.ToLower()));
                 setCommand = GetColumnNames(context)
                     .Where(x => !conditionField.Contains(x))
-                    .Where(x=>!lowerCaseWithoutFields.Contains(x.ToLower()))
+                    .Where(x => !lowerCaseWithoutFields.Contains(x.ToLower()))
                     .Join(",", x =>
                     {
-                        result.AddParameter(new SqlParameterInfo(x, ParameterUses.ForSet));
+                        result.AddParameter(new SqlParameterInfo(x));
                         return $"[{x}] = @{x}";
                     });
 
@@ -135,7 +135,7 @@ namespace Reface.NPI.Generators.SqlServer
             string values = columnNames.Join(",", x => $"@{x}");
             foreach (var columnName in columnNames)
             {
-                description.AddParameter(new SqlParameterInfo(columnName, ParameterUses.ForInsert));
+                description.AddParameter(new SqlParameterInfo(columnName));
             }
             description.SqlCommand = $"INSERT INTO [{context.TableName}]({fields})VALUES({values})";
             return description;
@@ -151,7 +151,7 @@ namespace Reface.NPI.Generators.SqlServer
             foreach (var condition in conditions)
             {
                 GenerateSqlByCondition(ref sqlBuilder, condition);
-                result.AddParameter(new SqlParameterInfo(condition.Parameter, ParameterUses.ForCondition));
+                result.AddParameter(new SqlParameterInfo(condition.Parameter));
             }
         }
 

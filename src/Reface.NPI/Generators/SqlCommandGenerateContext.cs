@@ -1,4 +1,5 @@
-﻿using Reface.NPI.Models;
+﻿using Reface.NPI.Attributes;
+using Reface.NPI.Models;
 using Reface.NPI.Parsers;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,10 @@ namespace Reface.NPI.Generators
         public IEnumerable<PropertyInfo> Properties { get; private set; }
 
         public MethodInfo Method { get; private set; }
+
+        public IEnumerable<QueryAttribute> QueryAttributes { get; private set; }
+
+        public bool HasAnyQueryAttribute { get; private set; }
 
         public static SqlCommandGenerateContextBuilder Create()
         {
@@ -53,6 +58,11 @@ namespace Reface.NPI.Generators
                 this.context.TableName = tableNameProvider.Provide(this.context.EntityType);
 
                 this.context.Properties = this.context.EntityType.GetProperties();
+
+                this.context.QueryAttributes = this.context.Method.GetCustomAttributes<QueryAttribute>();
+
+                this.context.HasAnyQueryAttribute = this.context.QueryAttributes != null && this.context.QueryAttributes.Any();
+
                 return this.context;
             }
         }

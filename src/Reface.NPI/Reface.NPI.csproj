@@ -52,6 +52,7 @@
     <Compile Include="Attributes\ForConditionAttribute.cs" />
     <Compile Include="Attributes\ForSetAttribute.cs" />
     <Compile Include="Attributes\ParameterAttribute.cs" />
+    <Compile Include="Attributes\QueryAttribute.cs" />
     <Compile Include="Constant.cs" />
     <Compile Include="DefaultCache.cs" />
     <Compile Include="DefaultResourceNameProvider.cs" />
@@ -109,6 +110,7 @@
     <Compile Include="Models\OrderTypes.cs" />
     <Compile Include="Models\SetInfo.cs" />
     <Compile Include="Models\UpdateInfo.cs" />
+    <Compile Include="NpiConfig.cs" />
     <Compile Include="NpiServicesCollection.cs" />
     <Compile Include="Paging.cs" />
     <Compile Include="Parsers\Actions\CountParseActions.cs" />
