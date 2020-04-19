@@ -179,6 +179,7 @@ namespace Reface.NPI.Generators
 
 **相关链接**
 
+[已知的一些问题](docs/ProblemsHaveBeenKnown.md)
 [Reface.NPI nuget 页面](https://www.nuget.org/packages/Reface.StateMachine)
 
 ---

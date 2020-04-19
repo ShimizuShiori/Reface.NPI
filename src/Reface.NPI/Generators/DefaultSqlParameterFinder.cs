@@ -25,6 +25,7 @@ namespace Reface.NPI.Generators
                  string[] words = queryCommand.Split(new char[] { ' ' });
                  return words.Select(x => x.Trim())
                      .Where(x => x.StartsWith("@") || x.StartsWith(":"))
+                     .Where(x => !x.StartsWith("@@"))
                      .Select(x => x.Substring(1));
              });
         }
