@@ -22,7 +22,7 @@ namespace Reface.NPI.Generators
 
         public MethodInfo Method { get; private set; }
 
-        public IEnumerable<QueryAttribute> QueryAttributes { get; private set; }
+        public IEnumerable<SqlAttribute> QueryAttributes { get; private set; }
 
         public bool HasAnyQueryAttribute { get; private set; }
 
@@ -49,7 +49,7 @@ namespace Reface.NPI.Generators
             {
                 var parser = new DefaultCommandParser();
 
-                this.context.QueryAttributes = this.context.Method.GetCustomAttributes<QueryAttribute>();
+                this.context.QueryAttributes = this.context.Method.GetCustomAttributes<SqlAttribute>();
 
                 this.context.HasAnyQueryAttribute = this.context.QueryAttributes != null && this.context.QueryAttributes.Any();
 

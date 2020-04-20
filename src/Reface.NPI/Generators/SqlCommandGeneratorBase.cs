@@ -57,23 +57,23 @@ namespace Reface.NPI.Generators
             {
                 case CommandInfoTypes.Delete:
                     description = GenerateDelete(context);
-                    description.Type = SqlCommandTypes.Delete;
+                    description.Mode = SqlCommandExecuteModes.Execute;
                     break;
                 case CommandInfoTypes.Update:
                     description = GenerateUpdate(context);
-                    description.Type = SqlCommandTypes.Update;
+                    description.Mode = SqlCommandExecuteModes.Execute;
                     break;
                 case CommandInfoTypes.Select:
                     description = GenerateSelect(context);
-                    description.Type = SqlCommandTypes.Select;
+                    description.Mode = SqlCommandExecuteModes.Query;
                     break;
                 case CommandInfoTypes.Insert:
                     description = GenerateInsert(context);
-                    description.Type = SqlCommandTypes.Insert;
+                    description.Mode = SqlCommandExecuteModes.Query;
                     break;
                 case CommandInfoTypes.Count:
                     description = GenerateCount(context);
-                    description.Type = SqlCommandTypes.Count;
+                    description.Mode = SqlCommandExecuteModes.Query;
                     break;
                 default: throw new NotImplementedException($"不能处理的命令类型 : {context.CommandInfo.Type.ToString()}");
             }
@@ -91,16 +91,16 @@ namespace Reface.NPI.Generators
         private SqlCommandDescription GetDescriptionByQuery(SqlCommandGenerateContext context)
         {
             string querySelector = NpiConfig.QuerySelector;
-            IEnumerable<QueryAttribute> queryAttributes = context.QueryAttributes.Where(x => x.Selector == querySelector);
+            IEnumerable<SqlAttribute> queryAttributes = context.QueryAttributes.Where(x => x.Selector == querySelector);
             if (queryAttributes.Count() > 1)
                 throw new ApplicationException("匹配到多个 QueryAttribute");
 
-            QueryAttribute queryAttribute = queryAttributes.FirstOrDefault();
+            SqlAttribute queryAttribute = queryAttributes.FirstOrDefault();
 
             SqlCommandDescription description = new SqlCommandDescription()
             {
                 SqlCommand = queryAttribute.Sql,
-                Type = queryAttribute.SqlCommandType
+                Mode = queryAttribute.Mode
             };
 
             foreach (var ps in this.sqlParameterFinder.Find(queryAttribute.Sql))

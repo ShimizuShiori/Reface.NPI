@@ -69,7 +69,7 @@ namespace Reface.NPITests
         [Description("UPDATE [User] SET [Password] = @Password,[Name] = @Name WHERE [Id] = @Id And [Uid] = @Uid")]
         void UpdatePasswordAndNameByIdAndUid(string password, string name, string id, string uid);
 
-        [Description("INSERT INTO [User]([Id],[Name],[Password],[CreateTime])VALUES(@Id,@Name,@Password,@CreateTime)")]
+        [Description("INSERT INTO [User]([Id],[Name],[Password],[CreateTime])VALUES(@Id,@Name,@Password,@CreateTime);SELECT ISNULL(SCOPE_IDENTITY(),0) AS [Id]")]
         void Insert(User user);
 
         [Description("UPDATE [User] SET [Loginname] = @Loginname WHERE [Id] = @Id")]
@@ -96,7 +96,7 @@ namespace Reface.NPITests
 
         #region 带 Without 的 Insert
 
-        [Description("INSERT INTO [User]([Name],[Password])VALUES(@Name,@Password)")]
+        [Description("INSERT INTO [User]([Name],[Password])VALUES(@Name,@Password);SELECT ISNULL(SCOPE_IDENTITY(),0) AS [Id]")]
         void InsertWithoutIdCreatetime(User user);
 
         #endregion
@@ -122,15 +122,15 @@ namespace Reface.NPITests
         #region Query
 
         [Description("SELECT @@INDENTITY_SCOPE")]
-        [SelectQuery("SELECT @@INDENTITY_SCOPE")]
+        [Sql(SqlCommandExecuteModes.Query, "SELECT @@INDENTITY_SCOPE")]
         string ReturnNewId();
 
         [Description("select * from [a] where id <> @id and name <> @name")]
-        [SelectQuery("select * from [a] where id <> @id and name <> @name")]
+        [Sql(SqlCommandExecuteModes.Query, "select * from [a] where id <> @id and name <> @name")]
         int DiyQueryByIdAndName(int id, string name);
 
         [Description("Delete from [a] where id <> @id")]
-        [DeleteQuery("Delete from [a] where id <> @id")]
+        [Sql(SqlCommandExecuteModes.Execute, "Delete from [a] where id <> @id")]
         int DiyDeleteById(int i);
 
         #endregion

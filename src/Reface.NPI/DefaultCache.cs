@@ -22,11 +22,23 @@ namespace Reface.NPI
             if (pool.TryGetValue(hashKey, out result))
             {
                 DebugLogger.Debug($"发现缓存 : {hashKey}");
+                if (result is ICopy c)
+                    return c.Copy();
+
                 return result;
             }
 
             result = creator(key);
-            pool[hashKey] = result;
+
+            if (result is ICopy c2)
+            {
+                var copied = c2.Copy();
+                pool[hashKey] = copied;
+            }
+            else
+            {
+                pool[hashKey] = result;
+            }
             return result;
         }
     }

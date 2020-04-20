@@ -137,7 +137,7 @@ namespace Reface.NPI.Generators.SqlServer
             {
                 description.AddParameter(new SqlParameterInfo(columnName));
             }
-            description.SqlCommand = $"INSERT INTO [{context.TableName}]({fields})VALUES({values})";
+            description.SqlCommand = $"INSERT INTO [{context.TableName}]({fields})VALUES({values});SELECT ISNULL(SCOPE_IDENTITY(),0) AS [Id]";
             return description;
         }
 

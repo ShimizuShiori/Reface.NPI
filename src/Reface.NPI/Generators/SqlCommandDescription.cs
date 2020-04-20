@@ -2,9 +2,9 @@
 
 namespace Reface.NPI.Generators
 {
-    public class SqlCommandDescription
+    public class SqlCommandDescription : ICopy
     {
-        public SqlCommandTypes Type { get; set; }
+        public SqlCommandExecuteModes Mode { get; set; }
 
         public string SqlCommand { get; set; }
         public Dictionary<string, SqlParameterInfo> Parameters { get; private set; }
@@ -22,6 +22,16 @@ namespace Reface.NPI.Generators
         public override string ToString()
         {
             return $"Sql : {SqlCommand} \nParameterValues : \n{Parameters.Join("\n", x => $"\t{x.Value.ToString()}")}";
+        }
+
+        public object Copy()
+        {
+            return new SqlCommandDescription()
+            {
+                SqlCommand = this.SqlCommand,
+                Mode = this.Mode,
+                Parameters = new Dictionary<string, SqlParameterInfo>(this.Parameters)
+            };
         }
     }
 }

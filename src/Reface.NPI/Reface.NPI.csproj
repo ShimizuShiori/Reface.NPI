@@ -49,13 +49,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\CountQueryAttribute.cs" />
-    <Compile Include="Attributes\DeleteQueryAttribute.cs" />
-    <Compile Include="Attributes\InsertQueryAttribute.cs" />
+    <Compile Include="Attributes\ExecuteAttribute.cs" />
     <Compile Include="Attributes\ParameterAttribute.cs" />
     <Compile Include="Attributes\QueryAttribute.cs" />
-    <Compile Include="Attributes\SelectQueryAttribute.cs" />
-    <Compile Include="Attributes\UpdateQueryAttribute.cs" />
+    <Compile Include="Attributes\SqlAttribute.cs" />
     <Compile Include="Constant.cs" />
     <Compile Include="DefaultCache.cs" />
     <Compile Include="DefaultResourceNameProvider.cs" />
@@ -90,6 +87,7 @@
     <Compile Include="Generators\OperatorMappings\IOperatorMapper.cs" />
     <Compile Include="Generators\OperatorMappings\Models\Mapping.cs" />
     <Compile Include="Generators\OperatorMappings\Models\Mappings.cs" />
+    <Compile Include="Generators\SqlCommandExecuteModes.cs" />
     <Compile Include="Generators\SqlCommandGenerateContext.cs" />
     <Compile Include="Generators\SqlCommandTypes.cs" />
     <Compile Include="Generators\SqlParameterInfo.cs" />
@@ -100,6 +98,7 @@
     <Compile Include="Generators\SqlServer\SqlServerOperatorMapper.cs" />
     <Compile Include="Generators\IParameterLookup.cs" />
     <Compile Include="ICache.cs" />
+    <Compile Include="ICopy.cs" />
     <Compile Include="INpiDao.cs" />
     <Compile Include="IResourceNameProvider.cs" />
     <Compile Include="IResourceProvider.cs" />
