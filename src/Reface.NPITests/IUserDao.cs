@@ -168,5 +168,11 @@ namespace Reface.NPITests
         void UpdateNameByNotId(int id);
 
         #endregion
+
+        #region Enum
+
+        void SelectByState(UserStates state);
+
+        #endregion
     }
 }

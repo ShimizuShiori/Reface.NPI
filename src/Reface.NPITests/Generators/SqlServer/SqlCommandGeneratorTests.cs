@@ -21,6 +21,7 @@ namespace Reface.NPITests.Generators.SqlServer
             foreach (var info in infos)
             {
                 System.ComponentModel.DescriptionAttribute desc = info.GetCustomAttribute<System.ComponentModel.DescriptionAttribute>();
+                if (desc == null) continue;
                 var d = g.Generate(info, null);
                 Console.WriteLine(d);
                 Assert.AreEqual(desc.Description, d.SqlCommand.Trim(), info.Name);
@@ -217,6 +218,15 @@ namespace Reface.NPITests.Generators.SqlServer
             Assert.AreEqual(10, d.Parameters["Id"].Value);
             Assert.AreEqual(1, d.Parameters[string.Format("{0}{1}", "Age", Constant.PARAMETER_SUFFIX_BETWEEN_BEGIN)].Value);
             Assert.AreEqual(2, d.Parameters[string.Format("{0}{1}", "Age", Constant.PARAMETER_SUFFIX_BETWEEN_END)].Value);
+        }
+
+        [TestMethod]
+        public void EnumTest1()
+        {
+            var g = new DefaultSqlServerCommandGenerator();
+            var method = typeof(IUserDao).GetMethod(nameof(IUserDao.SelectByState));
+            var d = g.Generate(method, new object[] { UserStates.Normal });
+            Assert.AreEqual(1, d.Parameters["State"].Value);
         }
     }
 }

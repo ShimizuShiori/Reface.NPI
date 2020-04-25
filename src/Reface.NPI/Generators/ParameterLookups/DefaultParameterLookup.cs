@@ -28,6 +28,11 @@ namespace Reface.NPI.Generators.ParameterLookups
                 ;
         }
 
+        private bool IsEnum(Type type)
+        {
+            return type.IsEnum;
+        }
+
         private bool IsCollectionType(Type type)
         {
             return typeof(IEnumerable).IsAssignableFrom(type);
@@ -62,6 +67,8 @@ namespace Reface.NPI.Generators.ParameterLookups
                 FillWithCollectionType(generator, description, parameterName, valueGetter);
             else if (IsObject(valueType))
                 FillWithObjectType(generator, description, valueType, valueGetter);
+            else if (IsEnum(valueType))
+                FillWithBaseType(description, parameterName, () => Convert.ToInt32(valueGetter()));
             else
                 throw new CanNotConvertToSqlParameterException(valueType);
         }
