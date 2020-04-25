@@ -1,8 +1,9 @@
-,Word,And,Or,By,End
-Start,,,,Condition,
-Condition,ConditionField,,,,
-ConditionField,ConditionOperator,NextCondition,NextCondition,,End
-ConditionOperator,ConditionParameter,NextCondition,NextCondition,,End
-NextCondition,ConditionField,,,,
-End,,,,,
-ConditionParameter,,NextCondition,NextCondition,,End
+,Word,And,Or,By,End,Not
+Start,,,,Condition,,
+Condition,ConditionField,,,,,NotCondition
+ConditionField,ConditionOperator,NextCondition,NextCondition,,End,
+ConditionOperator,ConditionParameter,NextCondition,NextCondition,,End,
+NextCondition,ConditionField,,,,,NotCondition
+End,,,,,,
+ConditionParameter,,NextCondition,NextCondition,,End,
+NotCondition,ConditionField,,,,,

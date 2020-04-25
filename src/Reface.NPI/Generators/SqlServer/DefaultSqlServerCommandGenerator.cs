@@ -154,11 +154,15 @@ namespace Reface.NPI.Generators.SqlServer
             sqlBuilder.Append(" WHERE");
             foreach (var condition in conditions)
             {
+                if (condition.IsNot)
+                    sqlBuilder.Append(" NOT(");
                 ConditionGeneratorContext conditionContext = new ConditionGeneratorContext(this,
                     result,
                     sqlBuilder,
                     condition);
                 this.conditionGenerateHandler.Handle(conditionContext);
+                if (condition.IsNot)
+                    sqlBuilder.Append(")");
                 if (condition.JoinerToNext != ConditionJoiners.Null)
                     sqlBuilder.Append($" {condition.JoinerToNext}");
             }

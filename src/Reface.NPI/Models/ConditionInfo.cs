@@ -1,5 +1,8 @@
 ﻿namespace Reface.NPI.Models
 {
+    /// <summary>
+    /// 条件信息
+    /// </summary>
     public class ConditionInfo
     {
         /// <summary>
@@ -18,6 +21,11 @@
         /// 与后一个条件的连接词
         /// </summary>
         public ConditionJoiners JoinerToNext { get; set; } = ConditionJoiners.Null;
+
+        /// <summary>
+        /// 该条件是否以 Not 的形式生成
+        /// </summary>
+        public bool IsNot { get; set; } = false;
 
         public override string ToString()
         {

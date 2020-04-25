@@ -7,7 +7,7 @@ using Reface.NPI.Parsers.Tokens;
 
 namespace Reface.NPI.Parsers
 {
-    public class DefaultDeleteParser : DefaultParser<DeleteInfo,DeleteStateMachine,DeleteToken,DeleteParseStates,DeleteParseActions>,IDeleteParser
+    public class DefaultDeleteParser : DefaultParser<DeleteInfo, DeleteStateMachine, DeleteToken, DeleteParseStates, DeleteParseActions>, IDeleteParser
     {
 
         protected override DeleteToken GetTokenByWord(string word)
@@ -23,14 +23,24 @@ namespace Reface.NPI.Parsers
                 case DeleteParseStates.Start:
                     break;
                 case DeleteParseStates.Condition:
+                    {
+                        ConditionInfo conditionInfo = new ConditionInfo();
+                        machine.Context[CONTEXT_KEY_CONDITION] = conditionInfo;
+                        info.ConditionInfos.Add(conditionInfo);
+                    }
+                    break;
+                case DeleteParseStates.NotCondition:
+                    {
+                        ConditionInfo conditionInfo = machine.Context[CONTEXT_KEY_CONDITION] as ConditionInfo;
+                        conditionInfo.IsNot = true;
+                    }
                     break;
                 case DeleteParseStates.ConditionField:
                     {
-                        ConditionInfo conditionInfo = new ConditionInfo();
+                        ConditionInfo conditionInfo = machine.Context[CONTEXT_KEY_CONDITION] as
+                            ConditionInfo;
                         conditionInfo.Field = machine.TokenStack.Pop().Text;
                         conditionInfo.Parameter = conditionInfo.Field;
-                        machine.Context[CONTEXT_KEY_CONDITION] = conditionInfo;
-                        info.ConditionInfos.Add(conditionInfo);
                     }
                     break;
                 case DeleteParseStates.ConditionOperator:
@@ -52,7 +62,10 @@ namespace Reface.NPI.Parsers
                         conditionInfo.JoinerToNext = token.Action == Actions.DeleteParseActions.And ?
                              ConditionJoiners.And :
                              ConditionJoiners.Or;
-                        machine.Context[CONTEXT_KEY_CONDITION] = null;
+
+                        conditionInfo = new ConditionInfo();
+                        info.ConditionInfos.Add(conditionInfo);
+                        machine.Context[CONTEXT_KEY_CONDITION] = conditionInfo;
                     }
                     break;
                 case DeleteParseStates.End:

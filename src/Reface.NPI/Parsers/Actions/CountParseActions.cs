@@ -6,6 +6,7 @@
         And,
         Or,
         By,
-        End
+        End,
+        Not
     }
 }

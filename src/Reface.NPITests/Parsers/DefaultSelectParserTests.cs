@@ -145,5 +145,21 @@ namespace Reface.NPI.Parsers.Tests
             Assert.AreEqual("Id", info.Orders[0].Field);
             Assert.AreEqual(OrderTypes.Asc, info.Orders[0].Type);
         }
+
+        [TestMethod]
+        public void ParseCommand_ByNotId()
+        {
+            string command = "ByNotId";
+            SelectInfo info = GetInfoByCommand(command);
+            Assert.AreEqual(1, info.Conditions.Count);
+            var condition = info.Conditions[0];
+            Assert.AreEqual(true, condition.IsNot);
+        }
+
+        private SelectInfo GetInfoByCommand(string command)
+        {
+            DefaultSelectParser parser = new DefaultSelectParser();
+            return parser.Parse(command);
+        }
     }
 }

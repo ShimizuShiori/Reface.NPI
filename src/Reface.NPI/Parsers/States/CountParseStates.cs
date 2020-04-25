@@ -8,7 +8,7 @@
         ConditionOperator,
         NextCondition,
         End,
-        ConditionParameter
-
+        ConditionParameter,
+        NotCondition
     }
 }

@@ -13,6 +13,7 @@
         OrderByField,
         AscOrDesc,
         End,
-        ConditionParameter
+        ConditionParameter,
+        NotCondition
     }
 }

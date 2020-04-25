@@ -11,7 +11,7 @@ namespace Reface.NPI.Parsers
 {
     public class DefaultUpdateParser : DefaultParser<UpdateInfo, UpdateStateMachine, UpdateToken, UpdateParseStates, UpdateParseActions>, IUpdateParser
     {
-       
+
         protected override UpdateToken GetTokenByWord(string word)
         {
             return UpdateToken.Create(word);
@@ -39,14 +39,25 @@ namespace Reface.NPI.Parsers
                         setInfo.Parameter = machine.TokenStack.Pop().Text;
                     }
                     break;
+                case UpdateParseStates.Condition:
+                    {
+                        ConditionInfo condition = new ConditionInfo();
+                        machine.Context[CONTEXT_KEY_CONDITION] = condition;
+                        info.Conditions.Add(condition);
+                    }
+                    break;
+                case UpdateParseStates.NotCondition:
+                    {
+                        ConditionInfo condition = machine.Context[CONTEXT_KEY_CONDITION] as ConditionInfo;
+                        condition.IsNot = true;
+                    }
+                    break;
                 case States.UpdateParseStates.ConditionField:
                     {
+                        ConditionInfo condition = machine.Context[CONTEXT_KEY_CONDITION] as ConditionInfo;
                         string field = machine.TokenStack.Pop().Text;
-                        ConditionInfo condition = new ConditionInfo();
                         condition.Field = field;
                         condition.Parameter = field;
-                        info.Conditions.Add(condition);
-                        machine.Context[CONTEXT_KEY_CONDITION] = condition;
                     }
                     break;
                 case States.UpdateParseStates.ConditionOperator:
@@ -70,6 +81,10 @@ namespace Reface.NPI.Parsers
                             : ConditionJoiners.And;
                         var condition = (ConditionInfo)machine.Context[CONTEXT_KEY_CONDITION];
                         condition.JoinerToNext = joiners;
+
+                        condition = new ConditionInfo();
+                        info.Conditions.Add(condition);
+                        machine.Context[CONTEXT_KEY_CONDITION] = condition;
                     }
                     break;
                 case States.UpdateParseStates.WithoutField:
@@ -80,7 +95,6 @@ namespace Reface.NPI.Parsers
                 case States.UpdateParseStates.NextWithoutField:
                 case States.UpdateParseStates.SetEquals:
                 case States.UpdateParseStates.NextSetField:
-                case States.UpdateParseStates.Condition:
                 case States.UpdateParseStates.Without:
                     machine.TokenStack.Pop();
                     break;

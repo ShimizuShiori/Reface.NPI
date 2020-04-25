@@ -14,6 +14,8 @@ namespace Reface.NPITests
     /// </summary>
     public interface IUserDao : INpiDao<User>
     {
+        #region 第一批测试方法
+
 
         [Description("SELECT * FROM [User] WHERE [Gid] = @Gid")]
         void SelectByGid(Guid gid);
@@ -81,6 +83,9 @@ namespace Reface.NPITests
         [Description("SELECT * FROM [User] WHERE [Uid] In @Uid")]
         void GetByUidIn(List<int> uid);
 
+        #endregion
+
+
         #region 带参数的语句生成
 
         [Description("SELECT * FROM [User] WHERE [Name] Like @Aname Or [Name] Like @Bname Or [Name] Like @Cname")]
@@ -142,6 +147,25 @@ namespace Reface.NPITests
 
         [Description("SELECT * FROM [User] WHERE [Id] = @Id And [Age] BETWEEN @Age_BEGIN AND @Age_END")]
         void SelectByIdAndAgeBetween(int id, BetweenParameter age);
+
+        #endregion
+
+        #region Not
+
+        [Description("SELECT * FROM [User] WHERE NOT( [Id] = @Id)")]
+        void SelectByNotId(string id);
+
+        [Description("DELETE FROM [User] WHERE NOT( [Id] = @Id)")]
+        void DeleteByNotId(string id);
+
+        [Description("SELECT COUNT(*) AS [C] FROM [User] WHERE NOT( [Id] = @Id)")]
+        void CountByNotId(string id);
+
+        [Description("SELECT * FROM [User] WHERE NOT( [Id] = @Id) Or NOT( [Name] = @Name)")]
+        void SelectByNotIdOrNotName(int id, string name);
+
+        [Description("UPDATE [User] SET [Name] = @Name WHERE NOT( [Id] = @Id)")]
+        void UpdateNameByNotId(int id);
 
         #endregion
     }

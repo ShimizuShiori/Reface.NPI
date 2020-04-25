@@ -8,6 +8,7 @@
         By,
         End,
         Equals,
-        Without
+        Without,
+        Not
     }
 }

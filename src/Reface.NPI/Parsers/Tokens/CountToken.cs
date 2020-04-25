@@ -7,6 +7,7 @@ namespace Reface.NPI.Parsers.Tokens
         public const string TEXT_BY = "By";
         public const string TEXT_AND = "And";
         public const string TEXT_OR = "Or";
+        public const string TEXT_NOT = "Not";
 
         public string Text { get; private set; }
 
@@ -22,9 +23,10 @@ namespace Reface.NPI.Parsers.Tokens
         {
             switch (text)
             {
-                case TEXT_BY:return new DeleteToken(text, DeleteParseActions.By);
-                case TEXT_AND:return new DeleteToken(text, DeleteParseActions.And);
-                case TEXT_OR:return new DeleteToken(text, DeleteParseActions.Or);
+                case TEXT_BY: return new DeleteToken(text, DeleteParseActions.By);
+                case TEXT_AND: return new DeleteToken(text, DeleteParseActions.And);
+                case TEXT_OR: return new DeleteToken(text, DeleteParseActions.Or);
+                case TEXT_NOT: return new DeleteToken(text, DeleteParseActions.Not);
                 default: return new DeleteToken(text, DeleteParseActions.Word);
             }
         }

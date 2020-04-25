@@ -8,6 +8,7 @@
         By,
         OrderBy,
         AscOrDesc,
-        End
+        End,
+        Not
     }
 }

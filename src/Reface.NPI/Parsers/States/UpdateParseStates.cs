@@ -15,7 +15,7 @@
         SetEquals,
         WithoutField,
         Without,
-        NextWithoutField
-
+        NextWithoutField,
+        NotCondition
     }
 }

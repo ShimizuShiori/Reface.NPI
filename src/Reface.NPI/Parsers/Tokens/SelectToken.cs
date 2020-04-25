@@ -10,6 +10,7 @@ namespace Reface.NPI.Parsers.Tokens
         public const string TEXT_ORDER_BY = "Orderby";
         public const string TEXT_ASC = "Asc";
         public const string TEXT_DESC = "Desc";
+        public const string TEXT_NOT = "Not";
 
         public string Text { get; private set; }
         public SelectParseActions Action { get; private set; }
@@ -36,6 +37,8 @@ namespace Reface.NPI.Parsers.Tokens
                     return new SelectToken(text, SelectParseActions.AscOrDesc);
                 case TEXT_DESC:
                     return new SelectToken(text, SelectParseActions.AscOrDesc);
+                case TEXT_NOT:
+                    return new SelectToken(text, SelectParseActions.Not);
                 default:
                     return new SelectToken(text, SelectParseActions.Word);
             }

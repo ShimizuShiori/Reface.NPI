@@ -4,6 +4,7 @@ using Reface.NPI.Parsers.Events;
 using Reface.NPI.Parsers.StateMachines;
 using Reface.NPI.Parsers.States;
 using Reface.NPI.Parsers.Tokens;
+using System.Runtime.Remoting.Contexts;
 
 namespace Reface.NPI.Parsers
 {
@@ -28,11 +29,10 @@ namespace Reface.NPI.Parsers
                     break;
                 case SelectParseStates.ConditionField:
                     {
-                        ConditionInfo condition = new ConditionInfo();
+                        ConditionInfo condition = (ConditionInfo)machine.Context[CONTEXT_KEY_CONDITION];
                         condition.Field = machine.TokenStack.Pop().Text;
                         condition.Parameter = condition.Field;
                         machine.Context[CONTEXT_KEY_CONDITION] = condition;
-                        info.Conditions.Add(condition);
                     }
                     break;
                 case SelectParseStates.ConditionOperator:
@@ -47,6 +47,10 @@ namespace Reface.NPI.Parsers
                         condition.JoinerToNext = machine.TokenStack.Pop().Action == Actions.SelectParseActions.Or
                             ? ConditionJoiners.Or
                             : ConditionJoiners.And;
+
+                        condition = new ConditionInfo();
+                        info.Conditions.Add(condition);
+                        machine.Context[CONTEXT_KEY_CONDITION] = condition;
                     }
                     break;
 
@@ -71,7 +75,21 @@ namespace Reface.NPI.Parsers
                             : OrderTypes.Asc;
                     }
                     break;
+                case SelectParseStates.NotCondition:
+                    {
+                        machine.TokenStack.Pop();
+                        ConditionInfo condition = (ConditionInfo)machine.Context[CONTEXT_KEY_CONDITION];
+                        condition.IsNot = true;
+                    }
+                    break;
                 case SelectParseStates.Condition:
+                    {
+                        machine.TokenStack.Pop();
+                        ConditionInfo condition = new ConditionInfo();
+                        info.Conditions.Add(condition);
+                        machine.Context[CONTEXT_KEY_CONDITION] = condition;
+                    }
+                    break;
                 case SelectParseStates.NextOutputField:
                 case SelectParseStates.OrderBy:
                     machine.TokenStack.Pop();
