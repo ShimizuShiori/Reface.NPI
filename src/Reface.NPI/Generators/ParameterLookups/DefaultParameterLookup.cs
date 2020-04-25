@@ -22,6 +22,9 @@ namespace Reface.NPI.Generators.ParameterLookups
                 || type == typeof(DateTime)
                 || type == typeof(bool)
                 || type == typeof(Guid)
+                || type == typeof(uint)
+                || type == typeof(ulong)
+                || type == typeof(ushort)
                 ;
         }
 

@@ -185,5 +185,38 @@ namespace Reface.NPITests.Generators.SqlServer
             Assert.AreEqual(1, d.Parameters["id"].Value);
             Assert.AreEqual("fc", d.Parameters["name"].Value);
         }
+
+        [TestMethod]
+        public void BetweenTest()
+        {
+            var g = new DefaultSqlServerCommandGenerator();
+            var method = typeof(IUserDao).GetMethod(nameof(IUserDao.GetByAgeBetween));
+            var d = g.Generate(method, new object[]
+            {
+                new BetweenParameter(1, 2)
+            });
+            Console.WriteLine(d);
+            Assert.AreEqual(2, d.Parameters.Count);
+            Assert.AreEqual(1, d.Parameters[string.Format("{0}{1}", "Age", Constant.PARAMETER_SUFFIX_BETWEEN_BEGIN)].Value);
+            Assert.AreEqual(2, d.Parameters[string.Format("{0}{1}", "Age", Constant.PARAMETER_SUFFIX_BETWEEN_END)].Value);
+        }
+
+
+        [TestMethod]
+        public void BetweenTest2()
+        {
+            var g = new DefaultSqlServerCommandGenerator();
+            var method = typeof(IUserDao).GetMethod(nameof(IUserDao.SelectByIdAndAgeBetween));
+            var d = g.Generate(method, new object[]
+            {
+                10,
+                new BetweenParameter(1, 2)
+            });
+            Console.WriteLine(d);
+            Assert.AreEqual(3, d.Parameters.Count);
+            Assert.AreEqual(10, d.Parameters["Id"].Value);
+            Assert.AreEqual(1, d.Parameters[string.Format("{0}{1}", "Age", Constant.PARAMETER_SUFFIX_BETWEEN_BEGIN)].Value);
+            Assert.AreEqual(2, d.Parameters[string.Format("{0}{1}", "Age", Constant.PARAMETER_SUFFIX_BETWEEN_END)].Value);
+        }
     }
 }

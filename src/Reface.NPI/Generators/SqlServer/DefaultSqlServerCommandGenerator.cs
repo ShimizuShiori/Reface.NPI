@@ -1,4 +1,5 @@
-﻿using Reface.NPI.Generators.OperatorMappings;
+﻿using Reface.NPI.Generators.ConditionGenerators;
+using Reface.NPI.Generators.OperatorMappings;
 using Reface.NPI.Models;
 using System;
 using System.Collections.Generic;
@@ -7,14 +8,18 @@ using System.Text;
 
 namespace Reface.NPI.Generators.SqlServer
 {
+    /// <summary>
+    /// 面向 SqlServer 的 <see cref="ISqlCommandGenerator"/> 。
+    /// </summary>
     public class DefaultSqlServerCommandGenerator : SqlCommandGeneratorBase, ISqlServerCommandGenerator
     {
-        private readonly IOperatorMapper operatorMapper = new SqlServerOperatorMapper();
         private readonly IFieldNameProvider fieldNameProvider;
+        private readonly IConditionGenerateHandler conditionGenerateHandler;
 
         public DefaultSqlServerCommandGenerator()
         {
             this.fieldNameProvider = NpiServicesCollection.GetService<IFieldNameProvider>();
+            this.conditionGenerateHandler = NpiServicesCollection.GetService<IConditionGenerateHandler>();
         }
 
         protected override SqlCommandDescription GenerateSelect(SqlCommandGenerateContext context)
@@ -37,7 +42,6 @@ namespace Reface.NPI.Generators.SqlServer
 
             GenerateByConditions(ref generateContext, selectInfo.Conditions);
 
-            string orderBy;
             if (!selectInfo.Paging)
             {
                 GenerateSqlByOrders(ref generateContext, selectInfo.Orders);
@@ -54,7 +58,7 @@ namespace Reface.NPI.Generators.SqlServer
             GenerateSqlByOrders(ref generateContext, selectInfo.Orders);
             shellBuilder.Append(" ) AS __RN__ FROM ( ");
             shellBuilder.Append(sqlBuilder.ToString());
-            shellBuilder.Append(") t ) t WHERE t.__RN__ > @BEGINRN AND t.__RN__ <= @ENDRN");
+            shellBuilder.Append($") t ) t WHERE t.__RN__ > @{Constant.PARAMETER_NAME_BEGIN_ROW_NUMBER} AND t.__RN__ <= @{Constant.PARAMETER_NAME_END_ROW_NUMBER}");
             result.AddParameter(new SqlParameterInfo() { Name = Constant.PARAMETER_NAME_BEGIN_ROW_NUMBER });
             result.AddParameter(new SqlParameterInfo() { Name = Constant.PARAMETER_NAME_END_ROW_NUMBER });
             result.SqlCommand = shellBuilder.ToString();
@@ -150,17 +154,14 @@ namespace Reface.NPI.Generators.SqlServer
             sqlBuilder.Append(" WHERE");
             foreach (var condition in conditions)
             {
-                GenerateSqlByCondition(ref sqlBuilder, condition);
-                result.AddParameter(new SqlParameterInfo(condition.Parameter));
+                ConditionGeneratorContext conditionContext = new ConditionGeneratorContext(this,
+                    result,
+                    sqlBuilder,
+                    condition);
+                this.conditionGenerateHandler.Handle(conditionContext);
+                if (condition.JoinerToNext != ConditionJoiners.Null)
+                    sqlBuilder.Append($" {condition.JoinerToNext}");
             }
-        }
-
-        private void GenerateSqlByCondition(ref StringBuilder sqlBuilder, ConditionInfo condition)
-        {
-            sqlBuilder.Append($" [{condition.Field}]");
-            sqlBuilder.Append($" {operatorMapper.GetOperatorByText(condition.Operators)} @{condition.Parameter}");
-            if (condition.JoinerToNext != ConditionJoiners.Null)
-                sqlBuilder.Append($" {condition.JoinerToNext.ToString()}");
         }
 
         private void GenerateSqlByOrders(ref GenerateContext context, IEnumerable<OrderInfo> orders)

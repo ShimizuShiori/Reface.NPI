@@ -1,24 +1,22 @@
 ﻿using Reface.NPI.Generators.OperatorMappings.Models;
 using System.Collections.Generic;
-using System.IO;
 
 namespace Reface.NPI.Generators.OperatorMappings
 {
-    public abstract class OperatorMapperBase : IOperatorMapper
+    public class DefaultOperatorMapper : IOperatorMapper
     {
-        protected abstract string OperatorMappingName { get; }
 
         private Dictionary<string, string> textToOperatorMap;
         private static readonly ICache cache;
 
-        static OperatorMapperBase()
+        static DefaultOperatorMapper()
         {
             cache = NpiServicesCollection.GetService<ICache>();
         }
 
         protected IResourceProvider ResourceProvider { get; private set; }
 
-        public OperatorMapperBase()
+        public DefaultOperatorMapper()
         {
             this.ResourceProvider = NpiServicesCollection.GetService<IResourceProvider>();
         }
@@ -37,14 +35,18 @@ namespace Reface.NPI.Generators.OperatorMappings
                     }
                 }
             }
-            return this.textToOperatorMap[text];
+            string result;
+            if (this.textToOperatorMap.TryGetValue(text, out result))
+                return result;
+
+            return null;
         }
 
         private Mappings GetMappings()
         {
             return cache.GetOrCreate<Mappings>($"{this.GetType().FullName}.{nameof(GetMappings)}", key =>
             {
-                string name = "Reface.NPI.Resources.OperatorMappings.SqlServer.xml";
+                string name = "Reface.NPI.Resources.OperatorMappings.xml";
                 using (var stream = this.ResourceProvider.Provide(name))
                 {
                     byte[] buffer = new byte[stream.Length];

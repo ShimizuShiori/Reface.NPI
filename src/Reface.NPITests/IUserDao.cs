@@ -134,5 +134,15 @@ namespace Reface.NPITests
         int DiyDeleteById(int i);
 
         #endregion
+
+        #region Between
+
+        [Description("SELECT * FROM [User] WHERE [Age] BETWEEN @Age_BEGIN AND @Age_END")]
+        void GetByAgeBetween(BetweenParameter age);
+
+        [Description("SELECT * FROM [User] WHERE [Id] = @Id And [Age] BETWEEN @Age_BEGIN AND @Age_END")]
+        void SelectByIdAndAgeBetween(int id, BetweenParameter age);
+
+        #endregion
     }
 }
