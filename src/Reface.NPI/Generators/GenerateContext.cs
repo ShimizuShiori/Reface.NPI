@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Reface.NPI.Generators.SqlServer
+namespace Reface.NPI.Generators
 {
     class GenerateContext
     {

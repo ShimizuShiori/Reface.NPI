@@ -97,11 +97,12 @@
     <Compile Include="Generators\SqlCommandExecuteModes.cs" />
     <Compile Include="Generators\SqlCommandGenerateContext.cs" />
     <Compile Include="Generators\SqlCommandTypes.cs" />
+    <Compile Include="Generators\Sqlite\DefaultSqliteCommandGenerator.cs" />
     <Compile Include="Generators\SqlParameterInfo.cs" />
     <Compile Include="Generators\SqlCommandDescription.cs" />
     <Compile Include="Generators\SqlCommandGeneratorBase.cs" />
     <Compile Include="Generators\SqlServer\DefaultSqlServerCommandGenerator.cs" />
-    <Compile Include="Generators\SqlServer\GenerateContext.cs" />
+    <Compile Include="Generators\GenerateContext.cs" />
     <Compile Include="Generators\IParameterLookup.cs" />
     <Compile Include="ICache.cs" />
     <Compile Include="ICopy.cs" />

@@ -60,6 +60,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Attributes\ESqlAttribute.cs" />
     <Compile Include="DefaultParameterFillerTests.cs" />
     <Compile Include="Generators\SqlServer\SqlCommandGeneratorTests.cs" />
     <Compile Include="IUserDao.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Parsers\DefaultInsertParserTests.cs" />
     <Compile Include="Parsers\DefaultSelectParserTests.cs" />
     <Compile Include="Parsers\DefaultUpdateParserTests.cs" />
+    <Compile Include="Parsers\Sqlite\SqliteGeneratorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceNameProviderTests.cs" />
     <Compile Include="User.cs" />
