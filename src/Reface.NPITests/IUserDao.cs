@@ -57,7 +57,7 @@ namespace Reface.NPITests
         [Description("DELETE FROM [User] WHERE [Name] = @Name")]
         void DeleteByName(string name);
 
-        [Description("DELETE FROM [User] WHERE [Id] = @Id And [State] = @State")]
+        [Description("DELETE FROM [User] WHERE ([Id] = @Id) And ([State] = @State)")]
         void DeleteByIdAndState(int id);
 
         [Description("UPDATE [User] SET [Password] = @Password WHERE [Id] = @Id")]
@@ -68,7 +68,7 @@ namespace Reface.NPITests
         void UpdatePasswordAndNameById(string password, string name, string id);
 
 
-        [Description("UPDATE [User] SET [Password] = @Password,[Name] = @Name WHERE [Id] = @Id And [Uid] = @Uid")]
+        [Description("UPDATE [User] SET [Password] = @Password,[Name] = @Name WHERE ([Id] = @Id) And ([Uid] = @Uid)")]
         void UpdatePasswordAndNameByIdAndUid(string password, string name, string id, string uid);
 
         [Description("INSERT INTO [User]([Id],[Name],[Password],[CreateTime])VALUES(@Id,@Name,@Password,@CreateTime);SELECT ISNULL(SCOPE_IDENTITY(),0) AS [Id]")]
@@ -88,13 +88,13 @@ namespace Reface.NPITests
 
         #region 带参数的语句生成
 
-        [Description("SELECT * FROM [User] WHERE [Name] Like @Aname Or [Name] Like @Bname Or [Name] Like @Cname")]
+        [Description("SELECT * FROM [User] WHERE (([Name] Like @Aname) Or ([Name] Like @Bname)) Or ([Name] Like @Cname)")]
         void SelectByNameLikeAnameOrNameLikeBnameOrNameLikeCname();
 
-        [Description("DELETE FROM [User] WHERE [Name] Like @Aname Or [Name] Like @Bname Or [Name] Like @Cname")]
+        [Description("DELETE FROM [User] WHERE (([Name] Like @Aname) Or ([Name] Like @Bname)) Or ([Name] Like @Cname)")]
         void DeleteByNameLikeAnameOrNameLikeBnameOrNameLikeCname();
 
-        [Description("UPDATE [User] SET [Password] = @Newpassword WHERE [Userid] = @Userid And [Password] = @Oldpassword")]
+        [Description("UPDATE [User] SET [Password] = @Newpassword WHERE ([Userid] = @Userid) And ([Password] = @Oldpassword)")]
         void UpdatePasswordEqualsNewpasswordByUseridAndPasswordIsOldpassword(string newPassword, string userId, string oldPassword);
 
         #endregion
@@ -145,26 +145,26 @@ namespace Reface.NPITests
         [Description("SELECT * FROM [User] WHERE [Age] BETWEEN @Age_BEGIN AND @Age_END")]
         void GetByAgeBetween(BetweenParameter age);
 
-        [Description("SELECT * FROM [User] WHERE [Id] = @Id And [Age] BETWEEN @Age_BEGIN AND @Age_END")]
+        [Description("SELECT * FROM [User] WHERE ([Id] = @Id) And ([Age] BETWEEN @Age_BEGIN AND @Age_END)")]
         void SelectByIdAndAgeBetween(int id, BetweenParameter age);
 
         #endregion
 
         #region Not
 
-        [Description("SELECT * FROM [User] WHERE NOT( [Id] = @Id)")]
+        [Description("SELECT * FROM [User] WHERE NOT([Id] = @Id)")]
         void SelectByNotId(string id);
 
-        [Description("DELETE FROM [User] WHERE NOT( [Id] = @Id)")]
+        [Description("DELETE FROM [User] WHERE NOT([Id] = @Id)")]
         void DeleteByNotId(string id);
 
-        [Description("SELECT COUNT(*) AS [C] FROM [User] WHERE NOT( [Id] = @Id)")]
+        [Description("SELECT COUNT(*) AS [C] FROM [User] WHERE NOT([Id] = @Id)")]
         void CountByNotId(string id);
 
-        [Description("SELECT * FROM [User] WHERE NOT( [Id] = @Id) Or NOT( [Name] = @Name)")]
+        [Description("SELECT * FROM [User] WHERE (NOT([Id] = @Id)) Or (NOT([Name] = @Name))")]
         void SelectByNotIdOrNotName(int id, string name);
 
-        [Description("UPDATE [User] SET [Name] = @Name WHERE NOT( [Id] = @Id)")]
+        [Description("UPDATE [User] SET [Name] = @Name WHERE NOT([Id] = @Id)")]
         void UpdateNameByNotId(int id);
 
         #endregion

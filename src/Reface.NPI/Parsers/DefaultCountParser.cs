@@ -25,49 +25,53 @@ namespace Reface.NPI.Parsers
                     break;
                 case States.CountParseStates.Condition:
                     {
-                        ConditionInfo condition = new ConditionInfo();
-                        info.ConditionInfos.Add(condition);
+                        FieldConditionInfo condition = new FieldConditionInfo();
+                        info.Condition = condition;
                         machine.Context[CONTEXT_KEY_CONDITION] = condition;
                     }
                     break;
                 case CountParseStates.NotCondition:
                     {
-                        ConditionInfo conditionInfo = machine.Context[CONTEXT_KEY_CONDITION] as ConditionInfo;
+                        FieldConditionInfo conditionInfo = machine.Context[CONTEXT_KEY_CONDITION] as FieldConditionInfo;
                         conditionInfo.IsNot = true;
                     }
                     break;
                 case States.CountParseStates.ConditionField:
                     {
-                        ConditionInfo conditionInfo = machine.Context[CONTEXT_KEY_CONDITION] as ConditionInfo;
+                        FieldConditionInfo conditionInfo = machine.Context[CONTEXT_KEY_CONDITION] as FieldConditionInfo;
                         conditionInfo.Field = machine.TokenStack.Pop().Text;
                         conditionInfo.Parameter = conditionInfo.Field;
-                        machine.Context[CONTEXT_KEY_CONDITION] = conditionInfo;
                     }
                     break;
                 case States.CountParseStates.ConditionOperator:
                     {
-                        ConditionInfo conditionInfo = machine.Context[CONTEXT_KEY_CONDITION] as ConditionInfo;
+                        FieldConditionInfo conditionInfo = machine.Context[CONTEXT_KEY_CONDITION] as FieldConditionInfo;
                         conditionInfo.Operators = machine.TokenStack.Pop().Text;
                     }
                     break;
                 case States.CountParseStates.ConditionParameter:
                     {
-                        ConditionInfo conditionInfo = machine.Context[CONTEXT_KEY_CONDITION] as ConditionInfo;
+                        FieldConditionInfo conditionInfo = machine.Context[CONTEXT_KEY_CONDITION] as FieldConditionInfo;
                         conditionInfo.Parameter = machine.TokenStack.Pop().Text;
                     }
                     break;
                 case States.CountParseStates.NextCondition:
                     {
-                        ConditionInfo conditionInfo = machine.Context[CONTEXT_KEY_CONDITION] as ConditionInfo;
+                        IConditionInfo conditionInfo = machine.Context[CONTEXT_KEY_CONDITION] as IConditionInfo;
                         var token = machine.TokenStack.Pop();
-                        conditionInfo.JoinerToNext = token.Action == Actions.CountParseActions.And ?
-                             ConditionJoiners.And :
-                             ConditionJoiners.Or;
-                        machine.Context[CONTEXT_KEY_CONDITION] = null;
 
-                        conditionInfo = new ConditionInfo();
-                        machine.Context[CONTEXT_KEY_CONDITION] = conditionInfo;
-                        info.ConditionInfos.Add(conditionInfo);
+                        ConditionJoiners joiner = token.Action == CountParseActions.And ? ConditionJoiners.And : ConditionJoiners.Or;
+
+                        FieldConditionInfo nextCondition = new FieldConditionInfo();
+
+                        info.Condition = new GroupConditionInfo()
+                        {
+                            LeftCondition = info.Condition,
+                            Joiner = joiner,
+                            RightCondition = nextCondition
+                        };
+
+                        machine.Context[CONTEXT_KEY_CONDITION] = nextCondition;
                     }
                     break;
                 case States.CountParseStates.End:

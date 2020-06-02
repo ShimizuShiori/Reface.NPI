@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Reface.NPI.Models;
+using System.Configuration;
 
 namespace Reface.NPI.Parsers.Tests
 {
@@ -15,9 +16,10 @@ namespace Reface.NPI.Parsers.Tests
             SelectInfo info = parser.Parse(command);
             Assert.AreEqual(1, info.Fields.Count, "count of field should be 1");
             Assert.AreEqual("Name", info.Fields[0]);
-            Assert.AreEqual(1, info.Conditions.Count, "count of condition should be 1");
-            Assert.AreEqual("Id", info.Conditions[0].Field);
-            Assert.AreEqual("", info.Conditions[0].Operators);
+            Assert.IsInstanceOfType(info.Condition, typeof(FieldConditionInfo));
+            FieldConditionInfo fc = (FieldConditionInfo)info.Condition;
+            Assert.AreEqual("Id", fc.Field);
+            Assert.AreEqual("", fc.Operators);
             Assert.AreEqual(0, info.Orders.Count);
         }
 
@@ -29,11 +31,17 @@ namespace Reface.NPI.Parsers.Tests
             DefaultSelectParser parser = new DefaultSelectParser();
             SelectInfo info = parser.Parse(command);
             Assert.AreEqual(0, info.Fields.Count, "count of field should be 0");
-            Assert.AreEqual(2, info.Conditions.Count, "count of condition should be 2");
-            Assert.AreEqual("Id", info.Conditions[0].Field);
-            Assert.AreEqual("", info.Conditions[0].Operators);
-            Assert.AreEqual("Name", info.Conditions[1].Field);
-            Assert.AreEqual("", info.Conditions[1].Operators);
+
+            var gc = info.Condition.AsGroupCondition();
+            var c1 = info.Condition.AsGroupCondition().LeftCondition.AsFieldCondition();
+            var c2 = info.Condition.AsGroupCondition().RightCondition.AsFieldCondition();
+
+            Assert.AreEqual(ConditionJoiners.And, gc.Joiner);
+
+            Assert.AreEqual("Id", c1.Field);
+            Assert.AreEqual("", c1.Operators);
+            Assert.AreEqual("Name", c2.Field);
+            Assert.AreEqual("", c2.Operators);
             Assert.AreEqual(0, info.Orders.Count);
         }
 
@@ -53,7 +61,6 @@ namespace Reface.NPI.Parsers.Tests
             DefaultSelectParser parser = new DefaultSelectParser();
             SelectInfo info = parser.Parse(command);
             Assert.AreEqual(outputCount, info.Fields.Count, "count of output");
-            Assert.AreEqual(conditionCount, info.Conditions.Count, "count of condition");
             Assert.AreEqual(orderByCount, info.Orders.Count, "count of orderby");
         }
 
@@ -65,13 +72,19 @@ namespace Reface.NPI.Parsers.Tests
             Assert.AreEqual("Name", info.Fields[0]);
             Assert.AreEqual("Icon", info.Fields[1]);
 
-            Assert.AreEqual("Regstertime", info.Conditions[0].Field);
-            Assert.AreEqual("", info.Conditions[0].Operators);
-            Assert.AreEqual(ConditionJoiners.And, info.Conditions[0].JoinerToNext);
+            Assert.IsInstanceOfType(info.Condition, typeof(GroupConditionInfo));
+            GroupConditionInfo gc = (GroupConditionInfo)info.Condition;
+            Assert.AreEqual(ConditionJoiners.And, gc.Joiner);
 
-            Assert.AreEqual("State", info.Conditions[1].Field);
-            Assert.AreEqual("", info.Conditions[1].Operators);
-            Assert.AreEqual(ConditionJoiners.Null, info.Conditions[1].JoinerToNext);
+            Assert.IsInstanceOfType(gc.LeftCondition, typeof(FieldConditionInfo));
+            FieldConditionInfo fc = (FieldConditionInfo)gc.LeftCondition;
+            Assert.AreEqual("Regstertime", fc.Field);
+            Assert.AreEqual("", fc.Operators);
+
+            Assert.IsInstanceOfType(gc.RightCondition, typeof(FieldConditionInfo));
+            fc = (FieldConditionInfo)gc.RightCondition;
+            Assert.AreEqual("State", fc.Field);
+            Assert.AreEqual("", fc.Operators);
 
             Assert.AreEqual("Regtertime", info.Orders[0].Field);
             Assert.AreEqual(OrderTypes.Desc, info.Orders[0].Type);
@@ -88,10 +101,12 @@ namespace Reface.NPI.Parsers.Tests
             SelectInfo info = parser.Parse("NameByIdIsMyid");
             Assert.AreEqual("Name", info.Fields[0]);
 
-            Assert.AreEqual("Id", info.Conditions[0].Field);
-            Assert.AreEqual("Is", info.Conditions[0].Operators);
-            Assert.AreEqual(ConditionJoiners.Null, info.Conditions[0].JoinerToNext);
-            Assert.AreEqual("Myid", info.Conditions[0].Parameter);
+            Assert.IsInstanceOfType(info.Condition, typeof(FieldConditionInfo));
+            FieldConditionInfo fc = (FieldConditionInfo)info.Condition;
+
+            Assert.AreEqual("Id", fc.Field);
+            Assert.AreEqual("Is", fc.Operators);
+            Assert.AreEqual("Myid", fc.Parameter);
         }
 
         [TestMethod]
@@ -101,15 +116,19 @@ namespace Reface.NPI.Parsers.Tests
             SelectInfo info = parser.Parse("NameByIdIsMyidAndAgeGtMyage");
             Assert.AreEqual("Name", info.Fields[0]);
 
-            Assert.AreEqual("Id", info.Conditions[0].Field);
-            Assert.AreEqual("Is", info.Conditions[0].Operators);
-            Assert.AreEqual(ConditionJoiners.And, info.Conditions[0].JoinerToNext);
-            Assert.AreEqual("Myid", info.Conditions[0].Parameter);
+            GroupConditionInfo gc = (GroupConditionInfo)info.Condition;
+            Assert.AreEqual(ConditionJoiners.And, gc.Joiner);
 
-            Assert.AreEqual("Age", info.Conditions[1].Field);
-            Assert.AreEqual("Gt", info.Conditions[1].Operators);
-            Assert.AreEqual(ConditionJoiners.Null, info.Conditions[1].JoinerToNext);
-            Assert.AreEqual("Myage", info.Conditions[1].Parameter);
+            FieldConditionInfo fc = (FieldConditionInfo)gc.LeftCondition;
+            Assert.AreEqual("Id", fc.Field);
+            Assert.AreEqual("Is", fc.Operators);
+            Assert.AreEqual("Myid", fc.Parameter);
+
+            fc = (FieldConditionInfo)gc.RightCondition;
+
+            Assert.AreEqual("Age", fc.Field);
+            Assert.AreEqual("Gt", fc.Operators);
+            Assert.AreEqual("Myage", fc.Parameter);
         }
 
         [TestMethod]
@@ -119,10 +138,11 @@ namespace Reface.NPI.Parsers.Tests
             SelectInfo info = parser.Parse("NameByIdIs");
             Assert.AreEqual("Name", info.Fields[0]);
 
-            Assert.AreEqual("Id", info.Conditions[0].Field);
-            Assert.AreEqual("Is", info.Conditions[0].Operators);
-            Assert.AreEqual(ConditionJoiners.Null, info.Conditions[0].JoinerToNext);
-            Assert.AreEqual("Id", info.Conditions[0].Parameter);
+            FieldConditionInfo fc = (FieldConditionInfo)info.Condition;
+
+            Assert.AreEqual("Id", fc.Field);
+            Assert.AreEqual("Is", fc.Operators);
+            Assert.AreEqual("Id", fc.Parameter);
         }
 
         [TestMethod]
@@ -132,15 +152,18 @@ namespace Reface.NPI.Parsers.Tests
             SelectInfo info = parser.Parse("NameByIdIsMyidAndAgeGtMyageOrderbyId");
             Assert.AreEqual("Name", info.Fields[0]);
 
-            Assert.AreEqual("Id", info.Conditions[0].Field);
-            Assert.AreEqual("Is", info.Conditions[0].Operators);
-            Assert.AreEqual(ConditionJoiners.And, info.Conditions[0].JoinerToNext);
-            Assert.AreEqual("Myid", info.Conditions[0].Parameter);
+            GroupConditionInfo gc = (GroupConditionInfo)info.Condition;
+            Assert.AreEqual(ConditionJoiners.And, gc.Joiner);
 
-            Assert.AreEqual("Age", info.Conditions[1].Field);
-            Assert.AreEqual("Gt", info.Conditions[1].Operators);
-            Assert.AreEqual(ConditionJoiners.Null, info.Conditions[1].JoinerToNext);
-            Assert.AreEqual("Myage", info.Conditions[1].Parameter);
+            FieldConditionInfo fc = (FieldConditionInfo)gc.LeftCondition;
+            Assert.AreEqual("Id", fc.Field);
+            Assert.AreEqual("Is", fc.Operators);
+            Assert.AreEqual("Myid", fc.Parameter);
+
+            fc = (FieldConditionInfo)gc.RightCondition;
+            Assert.AreEqual("Age", fc.Field);
+            Assert.AreEqual("Gt", fc.Operators);
+            Assert.AreEqual("Myage", fc.Parameter);
 
             Assert.AreEqual("Id", info.Orders[0].Field);
             Assert.AreEqual(OrderTypes.Asc, info.Orders[0].Type);
@@ -151,9 +174,9 @@ namespace Reface.NPI.Parsers.Tests
         {
             string command = "ByNotId";
             SelectInfo info = GetInfoByCommand(command);
-            Assert.AreEqual(1, info.Conditions.Count);
-            var condition = info.Conditions[0];
-            Assert.AreEqual(true, condition.IsNot);
+
+            FieldConditionInfo fc = (FieldConditionInfo)info.Condition;
+            Assert.IsTrue(fc.IsNot);
         }
 
         private SelectInfo GetInfoByCommand(string command)

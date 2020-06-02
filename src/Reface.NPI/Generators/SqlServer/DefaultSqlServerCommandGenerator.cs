@@ -40,7 +40,7 @@ namespace Reface.NPI.Generators.SqlServer
 
             sqlBuilder.Append($" FROM [{tableName}]");
 
-            GenerateByConditions(ref generateContext, selectInfo.Conditions);
+            GenerateByCondition(ref generateContext, selectInfo.Condition);
 
             if (!selectInfo.Paging)
             {
@@ -86,7 +86,8 @@ namespace Reface.NPI.Generators.SqlServer
             }
             else
             {
-                HashSet<string> conditionField = new HashSet<string>(updateInfo.Conditions.Select(x => x.Field));
+                HashSet<string> conditionField = updateInfo.Condition.GetAllFieldNames();
+
                 HashSet<string> lowerCaseWithoutFields = new HashSet<string>(updateInfo.WithoutFields.Select(x => x.ToLower()));
                 setCommand = GetColumnNames(context)
                     .Where(x => !conditionField.Contains(x))
@@ -101,7 +102,7 @@ namespace Reface.NPI.Generators.SqlServer
 
             sqlBuilder.Append(setCommand);
 
-            GenerateByConditions(ref generateContext, updateInfo.Conditions);
+            GenerateByCondition(ref generateContext, updateInfo.Condition);
 
             result.SqlCommand = sqlBuilder.ToString();
             return result;
@@ -116,7 +117,7 @@ namespace Reface.NPI.Generators.SqlServer
             GenerateContext generateContext = new GenerateContext(description, sqlBuilder);
 
             sqlBuilder.Append($"DELETE FROM [{tableName}]");
-            GenerateByConditions(ref generateContext, deleteInfo.ConditionInfos);
+            GenerateByCondition(ref generateContext, deleteInfo.Condition);
 
             description.SqlCommand = sqlBuilder.ToString();
             return description;
@@ -145,26 +146,39 @@ namespace Reface.NPI.Generators.SqlServer
             return description;
         }
 
-        private void GenerateByConditions(ref GenerateContext context, IEnumerable<ConditionInfo> conditions)
+        private void GenerateByCondition(ref GenerateContext context, IConditionInfo condition)
         {
-            if (conditions == null) return;
-            if (!conditions.Any()) return;
+            if (condition == null) return;
+
             var sqlBuilder = context.StringBuilder;
             var result = context.SqlCommandDescription;
-            sqlBuilder.Append(" WHERE");
-            foreach (var condition in conditions)
+            if (!context.HasWhereKeyword)
             {
-                if (condition.IsNot)
-                    sqlBuilder.Append(" NOT(");
+                sqlBuilder.Append(" WHERE ");
+                context.HasWhereKeyword = true;
+            }
+
+            if (condition is FieldConditionInfo fc)
+            {
+                if (fc.IsNot)
+                    sqlBuilder.Append("NOT(");
                 ConditionGeneratorContext conditionContext = new ConditionGeneratorContext(this,
                     result,
                     sqlBuilder,
-                    condition);
+                    fc);
                 this.conditionGenerateHandler.Handle(conditionContext);
-                if (condition.IsNot)
+                if (fc.IsNot)
                     sqlBuilder.Append(")");
-                if (condition.JoinerToNext != ConditionJoiners.Null)
-                    sqlBuilder.Append($" {condition.JoinerToNext}");
+            }
+            else if (condition is GroupConditionInfo gc)
+            {
+                sqlBuilder.Append("(");
+                GenerateByCondition(ref context, gc.LeftCondition);
+                sqlBuilder.Append(") ");
+                sqlBuilder.Append(gc.Joiner.ToString());
+                sqlBuilder.Append(" (");
+                GenerateByCondition(ref context, gc.RightCondition);
+                sqlBuilder.Append(")");
             }
         }
 
@@ -201,7 +215,7 @@ namespace Reface.NPI.Generators.SqlServer
             GenerateContext generateContext = new GenerateContext(description, sqlBuilder);
 
             sqlBuilder.Append($"SELECT COUNT(*) AS [{Constant.RESULT_FIELD_NAME_COUNT}] FROM [{tableName}]");
-            GenerateByConditions(ref generateContext, deleteInfo.ConditionInfos);
+            GenerateByCondition(ref generateContext, deleteInfo.Condition);
 
             description.SqlCommand = sqlBuilder.ToString();
             return description;

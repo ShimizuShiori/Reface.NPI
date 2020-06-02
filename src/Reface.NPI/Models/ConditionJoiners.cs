@@ -2,7 +2,6 @@
 {
     public enum ConditionJoiners
     {
-        Null,
         And,
         Or
     }

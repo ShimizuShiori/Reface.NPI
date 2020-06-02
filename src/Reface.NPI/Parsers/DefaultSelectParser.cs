@@ -4,7 +4,6 @@ using Reface.NPI.Parsers.Events;
 using Reface.NPI.Parsers.StateMachines;
 using Reface.NPI.Parsers.States;
 using Reface.NPI.Parsers.Tokens;
-using System.Runtime.Remoting.Contexts;
 
 namespace Reface.NPI.Parsers
 {
@@ -29,34 +28,35 @@ namespace Reface.NPI.Parsers
                     break;
                 case SelectParseStates.ConditionField:
                     {
-                        ConditionInfo condition = (ConditionInfo)machine.Context[CONTEXT_KEY_CONDITION];
+                        FieldConditionInfo condition = (FieldConditionInfo)machine.Context[CONTEXT_KEY_CONDITION];
                         condition.Field = machine.TokenStack.Pop().Text;
                         condition.Parameter = condition.Field;
-                        machine.Context[CONTEXT_KEY_CONDITION] = condition;
                     }
                     break;
                 case SelectParseStates.ConditionOperator:
                     {
-                        ConditionInfo condition = (ConditionInfo)machine.Context[CONTEXT_KEY_CONDITION];
+                        FieldConditionInfo condition = (FieldConditionInfo)machine.Context[CONTEXT_KEY_CONDITION];
                         condition.Operators = machine.TokenStack.Pop().Text;
                     }
                     break;
                 case SelectParseStates.NextCondition:
                     {
-                        ConditionInfo condition = (ConditionInfo)machine.Context[CONTEXT_KEY_CONDITION];
-                        condition.JoinerToNext = machine.TokenStack.Pop().Action == Actions.SelectParseActions.Or
-                            ? ConditionJoiners.Or
-                            : ConditionJoiners.And;
+                        ConditionJoiners joiner = machine.TokenStack.Pop().Action == SelectParseActions.And ? ConditionJoiners.And : ConditionJoiners.Or;
 
-                        condition = new ConditionInfo();
-                        info.Conditions.Add(condition);
+                        FieldConditionInfo condition = new FieldConditionInfo();
                         machine.Context[CONTEXT_KEY_CONDITION] = condition;
+                        info.Condition = new GroupConditionInfo()
+                        {
+                            LeftCondition = info.Condition,
+                            Joiner = joiner,
+                            RightCondition = condition
+                        };
                     }
                     break;
 
                 case SelectParseStates.ConditionParameter:
                     {
-                        ConditionInfo condition = (ConditionInfo)machine.Context[CONTEXT_KEY_CONDITION];
+                        FieldConditionInfo condition = (FieldConditionInfo)machine.Context[CONTEXT_KEY_CONDITION];
                         condition.Parameter = machine.TokenStack.Pop().Text;
                     }
                     break;
@@ -78,15 +78,15 @@ namespace Reface.NPI.Parsers
                 case SelectParseStates.NotCondition:
                     {
                         machine.TokenStack.Pop();
-                        ConditionInfo condition = (ConditionInfo)machine.Context[CONTEXT_KEY_CONDITION];
+                        FieldConditionInfo condition = (FieldConditionInfo)machine.Context[CONTEXT_KEY_CONDITION];
                         condition.IsNot = true;
                     }
                     break;
                 case SelectParseStates.Condition:
                     {
                         machine.TokenStack.Pop();
-                        ConditionInfo condition = new ConditionInfo();
-                        info.Conditions.Add(condition);
+                        FieldConditionInfo condition = new FieldConditionInfo();
+                        info.Condition = condition;
                         machine.Context[CONTEXT_KEY_CONDITION] = condition;
                     }
                     break;

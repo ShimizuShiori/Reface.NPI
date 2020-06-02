@@ -1,22 +1,10 @@
-﻿using System.Collections.Generic;
-
-namespace Reface.NPI.Models
+﻿namespace Reface.NPI.Models
 {
-    public class CountInfo : ICommandInfo
+    public class CountInfo : ICommandInfo, ICommandInfoHasCondition
     {
-
-        public List<ConditionInfo> ConditionInfos { get; private set; }
-
         public CommandInfoTypes Type => CommandInfoTypes.Count;
 
-        public CountInfo()
-        {
-            this.ConditionInfos = new List<ConditionInfo>();
-        }
+        public IConditionInfo Condition { get; set; }
 
-        public override string ToString()
-        {
-            return $"Condition : {this.ConditionInfos.Join(",", x => x.ToString())}";
-        }
     }
 }

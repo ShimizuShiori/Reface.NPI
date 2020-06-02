@@ -11,9 +11,9 @@ namespace Reface.NPI.Generators.ConditionGenerators
         private readonly ISqlCommandGenerator sqlCommandGenerator;
         private readonly SqlCommandDescription sqlCommandDescription;
         private readonly StringBuilder sqlBuilder;
-        private readonly ConditionInfo conditionInfo;
+        private readonly FieldConditionInfo conditionInfo;
 
-        public ConditionGeneratorContext(ISqlCommandGenerator sqlCommandGenerator, SqlCommandDescription sqlCommandDescription, StringBuilder sqlBuilder, ConditionInfo conditionInfo)
+        public ConditionGeneratorContext(ISqlCommandGenerator sqlCommandGenerator, SqlCommandDescription sqlCommandDescription, StringBuilder sqlBuilder, FieldConditionInfo conditionInfo)
         {
             this.sqlCommandGenerator = sqlCommandGenerator;
             this.sqlCommandDescription = sqlCommandDescription;

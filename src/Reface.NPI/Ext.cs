@@ -15,5 +15,10 @@ namespace Reface.NPI
         {
             return $"{method.DeclaringType.FullName}.{method.Name}";
         }
+
+        public static T As<T>(this object value)
+        {
+            return (T)value;
+        }
     }
 }

@@ -3,7 +3,7 @@
     /// <summary>
     /// 条件信息
     /// </summary>
-    public class ConditionInfo
+    public class FieldConditionInfo : IConditionInfo
     {
         /// <summary>
         /// 字段名
@@ -17,19 +17,14 @@
         /// 参数名
         /// </summary>
         public string Parameter { get; set; }
-        /// <summary>
-        /// 与后一个条件的连接词
-        /// </summary>
-        public ConditionJoiners JoinerToNext { get; set; } = ConditionJoiners.Null;
 
-        /// <summary>
-        /// 该条件是否以 Not 的形式生成
-        /// </summary>
         public bool IsNot { get; set; } = false;
 
         public override string ToString()
         {
-            return $"[{Field}] [{Operators}] [{JoinerToNext.ToString()}]";
+            if (!IsNot)
+                return $"[{Field}] [{Operators}] @{Parameter}";
+            return $"NOT ( [{Field}] [{Operators}] @{Parameter} )";
         }
     }
 }

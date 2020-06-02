@@ -41,20 +41,20 @@ namespace Reface.NPI.Parsers
                     break;
                 case UpdateParseStates.Condition:
                     {
-                        ConditionInfo condition = new ConditionInfo();
+                        FieldConditionInfo condition = new FieldConditionInfo();
                         machine.Context[CONTEXT_KEY_CONDITION] = condition;
-                        info.Conditions.Add(condition);
+                        info.Condition = condition;
                     }
                     break;
                 case UpdateParseStates.NotCondition:
                     {
-                        ConditionInfo condition = machine.Context[CONTEXT_KEY_CONDITION] as ConditionInfo;
+                        FieldConditionInfo condition = machine.Context[CONTEXT_KEY_CONDITION] as FieldConditionInfo;
                         condition.IsNot = true;
                     }
                     break;
                 case States.UpdateParseStates.ConditionField:
                     {
-                        ConditionInfo condition = machine.Context[CONTEXT_KEY_CONDITION] as ConditionInfo;
+                        FieldConditionInfo condition = machine.Context[CONTEXT_KEY_CONDITION] as FieldConditionInfo;
                         string field = machine.TokenStack.Pop().Text;
                         condition.Field = field;
                         condition.Parameter = field;
@@ -63,13 +63,13 @@ namespace Reface.NPI.Parsers
                 case States.UpdateParseStates.ConditionOperator:
                     {
                         string opr = machine.TokenStack.Pop().Text;
-                        ConditionInfo condition = machine.Context[CONTEXT_KEY_CONDITION] as ConditionInfo;
+                        FieldConditionInfo condition = machine.Context[CONTEXT_KEY_CONDITION] as FieldConditionInfo;
                         condition.Operators = opr;
                     }
                     break;
                 case States.UpdateParseStates.ConditionParameter:
                     {
-                        ConditionInfo condition = machine.Context[CONTEXT_KEY_CONDITION] as ConditionInfo;
+                        FieldConditionInfo condition = machine.Context[CONTEXT_KEY_CONDITION] as FieldConditionInfo;
                         condition.Parameter = machine.TokenStack.Pop().Text;
                     }
                     break;
@@ -79,12 +79,16 @@ namespace Reface.NPI.Parsers
                         ConditionJoiners joiners = token.Action == Actions.UpdateParseActions.Or
                             ? ConditionJoiners.Or
                             : ConditionJoiners.And;
-                        var condition = (ConditionInfo)machine.Context[CONTEXT_KEY_CONDITION];
-                        condition.JoinerToNext = joiners;
 
-                        condition = new ConditionInfo();
-                        info.Conditions.Add(condition);
-                        machine.Context[CONTEXT_KEY_CONDITION] = condition;
+                        FieldConditionInfo nextCondition = new FieldConditionInfo();
+                        info.Condition = new GroupConditionInfo()
+                        {
+                            LeftCondition = info.Condition,
+                            Joiner = ConditionJoiners.And,
+                            RightCondition = nextCondition
+                        };
+
+                        machine.Context[CONTEXT_KEY_CONDITION] = nextCondition;
                     }
                     break;
                 case States.UpdateParseStates.WithoutField:

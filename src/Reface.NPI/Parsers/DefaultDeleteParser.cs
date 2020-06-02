@@ -24,48 +24,53 @@ namespace Reface.NPI.Parsers
                     break;
                 case DeleteParseStates.Condition:
                     {
-                        ConditionInfo conditionInfo = new ConditionInfo();
+                        FieldConditionInfo conditionInfo = new FieldConditionInfo();
                         machine.Context[CONTEXT_KEY_CONDITION] = conditionInfo;
-                        info.ConditionInfos.Add(conditionInfo);
+                        info.Condition = conditionInfo;
                     }
                     break;
                 case DeleteParseStates.NotCondition:
                     {
-                        ConditionInfo conditionInfo = machine.Context[CONTEXT_KEY_CONDITION] as ConditionInfo;
+                        FieldConditionInfo conditionInfo = machine.Context[CONTEXT_KEY_CONDITION] as FieldConditionInfo;
                         conditionInfo.IsNot = true;
                     }
                     break;
                 case DeleteParseStates.ConditionField:
                     {
-                        ConditionInfo conditionInfo = machine.Context[CONTEXT_KEY_CONDITION] as
-                            ConditionInfo;
+                        FieldConditionInfo conditionInfo = machine.Context[CONTEXT_KEY_CONDITION] as
+                            FieldConditionInfo;
                         conditionInfo.Field = machine.TokenStack.Pop().Text;
                         conditionInfo.Parameter = conditionInfo.Field;
                     }
                     break;
                 case DeleteParseStates.ConditionOperator:
                     {
-                        ConditionInfo conditionInfo = machine.Context[CONTEXT_KEY_CONDITION] as ConditionInfo;
+                        FieldConditionInfo conditionInfo = machine.Context[CONTEXT_KEY_CONDITION] as FieldConditionInfo;
                         conditionInfo.Operators = machine.TokenStack.Pop().Text;
                     }
                     break;
                 case DeleteParseStates.ConditionParameter:
                     {
-                        ConditionInfo conditionInfo = machine.Context[CONTEXT_KEY_CONDITION] as ConditionInfo;
+                        FieldConditionInfo conditionInfo = machine.Context[CONTEXT_KEY_CONDITION] as FieldConditionInfo;
                         conditionInfo.Parameter = machine.TokenStack.Pop().Text;
                     }
                     break;
                 case DeleteParseStates.NextCondition:
                     {
-                        ConditionInfo conditionInfo = machine.Context[CONTEXT_KEY_CONDITION] as ConditionInfo;
                         DeleteToken token = machine.TokenStack.Pop();
-                        conditionInfo.JoinerToNext = token.Action == Actions.DeleteParseActions.And ?
+                        ConditionJoiners joiner = token.Action == Actions.DeleteParseActions.And ?
                              ConditionJoiners.And :
                              ConditionJoiners.Or;
 
-                        conditionInfo = new ConditionInfo();
-                        info.ConditionInfos.Add(conditionInfo);
-                        machine.Context[CONTEXT_KEY_CONDITION] = conditionInfo;
+                        FieldConditionInfo nextCondition = new FieldConditionInfo();
+                        machine.Context[CONTEXT_KEY_CONDITION] = nextCondition;
+
+                        info.Condition = new GroupConditionInfo()
+                        {
+                            LeftCondition = info.Condition,
+                            Joiner = joiner,
+                            RightCondition = nextCondition
+                        };
                     }
                     break;
                 case DeleteParseStates.End:

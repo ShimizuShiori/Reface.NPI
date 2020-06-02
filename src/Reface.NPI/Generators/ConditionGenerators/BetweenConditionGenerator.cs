@@ -15,7 +15,7 @@ namespace Reface.NPI.Generators.ConditionGenerators
 
             string paraNameBegin = string.Format("{0}{1}", context.ParameterName, Constant.PARAMETER_SUFFIX_BETWEEN_BEGIN);
             string paraNameEnd = string.Format("{0}{1}", context.ParameterName, Constant.PARAMETER_SUFFIX_BETWEEN_END);
-            context.SqlBuilder.Append($" [{context.FieldName}] BETWEEN {context.GetParameterCommand(paraNameBegin)} AND {context.GetParameterCommand(paraNameEnd)}");
+            context.SqlBuilder.Append($"[{context.FieldName}] BETWEEN {context.GetParameterCommand(paraNameBegin)} AND {context.GetParameterCommand(paraNameEnd)}");
 
             context.AddParameter(paraNameBegin);
             context.AddParameter(paraNameEnd);

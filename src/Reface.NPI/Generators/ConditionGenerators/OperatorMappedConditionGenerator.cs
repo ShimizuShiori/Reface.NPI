@@ -23,7 +23,7 @@ namespace Reface.NPI.Generators.ConditionGenerators
             opr = operatorMapper.GetOperatorByText(opr);
             if (string.IsNullOrEmpty(opr)) return false;
 
-            context.SqlBuilder.Append($" [{context.FieldName}] {opr} {context.GetParameterCommand(context.ParameterName)}");
+            context.SqlBuilder.Append($"[{context.FieldName}] {opr} {context.GetParameterCommand(context.ParameterName)}");
             context.AddParameter(context.ParameterName);
             return true;
         }
